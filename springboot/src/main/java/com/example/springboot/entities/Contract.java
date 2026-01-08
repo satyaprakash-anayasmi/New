@@ -83,7 +83,6 @@ public class Contract {
         inverseJoinColumns = @JoinColumn(name = "CityId")
     )
     @NotNull(message = "City ID is mandatory")
-    @Column(name = "CityId", nullable = false)
     private List<City> cities;
 
 }

@@ -46,7 +46,11 @@ public class ContractServiceImpl implements ContractService {
             existingContract.setContractorName(contractDetails.getContractorName());
             existingContract.setBusinessName(contractDetails.getBusinessName());
             existingContract.setAddress(contractDetails.getAddress());
-            existingContract.setCities(contractDetails.getCities());
+            
+            if (contractDetails.getCities() != null) {
+                existingContract.setCities(contractDetails.getCities());
+            }
+            
             existingContract.setMobile(contractDetails.getMobile());
             existingContract.setEmail(contractDetails.getEmail());
             existingContract.setBankDetails(contractDetails.getBankDetails());

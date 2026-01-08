@@ -1,16 +1,11 @@
 package com.example.springboot.dtos;
 
+import lombok.Data;
+
+@Data
 public class CityDTO {
-        private int id;
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    
+    private Integer cityId;
+    private String cityName;
+    private String state;
+    private String country;
 }
