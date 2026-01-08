@@ -5,13 +5,15 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "Contract")
 public class Contract {
@@ -76,13 +78,9 @@ public class Contract {
     private Boolean isDeleted = false;
 
 
-     @ManyToMany
-    @JoinTable(
-        name = "Contract_City",
-        joinColumns = @JoinColumn(name = "ContractId"),
-        inverseJoinColumns = @JoinColumn(name = "CityId")
-    )
     @NotNull(message = "City ID is mandatory")
-    private List<City> cities;
+    @ManyToOne  
+    @JoinColumn(name = "CityId", nullable = false)
+    private City cities;
 
 }
