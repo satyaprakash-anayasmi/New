@@ -1,16 +1,18 @@
-package com.example.springboot.service;
+package com.example.springboot.services.Impls;
 
-import com.example.springboot.entity.Contract;
-import com.example.springboot.repository.Repo;
+import com.example.springboot.entities.Contract;
+import com.example.springboot.repositories.ContractRepo;
+import com.example.springboot.services.ContractService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
 @org.springframework.stereotype.Service
-public class ServiceImpl implements Service {
+public class ContractServiceImpl implements ContractService {
 
     @Autowired
-    private Repo repository;
+    private ContractRepo repository;
 
     @Override
     public Contract saveContract(Contract contract) {
@@ -44,7 +46,7 @@ public class ServiceImpl implements Service {
             existingContract.setContractorName(contractDetails.getContractorName());
             existingContract.setBusinessName(contractDetails.getBusinessName());
             existingContract.setAddress(contractDetails.getAddress());
-            existingContract.setCityId(contractDetails.getCityId());
+            existingContract.setCities(contractDetails.getCities());
             existingContract.setMobile(contractDetails.getMobile());
             existingContract.setEmail(contractDetails.getEmail());
             existingContract.setBankDetails(contractDetails.getBankDetails());

@@ -1,9 +1,12 @@
-package com.example.springboot.controller;
+package com.example.springboot.controllers;
 
-import com.example.springboot.entity.Contract;
-import com.example.springboot.service.Service;
+import com.example.springboot.entities.Contract;
+import com.example.springboot.services.ContractService;
+import com.example.springboot.dtos.ContractDTO;
+import java.util.stream.Collectors;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,23 +20,31 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/contracts")
-public class Controller {
+public class ContractController {
 
     @Autowired
-    private Service service;
+    private ContractService service;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
 
     @PostMapping("/add")
-    public ResponseEntity<?> addContract(@Valid @RequestBody Contract contract) {
-        Contract savedContract = service.saveContract(contract);
+    public ResponseEntity<?> addContract(@Valid @RequestBody ContractDTO contractDTO) {
+        Contract contractRequest = modelMapper.map(contractDTO, Contract.class);
+        Contract savedContract = service.saveContract(contractRequest);
         if (savedContract == null) {
             return ResponseEntity.badRequest().body("Failed to save contract");
         }
-        return ResponseEntity.ok(savedContract);
+        ContractDTO contractResponse = modelMapper.map(savedContract, ContractDTO.class);
+        return ResponseEntity.ok(contractResponse);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Contract>> findAllContracts() {
-        return ResponseEntity.ok(service.getContracts());
+    public ResponseEntity<List<ContractDTO>> findAllContracts() {
+        return ResponseEntity.ok(service.getContracts().stream()
+                .map(contract -> modelMapper.map(contract, ContractDTO.class))
+                .collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
@@ -42,16 +53,19 @@ public class Controller {
         if (contract == null) {
             return ResponseEntity.status(404).body("Contract not found with ID: " + id);
         }
-        return ResponseEntity.ok(contract);
+        ContractDTO contractResponse = modelMapper.map(contract, ContractDTO.class);
+        return ResponseEntity.ok(contractResponse);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Contract> updateContract(@PathVariable int id, @Valid @RequestBody Contract contract) {
-        Contract updatedContract = service.updateContract(id, contract);
+    public ResponseEntity<ContractDTO> updateContract(@PathVariable int id, @Valid @RequestBody ContractDTO contractDTO) {
+        Contract contractRequest = modelMapper.map(contractDTO, Contract.class);
+        Contract updatedContract = service.updateContract(id, contractRequest);
         if (updatedContract == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(updatedContract);
+        ContractDTO contractResponse = modelMapper.map(updatedContract, ContractDTO.class);
+        return ResponseEntity.ok(contractResponse);
     }
 
     @DeleteMapping("/delete/{id}")

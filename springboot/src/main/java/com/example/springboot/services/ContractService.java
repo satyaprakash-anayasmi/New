@@ -1,9 +1,10 @@
-package com.example.springboot.service;
+package com.example.springboot.services;
 
-import com.example.springboot.entity.Contract;
 import java.util.List;
 
-public interface Service {
+import com.example.springboot.entities.Contract;
+
+public interface ContractService {
     Contract saveContract(Contract contract);
 
     List<Contract> getContracts();

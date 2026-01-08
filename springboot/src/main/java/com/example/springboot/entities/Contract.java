@@ -1,4 +1,4 @@
-package com.example.springboot.entity;
+package com.example.springboot.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -9,6 +9,7 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -30,9 +31,6 @@ public class Contract {
     @Column(name = "Address", length = 500)
     private String address;
 
-    @NotNull(message = "City ID is mandatory")
-    @Column(name = "CityId", nullable = false)
-    private Integer cityId;
 
     @NotBlank(message = "Mobile number is mandatory")
     @Size(max = 15)
@@ -76,5 +74,16 @@ public class Contract {
 
     @Column(name = "IsDeleted", nullable = false)
     private Boolean isDeleted = false;
+
+
+     @ManyToMany
+    @JoinTable(
+        name = "Contract_City",
+        joinColumns = @JoinColumn(name = "ContractId"),
+        inverseJoinColumns = @JoinColumn(name = "CityId")
+    )
+    @NotNull(message = "City ID is mandatory")
+    @Column(name = "CityId", nullable = false)
+    private List<City> cities;
 
 }
