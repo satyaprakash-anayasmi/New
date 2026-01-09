@@ -6,12 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.example.curd.entities.enums.StudentBloodGroupType;
 import com.example.curd.entities.enums.StudentDepartment;
 import com.example.curd.entities.enums.StudentGender;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Entity
@@ -68,5 +72,6 @@ public class StudentEntity {
 
     @OneToMany(mappedBy = "student", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
     private List<MeetingEntity> meetings = new ArrayList<>();
+    
     
 }
