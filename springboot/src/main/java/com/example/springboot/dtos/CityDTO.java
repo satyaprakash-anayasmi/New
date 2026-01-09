@@ -5,6 +5,4 @@ import lombok.Data;
 public class CityDTO {
     private Integer cityId;
     private String cityName;
-    private String state;
-    private String country;
 }

@@ -11,6 +11,5 @@ public class BookingDTO {
     private String customerName;
     private LocalDate validUntil;
     private LocalDateTime createdAt;
-    // Avoid including full StudentDTO to prevent circular references, or use a simplified ID
     private Long studentId; 
 }

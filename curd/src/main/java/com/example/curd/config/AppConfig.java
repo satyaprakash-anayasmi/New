@@ -11,7 +11,6 @@ public class AppConfig {
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
-        // STANDARD strategy helps map 'studentId' in DTO to 'student.id' in Entity
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
         return modelMapper;
     }

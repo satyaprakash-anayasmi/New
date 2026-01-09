@@ -9,6 +9,16 @@
             "projectName": "springboot",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-DemoApplication<curd>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.curd.DemoApplication",
+            "projectName": "curd",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

@@ -23,7 +23,7 @@ import com.example.springboot.services.CityService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/cities")
+@RequestMapping("cities")
 public class CityController {
     @Autowired
     private CityService cityService;

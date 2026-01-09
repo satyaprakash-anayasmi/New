@@ -1,10 +1,7 @@
 package com.example.springboot.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -12,10 +9,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
+
+@Entity
 @Getter
 @Setter
-@Entity
 @Table(name = "Contract")
+
 public class Contract {
 
     @Id
@@ -77,10 +77,8 @@ public class Contract {
     @Column(name = "IsDeleted", nullable = false)
     private Boolean isDeleted = false;
 
-
-    @NotNull(message = "City ID is mandatory")
-    @ManyToOne  
-    @JoinColumn(name = "CityId", nullable = false)
+    @OneToOne(cascade={CascadeType.MERGE,CascadeType.PERSIST})//parent
+    @JoinColumn(name = "CityId")
     private City cities;
-
 }
+

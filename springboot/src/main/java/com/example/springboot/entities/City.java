@@ -1,11 +1,14 @@
 package com.example.springboot.entities;
 
 
+
 import java.util.List;
 import jakarta.persistence.*;
 import lombok.*;
+
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "City")
 public class City {
     @Id
@@ -14,12 +17,6 @@ public class City {
     private Integer cityId;
     @Column(name = "CityName", length = 100, nullable = false)
     private String cityName;
-   
-
-    @OneToMany(mappedBy = "cities")
-    private List<Contract> contracts;
-    
-
-
-
+    @OneToOne(mappedBy = "cities")
+    private Contract contracts;
 }
