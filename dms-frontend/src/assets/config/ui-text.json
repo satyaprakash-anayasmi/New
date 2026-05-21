@@ -1,0 +1,47 @@
+{
+    "common": {
+        "loading": "Loading...",
+        "submit": "Submit",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "action": "Action",
+        "status": "Status",
+        "not_found": "No entries found."
+    },
+    "headers": {
+        "dashboard": "Document Dashboard",
+        "upload": "Upload New Document",
+        "review": "Review Queue",
+        "assignment": "Review Assignment",
+        "login": "Welcome Back"
+    },
+    "labels": {
+        "username": "Username",
+        "password": "Password",
+        "email": "Email Address",
+        "title": "Document Title",
+        "file": "Select File",
+        "reviewer": "Assign To Reviewer",
+        "comments": "Comments / Notes"
+    },
+    "placeholders": {
+        "username": "Enter your username",
+        "password": "••••••••",
+        "title": "e.g. Annual Report 2024",
+        "comments": "Add your review notes here...",
+        "reviewer": "Select a reviewer..."
+    },
+    "messages": {
+        "login_success": "Welcome back! Login successful.",
+        "login_error": "Invalid credentials. Please try again.",
+        "upload_success": "Document has been uploaded successfully.",
+        "upload_error": "Failed to upload document.",
+        "assign_success": "Document assigned to reviewer successfully.",
+        "assign_error": "Assignment failed. Please try again.",
+        "review_success": "Your review has been submitted.",
+        "review_error": "Could not submit review.",
+        "file_required": "Please select a file to upload.",
+        "title_required": "Document title is required.",
+        "load_error": "Error loading documents list."
+    }
+}

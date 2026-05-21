@@ -1,0 +1,26 @@
+<app-toast></app-toast>
+<ng-container *ngIf="!isLoginPage">
+  <div class="flex h-screen bg-gray-100 overflow-hidden">
+    <!-- Sidebar -->
+    <app-sidebar></app-sidebar>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <!-- Header -->
+      <header class="h-16 bg-white flex items-center justify-between px-6 border-b border-gray-200">
+        <h1 class="text-xl font-semibold text-gray-800">DMS Portal</h1>
+        <div class="flex items-center gap-6">
+          <button (click)="logout()"
+            class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded text-sm transition font-medium border border-gray-300">Logout</button>
+        </div>
+      </header>
+
+      <!-- Page Content Router -->
+      <main class="flex-1 overflow-x-hidden overflow-y-auto p-6">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
+  </div>
+</ng-container>
+
+<router-outlet *ngIf="isLoginPage"></router-outlet>

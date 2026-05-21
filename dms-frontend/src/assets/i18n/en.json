@@ -1,0 +1,10 @@
+{
+  "VALIDATION": {
+    "REQUIRED_USERNAME": "Username is required.",
+    "REQUIRED_DOC": "Please attach a document."
+  },
+  "API_ERROR": {
+    "msg.error.bad.credentials": "Invalid username or password.",
+    "msg.document.not.found": "The requested document does not exist."
+  }
+}
