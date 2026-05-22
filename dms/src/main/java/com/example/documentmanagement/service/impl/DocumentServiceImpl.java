@@ -1,9 +1,11 @@
 package com.example.documentmanagement.service.impl;
 
 import com.example.documentmanagement.dto.response.DocumentResponse;
+import com.example.documentmanagement.dto.response.PagedResponse;
 import com.example.documentmanagement.entity.Document;
 import com.example.documentmanagement.entity.DocumentStatus;
 import com.example.documentmanagement.entity.User;
+import com.example.documentmanagement.exception.ResourceNotFoundException;
 import com.example.documentmanagement.mapper.DocumentMapper;
 import com.example.documentmanagement.repository.DocumentRepository;
 import com.example.documentmanagement.repository.UserRepository;
@@ -13,11 +15,15 @@ import com.example.documentmanagement.util.MessageConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.example.documentmanagement.exception.ResourceNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -111,7 +117,36 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     @Transactional(readOnly = true)
-    public org.springframework.core.io.Resource downloadDocument(Long id) {
+    public PagedResponse<DocumentResponse> getPagedDocuments(int page, int size, List<String> statuses) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Document> documentPage;
+
+        if (statuses != null && !statuses.isEmpty()) {
+            List<DocumentStatus> enumStatuses = statuses.stream()
+                    .map(DocumentStatus::valueOf)
+                    .toList();
+            documentPage = documentRepository.findByStatusIn(enumStatuses, pageable);
+        } else {
+            documentPage = documentRepository.findAll(pageable);
+        }
+
+        List<DocumentResponse> content = documentPage.getContent().stream()
+                .map(documentMapper::toResponse)
+                .toList();
+
+        return PagedResponse.<DocumentResponse>builder()
+                .content(content)
+                .pageNumber(documentPage.getNumber())
+                .pageSize(documentPage.getSize())
+                .totalElements(documentPage.getTotalElements())
+                .totalPages(documentPage.getTotalPages())
+                .last(documentPage.isLast())
+                .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Resource downloadDocument(Long id) {
         Document doc = documentRepository.findById(id)
                 .orElseThrow(() -> {
                     String msg = messageSource.getMessage(MessageConstants.DOCUMENT_NOT_FOUND, null,
@@ -120,8 +155,7 @@ public class DocumentServiceImpl implements DocumentService {
                 });
         try {
             Path filePath = Paths.get(doc.getFilePath());
-            org.springframework.core.io.Resource resource = new org.springframework.core.io.UrlResource(
-                    filePath.toUri());
+            Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
@@ -150,9 +184,9 @@ public class DocumentServiceImpl implements DocumentService {
 
     private String calculateChecksum(byte[] data) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] encodedhash = digest.digest(data);
-        StringBuilder hexString = new StringBuilder(2 * encodedhash.length);
-        for (byte b : encodedhash) {
+        byte[] encodedHash = digest.digest(data);
+        StringBuilder hexString = new StringBuilder(2 * encodedHash.length);
+        for (byte b : encodedHash) {
             String hex = Integer.toHexString(0xff & b);
             if (hex.length() == 1) {
                 hexString.append('0');

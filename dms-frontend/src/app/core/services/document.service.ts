@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../../shared/models/api-response.model';
 import { DocumentResponse } from '../../shared/models/document.model';
+import { PagedResponse } from '../../shared/models/paged-response.model';
 
 @Injectable({ providedIn: 'root' })
 export class DocumentService {
@@ -19,6 +20,14 @@ export class DocumentService {
 
     getAllDocuments(): Observable<ApiResponse<DocumentResponse[]>> {
         return this.http.get<ApiResponse<DocumentResponse[]>>(this.apiUrl);
+    }
+
+    getPagedDocuments(page: number = 0, size: number = 10, statuses?: string[]): Observable<ApiResponse<PagedResponse<DocumentResponse>>> {
+        let url = `${this.apiUrl}/paged?page=${page}&size=${size}`;
+        if (statuses && statuses.length > 0) {
+            url += `&statuses=${statuses.join(',')}`;
+        }
+        return this.http.get<ApiResponse<PagedResponse<DocumentResponse>>>(url);
     }
 
     getDocumentById(id: number): Observable<ApiResponse<DocumentResponse>> {

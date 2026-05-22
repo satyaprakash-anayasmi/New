@@ -4,6 +4,7 @@ import com.example.documentmanagement.dto.request.ReviewRequest;
 import com.example.documentmanagement.entity.Document;
 import com.example.documentmanagement.entity.DocumentStatus;
 import com.example.documentmanagement.entity.User;
+import com.example.documentmanagement.exception.InvalidDocumentStateException;
 import com.example.documentmanagement.repository.DocumentRepository;
 import com.example.documentmanagement.repository.ReviewRepository;
 import com.example.documentmanagement.repository.UserRepository;
@@ -30,6 +31,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ReviewServiceImplTest {
+
     private static final String REVIEWER_USER = "reviewer_user";
 
     @Mock
@@ -114,7 +116,8 @@ class ReviewServiceImplTest {
         ReviewRequest request = new ReviewRequest();
         request.setAction("APPROVED");
 
-        Exception exception = assertThrows(RuntimeException.class, () -> reviewService.reviewDocument(1L, request));
+        InvalidDocumentStateException exception = assertThrows(InvalidDocumentStateException.class,
+                () -> reviewService.reviewDocument(1L, request));
 
         assertEquals("Not in review", exception.getMessage());
         verify(documentRepository, never()).save(any());

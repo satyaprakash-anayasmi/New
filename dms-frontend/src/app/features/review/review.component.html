@@ -1,102 +1,119 @@
-<div class="bg-white rounded-xl shadow-lg w-full border border-gray-100 p-8 flex gap-10 min-h-[600px]">
-
-    <!-- Left Side: Queue List -->
-    <div class="w-2/5 border-r border-gray-100 pr-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">{{ text.headers.review }}</h2>
-
-        <div *ngIf="isLoading" class="flex items-center gap-3 text-indigo-600 py-4 font-medium animate-pulse">
-            <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                </path>
-            </svg>
-            {{ text.common.loading }}
-        </div>
-
-        <div *ngIf="!isLoading && documents.length === 0"
-            class="bg-gray-50 border border-dashed border-gray-300 rounded-lg p-10 text-center text-gray-500 italic">
-            {{ text.common.not_found }}
-        </div>
-
-        <div class="space-y-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar"
-            *ngIf="!isLoading && documents.length > 0">
-            @for (doc of documents; track doc.id) {
-            <button type="button" (click)="selectDocument(doc)"
-                [ngClass]="{'bg-indigo-50 border-indigo-500 ring-2 ring-indigo-200': activeDoc?.id === doc.id, 'border-gray-200 hover:bg-gray-50': activeDoc?.id !== doc.id}"
-                class="w-full text-left border-2 rounded-xl p-5 cursor-pointer transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <div class="flex justify-between items-start mb-2">
-                    <h3 class="font-bold text-gray-900 group-hover:text-indigo-700 transition-colors">{{ doc.title }}
-                    </h3>
-                    <span
-                        class="text-[10px] font-bold uppercase tracking-wider bg-indigo-100 text-indigo-700 px-2 py-1 rounded">
-                        {{ formatStatus(doc.status) }}
-                    </span>
-                </div>
-                <div class="flex items-center text-xs text-gray-500">
-                    <svg class="h-3.5 w-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                    By: {{ doc.uploaderUsername }}
-                </div>
-            </button>
-            }
-        </div>
+<div class="container mx-auto px-4 py-12">
+    <div class="mb-12">
+        <h1 class="text-4xl font-black text-gray-900 tracking-tight mb-2">{{ text.headers.review }}</h1>
+        <p class="text-gray-500 font-medium">Verify and process documents submitted for review.</p>
     </div>
 
-    <!-- Right Side: Review Form -->
-    <div class="w-3/5">
-        <div *ngIf="!activeDoc" class="h-full flex flex-col items-center justify-center text-gray-400">
-            <svg class="h-16 w-16 mb-4 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            <p class="font-medium">Select a document from the queue to review</p>
+    <div class="grid grid-cols-1 xl:grid-cols-12 gap-10 items-start">
+        <!-- Left Side: Document List (Master) -->
+        <div class="xl:col-span-8 group">
+            <app-data-table title="Review Queue" [headers]="tableHeaders" [data]="documents"
+                [totalElements]="totalElements" [totalPages]="totalPages" [currentPage]="currentPage"
+                [pageSize]="pageSize" [isLast]="isLast" [isLoading]="isLoading" [pageSizeOptions]="[5, 10, 30]"
+                (pageChange)="loadPendingDocuments($event)" (pageSizeChange)="onPageSizeChange($event)">
+
+                <tr *ngFor="let doc of documents" (click)="selectDocument(doc)" (keydown.enter)="selectDocument(doc)"
+                    tabindex="0"
+                    [ngClass]="{'bg-indigo-50/50 border-l-[6px] border-indigo-600': activeDoc?.id === doc.id, 'hover:bg-gray-50/50': activeDoc?.id !== doc.id}"
+                    class="cursor-pointer transition-all duration-300 border-b border-gray-50 group/row focus:outline-none focus:bg-indigo-50/50">
+                    <td class="px-10 py-6">
+                        <div class="flex flex-col">
+                            <span class="font-bold text-gray-900 group-hover/row:text-indigo-600 transition-colors">{{
+                                doc.title }}</span>
+                            <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Ref:
+                                #DMS-{{ doc.id }}</span>
+                        </div>
+                    </td>
+                    <td class="px-10 py-6">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-[10px] font-black text-gray-400 border border-gray-200">
+                                {{ doc.uploaderUsername.substring(0,2).toUpperCase() }}
+                            </div>
+                            <span class="text-xs font-bold text-gray-600">{{ doc.uploaderUsername }}</span>
+                        </div>
+                    </td>
+                    <td class="px-10 py-6">
+                        <span [ngClass]="{
+                            'bg-amber-50 text-amber-600 border-amber-100': doc.status === 'IN_REVIEW',
+                            'bg-indigo-50 text-indigo-600 border-indigo-100': doc.status === 'UPLOADED'
+                        }"
+                            class="px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-[0.15em] border shadow-sm inline-flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full"
+                                [ngClass]="doc.status === 'IN_REVIEW' ? 'bg-amber-500' : 'bg-indigo-500'"></span>
+                            {{ formatStatus(doc.status) }}
+                        </span>
+                    </td>
+                </tr>
+            </app-data-table>
         </div>
 
-        <div *ngIf="activeDoc" class="animate-fade-in">
-            <h2 class="text-2xl font-bold text-gray-800 mb-8 pb-4 border-b border-gray-100">Reviewing Document <span
-                    class="text-indigo-600">#{{ activeDoc.id }}</span></h2>
+        <!-- Right Side: Review Detail (Detail) -->
+        <div class="xl:col-span-4 sticky top-12">
+            <div *ngIf="activeDoc; else emptyDetail"
+                class="bg-white rounded-[2rem] shadow-2xl border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-right-8 duration-500">
+                <div
+                    class="px-8 py-8 bg-gradient-to-br from-indigo-600 to-violet-700 text-white relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+                    <div class="relative z-10">
+                        <p class="text-[10px] font-black uppercase tracking-[0.3em] opacity-70 mb-2">Reviewing Item</p>
+                        <h3 class="text-2xl font-black truncate">{{ activeDoc.title }}</h3>
+                        <div class="flex items-center gap-4 mt-6">
+                            <button (click)="openDocument(activeDoc.id)"
+                                class="flex-1 bg-white/20 backdrop-blur-md border border-white/30 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-indigo-600 transition-all active:scale-95">
+                                View Full Document
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="grid grid-cols-2 gap-6 bg-gray-50 p-6 rounded-xl mb-8 border border-gray-100 shadow-inner">
-                <div>
-                    <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{{
-                        text.labels.title }}</span>
-                    <p class="text-sm font-bold text-gray-900">{{ activeDoc.title }}</p>
-                </div>
-                <div>
-                    <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">File
-                        Extension</span>
-                    <p class="text-sm font-bold text-gray-900">{{ activeDoc.fileType }}</p>
-                </div>
-                <div class="col-span-2">
-                    <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Upload
-                        Date</span>
-                    <p class="text-sm font-bold text-gray-900">{{ activeDoc.createdAt | date:'fullDate' }}</p>
+                <div class="p-8 space-y-8">
+                    <div>
+                        <label for="comments"
+                            class="block text-[10px] font-black text-gray-400 uppercase tracking-[0.25em] mb-4">
+                            Reviewer Feedback
+                        </label>
+                        <textarea id="comments" [(ngModel)]="comments" rows="5"
+                            placeholder="Provide detailed feedback for the uploader..."
+                            class="w-full px-6 py-5 bg-gray-50 border-2 border-transparent rounded-3xl text-sm font-bold text-gray-700 outline-none focus:bg-white focus:border-indigo-600 transition-all resize-none shadow-inner"></textarea>
+                    </div>
+
+                    <div class="flex flex-col gap-4">
+                        <button (click)="submitReview('APPROVE')"
+                            class="w-full py-5 bg-emerald-500 text-white rounded-3xl text-xs font-black uppercase tracking-[0.2em] shadow-lg shadow-emerald-200 hover:bg-emerald-600 hover:-translate-y-1 transition-all active:translate-y-0">
+                            Approve Document
+                        </button>
+                        <button (click)="submitReview('REJECT')"
+                            class="w-full py-5 bg-rose-500 text-white rounded-3xl text-xs font-black uppercase tracking-[0.2em] shadow-lg shadow-rose-200 hover:bg-rose-600 hover:-translate-y-1 transition-all active:translate-y-0">
+                            Reject Document
+                        </button>
+                        <button (click)="activeDoc = null"
+                            class="w-full py-4 bg-white text-gray-400 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:text-gray-600 transition-all">
+                            Cancel Review
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div class="space-y-6">
-                <div>
-                    <label for="comments" class="block text-sm font-bold text-gray-700 mb-2">{{ text.labels.comments
-                        }}</label>
-                    <textarea id="comments" [(ngModel)]="comments" rows="5"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-                        [placeholder]="text.placeholders.comments" [title]="text.labels.comments"></textarea>
+            <ng-template #emptyDetail>
+                <div
+                    class="bg-gray-50/50 border-2 border-dashed border-gray-100 rounded-[2.5rem] p-12 text-center flex flex-col items-center group">
+                    <div
+                        class="w-24 h-24 bg-white rounded-[2rem] shadow-sm flex items-center justify-center text-gray-200 mb-8 group-hover:scale-110 transition-transform duration-500">
+                        <svg class="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                        </svg>
+                    </div>
+                    <h4 class="text-gray-900 font-black text-sm uppercase tracking-widest mb-4">Focus Required</h4>
+                    <p class="text-xs text-gray-400 font-bold leading-relaxed">
+                        Select a document from the queue on the left to start the verification process.
+                    </p>
                 </div>
-
-                <div class="flex gap-4 pt-4">
-                    <button type="button" (click)="submitReview('APPROVED')"
-                        class="flex-1 bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-bold shadow-lg shadow-green-100 transform active:scale-[0.98] transition-all">
-                        {{ text.common.confirm }} / Approve
-                    </button>
-                    <button type="button" (click)="submitReview('REJECTED')"
-                        class="flex-1 bg-white border-2 border-red-500 text-red-600 hover:bg-red-50 py-4 rounded-xl font-bold transform active:scale-[0.98] transition-all">
-                        Reject Document
-                    </button>
-                </div>
-            </div>
+            </ng-template>
         </div>
     </div>
+
+    <app-document-viewer [show]="showViewer" [document]="selectedDocForView" (close)="showViewer = false">
+    </app-document-viewer>
 </div>

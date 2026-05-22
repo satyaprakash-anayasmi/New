@@ -4,11 +4,15 @@ import { DocumentService } from '../../core/services/document.service';
 import { ToastService } from '../../core/services/toast.service';
 import { ConfigService } from '../../core/services/config.service';
 import { DocumentResponse } from '../../shared/models/document.model';
+import { DataTableComponent } from '../../shared/components/data-table/data-table.component';
+import { DocumentViewerComponent } from '../../shared/components/document-viewer/document-viewer.component';
+import { ApiResponse } from '../../shared/models/api-response.model';
+import { PagedResponse } from '../../shared/models/paged-response.model';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DataTableComponent, DocumentViewerComponent],
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
@@ -16,6 +20,24 @@ export class DashboardComponent implements OnInit {
   isLoading = false;
   userProfile = { username: '', role: '' };
   readonly text = this.config.text;
+  selectedDocForView: DocumentResponse | null = null;
+  showViewer = false;
+
+  // Table Config
+  tableHeaders = [
+    { label: 'ID', key: 'id' },
+    { label: this.text.labels.title, key: 'title' },
+    { label: this.text.common.status, key: 'status' },
+    { label: 'Owner', key: 'uploaderUsername' },
+    { label: this.text.common.action, key: 'actions' }
+  ];
+
+  // Pagination properties
+  currentPage = 0;
+  pageSize = 5;
+  totalElements = 0;
+  totalPages = 0;
+  isLast = false;
 
   constructor(
     private readonly documentService: DocumentService,
@@ -25,7 +47,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.extractUserProfile();
-    this.loadDocuments();
+    this.loadDocuments(0);
   }
 
   extractUserProfile() {
@@ -47,30 +69,33 @@ export class DashboardComponent implements OnInit {
   }
 
   openDocument(id: number) {
-    this.documentService.downloadDocument(id).subscribe({
-      next: (blob) => {
-        const url = globalThis.URL.createObjectURL(blob);
-        globalThis.open(url, '_blank');
-        setTimeout(() => globalThis.URL.revokeObjectURL(url), 10000);
-      },
-      error: (err) => {
-        this.toast.showError('Could not open document. It might be missing from storage.');
-      }
-    });
+    const doc = this.documents.find(d => d.id === id);
+    if (doc) {
+      this.selectedDocForView = doc;
+      this.showViewer = true;
+    }
   }
 
-  loadDocuments() {
+  onPageSizeChange(newSize: number) {
+    this.pageSize = newSize;
+    this.loadDocuments(0);
+  }
+
+  loadDocuments(page: number = 0) {
     this.isLoading = true;
-    this.documentService.getAllDocuments().subscribe({
-      next: (res) => {
-        if (res.success) {
-          this.documents = res.data;
+    this.currentPage = page;
+    this.documentService.getPagedDocuments(page, this.pageSize).subscribe({
+      next: (res: ApiResponse<PagedResponse<DocumentResponse>>) => {
+        if (res.success && res.data) {
+          this.documents = res.data.content;
+          this.totalElements = res.data.totalElements;
+          this.totalPages = res.data.totalPages;
+          this.isLast = res.data.last;
         }
         this.isLoading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         this.isLoading = false;
-        // Don't show toast if we're unauthorized, the interceptor handles the redirect
         if (err.status !== 401 && err.status !== 403) {
           this.toast.showError(this.config.get('messages.load_error'));
         }

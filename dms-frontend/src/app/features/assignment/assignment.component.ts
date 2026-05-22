@@ -8,11 +8,12 @@ import { ToastService } from '../../core/services/toast.service';
 import { ConfigService } from '../../core/services/config.service';
 import { UserResponse } from '../../shared/models/user.model';
 import { DocumentResponse } from '../../shared/models/document.model';
+import { DataTableComponent } from '../../shared/components/data-table/data-table.component';
 
 @Component({
     selector: 'app-assignment',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, DataTableComponent],
     templateUrl: './assignment.component.html'
 })
 export class AssignmentComponent implements OnInit {
@@ -23,6 +24,19 @@ export class AssignmentComponent implements OnInit {
     selectedReviewerId: number | null = null;
     readonly text = this.config.text;
 
+    // Table Config
+    tableHeaders = [
+        { label: 'Document', key: 'title' },
+        { label: 'Status', key: 'status' }
+    ];
+
+    // Pagination properties
+    currentPage = 0;
+    pageSize = 5;
+    totalElements = 0;
+    totalPages = 0;
+    isLast = false;
+
     constructor(
         private readonly documentService: DocumentService,
         private readonly userService: UserService,
@@ -32,26 +46,38 @@ export class AssignmentComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.loadData();
+        this.loadData(0);
+        this.loadReviewers();
     }
 
-    loadData() {
+    onPageSizeChange(newSize: number) {
+        this.pageSize = newSize;
+        this.loadData(0);
+    }
+
+    loadData(page: number = 0) {
         this.isLoading = true;
-        this.documentService.getAllDocuments().subscribe({
+        this.currentPage = page;
+        this.documentService.getPagedDocuments(page, this.pageSize, ['UPLOADED']).subscribe({
             next: (res) => {
-                if (res.success) {
-                    this.documents = res.data.filter((doc) => doc.status === 'UPLOADED');
+                if (res.success && res.data) {
+                    this.documents = res.data.content;
+                    this.totalElements = res.data.totalElements;
+                    this.totalPages = res.data.totalPages;
+                    this.isLast = res.data.last;
                 }
                 this.isLoading = false;
             },
-            error: (err: any) => {
+            error: (err) => {
                 this.isLoading = false;
                 if (err.status !== 401 && err.status !== 403) {
                     this.toast.showError(this.config.get('messages.load_error'));
                 }
             }
         });
+    }
 
+    loadReviewers() {
         this.userService.getReviewers().subscribe({
             next: (res) => {
                 if (res.success) {

@@ -2,17 +2,17 @@ package com.example.documentmanagement.service.impl;
 
 import com.example.documentmanagement.entity.User;
 import com.example.documentmanagement.repository.UserRepository;
+import com.example.documentmanagement.service.CustomUserDetailsService;
 import com.example.documentmanagement.util.MessageConstants;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements CustomUserDetailsService {
 
     private final UserRepository userRepository;
     private final MessageSource messageSource;

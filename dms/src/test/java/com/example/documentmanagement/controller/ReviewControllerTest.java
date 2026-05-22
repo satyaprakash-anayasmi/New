@@ -33,6 +33,12 @@ class ReviewControllerTest {
     @MockBean
     private MessageSource messageSource;
 
+    @MockBean
+    private com.example.documentmanagement.security.JwtUtil jwtUtil;
+
+    @MockBean
+    private com.example.documentmanagement.service.CustomUserDetailsService userDetailsService;
+
     @Autowired
     private ObjectMapper objectMapper;
 

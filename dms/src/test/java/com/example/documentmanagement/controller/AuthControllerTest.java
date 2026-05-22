@@ -23,42 +23,48 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = AuthController.class)
-@AutoConfigureMockMvc(addFilters = false) // Disable security filters for simple controller test
+@AutoConfigureMockMvc(addFilters = false)
 class AuthControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+        @Autowired
+        private ObjectMapper objectMapper;
 
-    @MockBean
-    private AuthService authService;
+        @MockBean
+        private AuthService authService;
 
-    @MockBean
-    private MessageSource messageSource;
+        @MockBean
+        private MessageSource messageSource;
 
-    @MockBean
-    private com.example.documentmanagement.security.JwtUtil jwtUtil;
+        @MockBean
+        private com.example.documentmanagement.security.JwtUtil jwtUtil;
 
-    @Test
-    void loginSuccess() throws Exception {
-        LoginRequest request = new LoginRequest();
-        request.setUsername("admin");
-        request.setPassword("admin123");
+        @MockBean
+        private com.example.documentmanagement.service.CustomUserDetailsService userDetailsService;
 
-        TokenResponse tokenResponse = TokenResponse.builder().accessToken("fake-jwt-token").username("admin").build();
+        @Test
+        void loginSuccess() throws Exception {
+                LoginRequest request = new LoginRequest();
+                request.setUsername("admin");
+                request.setPassword("admin123");
 
-        when(authService.authenticateAndGenerateToken(any(LoginRequest.class))).thenReturn(tokenResponse);
-        when(messageSource.getMessage(eq(MessageConstants.LOGIN_SUCCESS), any(), anyString(), any()))
-                .thenReturn("Login successful");
+                TokenResponse tokenResponse = TokenResponse.builder()
+                                .accessToken("fake-jwt-token")
+                                .username("admin")
+                                .build();
 
-        mockMvc.perform(post("/api/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.message").value("Login successful"))
-                .andExpect(jsonPath("$.data.accessToken").value("fake-jwt-token"));
-    }
+                when(authService.authenticateAndGenerateToken(any(LoginRequest.class))).thenReturn(tokenResponse);
+                when(messageSource.getMessage(eq(MessageConstants.LOGIN_SUCCESS), any(), anyString(), any()))
+                                .thenReturn("Login successful");
+
+                mockMvc.perform(post("/api/auth/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(request)))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.success").value(true))
+                                .andExpect(jsonPath("$.message").value("Login successful"))
+                                .andExpect(jsonPath("$.data.accessToken").value("fake-jwt-token"));
+        }
 }

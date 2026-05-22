@@ -1,3 +1,131 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    @keyframes spin-slow {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .animate-spin-slow {
+        animation: spin-slow 12s linear infinite;
+    }
+
+    @keyframes color-change {
+        0% {
+            color: #4f46e5;
+        }
+
+        25% {
+            color: #e11d48;
+        }
+
+        50% {
+            color: #0891b2;
+        }
+
+        75% {
+            color: #9333ea;
+        }
+
+        100% {
+            color: #4f46e5;
+        }
+    }
+
+    .animate-text-color {
+        animation: color-change 5s infinite;
+    }
+
+    @keyframes spin-mini {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .animate-spin-mini {
+        animation: spin-mini 3s linear infinite;
+    }
+
+    @keyframes pulse-multi-bg {
+        0% {
+            background-color: #4f46e5;
+            box-shadow: 0 0 15px #4f46e580;
+            transform: scale(1);
+        }
+
+        10% {
+            background-color: #e11d48;
+            box-shadow: 0 0 20px #e11d4880;
+            transform: scale(1.05);
+        }
+
+        20% {
+            background-color: #0891b2;
+            box-shadow: 0 0 15px #0891b280;
+            transform: scale(1);
+        }
+
+        30% {
+            background-color: #9333ea;
+            box-shadow: 0 0 20px #9333ea80;
+            transform: scale(1.05);
+        }
+
+        40% {
+            background-color: #10b981;
+            box-shadow: 0 0 15px #10b98180;
+            transform: scale(1);
+        }
+
+        50% {
+            background-color: #f59e0b;
+            box-shadow: 0 0 20px #f59e0b80;
+            transform: scale(1.05);
+        }
+
+        60% {
+            background-color: #ea580c;
+            box-shadow: 0 0 15px #ea580c80;
+            transform: scale(1);
+        }
+
+        70% {
+            background-color: #d946ef;
+            box-shadow: 0 0 20px #d946ef80;
+            transform: scale(1.05);
+        }
+
+        80% {
+            background-color: #0ea5e9;
+            box-shadow: 0 0 15px #0ea5e980;
+            transform: scale(1);
+        }
+
+        90% {
+            background-color: #7c3aed;
+            box-shadow: 0 0 20px #7c3aed80;
+            transform: scale(1.05);
+        }
+
+        100% {
+            background-color: #4f46e5;
+            box-shadow: 0 0 15px #4f46e580;
+            transform: scale(1);
+        }
+    }
+
+    .animate-pulse-glow {
+        animation: pulse-multi-bg 6s infinite ease-in-out;
+    }
+}
