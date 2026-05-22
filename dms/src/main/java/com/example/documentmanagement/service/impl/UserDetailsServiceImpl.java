@@ -1,4 +1,4 @@
-package com.example.documentmanagement.service;
+package com.example.documentmanagement.service.impl;
 
 import com.example.documentmanagement.entity.User;
 import com.example.documentmanagement.repository.UserRepository;
