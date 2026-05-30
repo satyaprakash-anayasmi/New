@@ -1,0 +1,25 @@
+File: AuditServiceImpl.java
+
+Line-by-line Explanation (Hinglish):
+
+1-14: Imports
+- Repositories save krne db mai and Entity record format. Logger framework tool track record trace. Spring Context Authentication Security current system profile token uthane k package.  
+
+15-18: Annotations Services setup
+- @Slf4j tool logger string output variable create. @Service object registration in Spring component scan. @RequiredArgsConstructor dependency inject finalize karegi constructor code hide short . Implement AuditService abstraction connect kiya interface se .  
+
+20-21: Dependencies
+- `AuditRepository` entity form file log table save process krwaati and `userRepository` user details lookup verify database search function . 
+
+23-43: logAction Definition Logic
+- Helper function method banaya jo pura app controllers ya service modules hit karte hain jaisa ki Document Service m upload document call par.  Parameter (action String Document Upload) kya detail  ,  kaunsi entity file, Id , aur description message lete hain theek save process flow database table pe insert create run ke liye .
+- Security Context Principal k current `getCurrentUser` session filter lagaya function chalaya User object DB laya variable store m save rkha currentUser .  
+- Mask Sensitive system process 'maskSensitiveData' details msg pass kra jisse password na leak log save ho audit pe (Regex apply mask logic) .  
+- Logger  k console app print p log.info(...) file action Id kon User kar rba h , data form console display string dega  jisme audit admin pd payega terminal pe file record .  
+- `AuditLog.builder(...)`. Entity design mapping data construct assign model object run kia with current Context params feed complete record structure  , and End repository `auditRepository.save(auditLog)` save execution db run query sql database insert update row Audit schema p kar li.
+
+45-49: maskSensitiveData private function
+- Return input safe string password and secret type regex code  replaceAll check "$1=******" replace star kar db m bhejti safety log file leaks rokk legi application properties info pe string data filter se.
+
+51-59: getCurrentUser logic
+- User fetch Auth framework  Object string name pass on Repo method  run orElse Null . User filter auth data filter nikal db validation result form kar rahi is module me authentication helper format func kaam aaya bina request headers k pass object data lene m context provider object variable .

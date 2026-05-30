@@ -1,0 +1,30 @@
+File: ReviewServiceImpl.java
+
+Line-by-line Explanation (Hinglish):
+
+1-24: Imports
+- Service interface class Document Review Models  Exceptions , Database Query repository class data flow import  . SecurityContext context load verify logic file module transaction check.  
+
+25: @Service
+- Stereotype tag business process component . Logics rules validation sab isi component k andar banaye honge .   
+
+28-41: Repositories variables and constructor inject  
+- DocumentRepository table operation file doc ko edit aur review , user k roles assignment . Audit system injection transaction logs track kar connect kia msg source setup .      
+
+43-71: assignReviewer Setup Method logic
+- @Transactional rollbacks fail hone se prevent karta function . Parameter me 2 ids ayi hai document aur Assign Person.  
+- Repo search chlti agar Document null aya `orElseThrow` lambda exception `ResourceNotFoundException` fekega . User reviewer findById check krega validation k admi majjud ha k ghalat number h ID. 
+- Validation check success m Document Status property Uploaded ki jagah 'IN_REVIEW' flag mode me change , .save call repository data update karti Database record modify.  
+- Dusra table log audit  'Review' object initialize builder design data create `reviewer , "ASSIGNED" msg` feed kia repository commit create kia relation doc to User.  
+- Final audit history trigger action record kr lia kon kya modify  function.
+
+73-106: reviewDocument Method process approval reject
+- Again transaction set lock safe. document ID record load kar DB find null or error handling.
+- `if (document.getStatus() != DocumentStatus.IN_REVIEW....` Business rule: Check ki agar system koi dusra status m to reviewer Approve ni karsa , throw error invalid attempt .  
+- Logged system current reviewer token account check User Current session filter layega object form me.  
+- Validation clear `DocumentStatus newStatus` set ternary logic . Agar Frontend string model APPROVED aya Enum Property Status 'APPROVED' status switch other wise 'REJECTED' . Update Document repo save .
+- 'Review' entity model builder record time localDateTime mark `completedAt` , comments store repository flush update .
+- End log audit trace history update document record .
+
+108-123: getCurrentUser
+- Helper generic method duplicate string copy nhi hone provide logic abstraction. Authentication get context string naam fetch cast if security . User nikal query db exception null .

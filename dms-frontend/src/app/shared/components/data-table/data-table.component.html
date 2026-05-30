@@ -1,0 +1,198 @@
+<div class="flex flex-col gap-6">
+    <!-- Desktop: Structured Registry -->
+    <div
+        class="hidden md:block bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden animate-in fade-in duration-500">
+        <div class="px-10 py-8 border-b border-gray-50 flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-black text-gray-900 tracking-tight leading-none">{{ title }}</h2>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] mt-2">Digital Ledger Control</p>
+            </div>
+            <div class="flex items-center gap-6">
+                <span *ngIf="selectedItems.length > 0"
+                    class="text-[10px] font-black text-indigo-600 bg-indigo-50 px-4 py-2 rounded-full uppercase animate-in slide-in-from-right-4">
+                    {{ selectedItems.length }} Selected
+                </span>
+                <span
+                    class="px-4 py-2 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-emerald-100 flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    {{ totalElements }} Records
+                </span>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50/30">
+                        <th *ngIf="selectable" class="pl-8 py-5 w-10"></th>
+                        <th *ngFor="let h of headers"
+                            class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50">
+                            {{ h.label }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    <tr *ngFor="let item of data"
+                        [ngClass]="isSelected(item) ? 'bg-indigo-50/30' : 'hover:bg-gray-50/50'"
+                        class="transition-all cursor-pointer group outline-none relative-row focus-within:bg-indigo-50/50">
+
+                        <td *ngIf="selectable" class="pl-8 py-5 relative z-20">
+                            <label class="flex items-center cursor-pointer" aria-label="Select record">
+                                <input type="checkbox" [checked]="isSelected(item)"
+                                    (change)="toggleSelection(item, $event)" class="sr-only">
+                                <div [class.bg-indigo-600]="isSelected(item)"
+                                    [class.border-indigo-600]="isSelected(item)"
+                                    class="w-5 h-5 border-2 border-gray-200 rounded-md transition-all flex items-center justify-center">
+                                    <svg *ngIf="isSelected(item)" class="w-3.5 h-3.5 text-white" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                            </label>
+                        </td>
+
+                        <td *ngFor="let h of headers; let first = first" class="px-8 py-5">
+                            <!-- Stretched button for row interaction accessibility -->
+                            <button *ngIf="first" type="button" (click)="onRowClick(item); $event.stopPropagation()"
+                                class="stretched-button"
+                                [attr.aria-label]="'View details for ' + (item.title || item.name || 'this item')">
+                                <span class="sr-only">View Details</span>
+                            </button>
+
+                            <span *ngIf="!h.type"
+                                class="text-sm font-bold text-gray-700 group-hover:text-indigo-600 transition-colors relative z-0 truncate">{{
+                                item[h.key] }}</span>
+
+                            <span *ngIf="h.type === 'id'"
+                                class="font-mono text-xs font-bold text-gray-400 tracking-tighter">#DMS-{{ item[h.key]
+                                }}</span>
+                            <span *ngIf="h.type === 'status'" [ngClass]="getStatusClasses(item[h.key])"
+                                class="px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest border shadow-sm">
+                                {{ formatStatus(item[h.key]) }}
+                            </span>
+                            <div *ngIf="h.type === 'user'" class="flex items-center gap-3">
+                                <div
+                                    class="w-8 h-8 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center text-[10px] font-black text-gray-400 uppercase animate-spin-slow">
+                                    {{ (item[h.key] || '').substring(0,2) }}</div>
+                                <span class="text-xs font-bold text-gray-600 tracking-tight">{{ item[h.key] }}</span>
+                            </div>
+                            <button *ngIf="h.type === 'action'" (click)="onRowClick(item); $event.stopPropagation()"
+                                class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-[10px] font-black uppercase text-gray-600 hover:bg-slate-900 hover:text-white transition-all shadow-sm">
+                                {{ h.btnLabel || 'View' }}
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Mobile: Individual Compact Cards -->
+    <div class="md:hidden space-y-4" *ngIf="!isLoading && data.length > 0">
+        <!-- Mobile Header/Stat -->
+        <div class="flex items-center justify-between px-2 mb-2">
+            <div class="flex items-center gap-3">
+                <h2 class="text-lg font-black text-gray-900 tracking-tight">{{ title }}</h2>
+                <span *ngIf="selectedItems.length > 0"
+                    class="text-[9px] font-black text-white bg-indigo-600 px-3 py-1 rounded-full uppercase scale-animation italic">
+                    {{ selectedItems.length }}
+                </span>
+            </div>
+            <span class="text-[9px] font-black text-indigo-500 bg-indigo-50 px-3 py-1 rounded-full uppercase">{{
+                totalElements }} Items</span>
+        </div>
+
+        <div *ngFor="let item of data" class="relative group">
+            <!-- Selection Indicator (Bubble) moved outside for accessibility -->
+            <label *ngIf="selectable"
+                class="absolute top-6 right-6 w-7 h-7 border-2 border-gray-100 rounded-full flex items-center justify-center transition-all z-20 cursor-pointer"
+                [class.bg-indigo-600]="isSelected(item)" [class.border-indigo-600]="isSelected(item)"
+                aria-label="Toggle selection">
+                <input type="checkbox" [checked]="isSelected(item)" (change)="toggleSelection(item, $event)"
+                    class="sr-only">
+                <svg *ngIf="isSelected(item)" class="w-4 h-4 text-white animate-in zoom-in-50" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7" />
+                </svg>
+            </label>
+
+            <button type="button" (click)="onRowClick(item)" [class.selected-card]="isSelected(item)"
+                class="w-full text-left bg-white rounded-[2rem] p-6 border-2 transition-all duration-300 flex flex-col gap-5 overflow-hidden active:scale-95 cursor-pointer outline-none focus:border-indigo-600 focus:bg-indigo-50/10"
+                [ngClass]="isSelected(item) ? 'border-indigo-600 bg-indigo-50/20 shadow-xl' : 'border-gray-100 shadow-sm'"
+                aria-label="View document details" title="View document details">
+
+                <div class="flex justify-between items-start w-full">
+                    <div class="pr-8 text-left">
+                        <span class="text-[8px] font-bold text-gray-300 uppercase tracking-widest block mb-1">ID:
+                            #DMS-{{
+                            item.id }}</span>
+                        <h3 class="text-sm font-black text-gray-900 leading-tight line-clamp-1">{{ item.title ||
+                            item.name
+                            || 'Untitled Artifact' }}</h3>
+                    </div>
+                    <span *ngIf="item.status && !selectable" [ngClass]="getStatusClasses(item.status)"
+                        class="px-2 py-1 rounded-lg text-[7px] font-black uppercase tracking-widest border shrink-0">
+                        {{ formatStatus(item.status) }}
+                    </span>
+                </div>
+
+                <div class="flex items-center justify-between w-full pointer-events-none">
+                    <div class="flex items-center gap-2">
+                        <div
+                            class="w-6 h-6 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-[8px] font-black text-slate-400 uppercase animate-spin-slow">
+                            {{ (item.uploaderUsername || item.username || '').substring(0,2) }}
+                        </div>
+                        <span class="text-[9px] font-bold text-gray-500 uppercase tracking-tight">{{
+                            item.uploaderUsername
+                            || item.username }}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span
+                            class="text-[8px] font-black text-indigo-400 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-100/50 uppercase tracking-tighter">
+                            {{ item.fileType }}
+                        </span>
+                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">
+                            {{ item.fileSize ? (item.fileSize / 1024).toFixed(1) + ' KB' : 'N/A' }}
+                        </span>
+                    </div>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Pagination (Shared Design but Responsive) -->
+    <div
+        class="px-6 py-6 md:px-10 md:py-8 bg-white md:bg-gray-50/50 rounded-[2rem] md:rounded-[2rem] border border-gray-100 md:border-t-0 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center justify-between w-full md:w-auto gap-6 px-2 md:px-0">
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none">
+                Showing <span class="text-gray-900">{{ currentPage * pageSize + 1 }}-{{ (currentPage + 1) * pageSize >
+                    totalElements ? totalElements : (currentPage + 1) * pageSize }}</span>
+            </p>
+            <div class="flex items-center gap-2">
+                <label for="pageSizeSelect" class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Page
+                    Size</label>
+                <select id="pageSizeSelect" [(ngModel)]="pageSize" (change)="onPageSizeChange()"
+                    class="bg-white border border-gray-100 rounded-lg px-2 py-1 text-[10px] font-bold text-gray-700 outline-none cursor-pointer">
+                    <option *ngFor="let opt of pageSizeOptions" [value]="opt">{{ opt }}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2 w-full md:w-auto justify-center md:justify-end">
+            <button (click)="onPrevPage()" [disabled]="currentPage === 0" aria-label="Previous Page"
+                title="Previous Page"
+                class="p-3 rounded-xl bg-white border border-gray-100 text-gray-400 active:scale-90 disabled:opacity-30 shadow-sm transition-all"><svg
+                    class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                </svg></button>
+            <div
+                class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl text-[10px] font-black shadow-lg shadow-indigo-100">
+                {{ currentPage + 1 }}</div>
+            <button (click)="onNextPage()" [disabled]="isLast" aria-label="Next Page" title="Next Page"
+                class="p-3 rounded-xl bg-white border border-gray-100 text-gray-400 active:scale-90 disabled:opacity-30 shadow-sm transition-all"><svg
+                    class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                </svg></button>
+        </div>
+    </div>
+</div>

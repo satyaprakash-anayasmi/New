@@ -1,0 +1,6 @@
+File: UserService.java
+
+Line-by-line Explanation (Hinglish):
+
+1-9: Method limits interface
+- Interface 'getReviewers' UserResponse mapping param list return abstract format logic architecture .

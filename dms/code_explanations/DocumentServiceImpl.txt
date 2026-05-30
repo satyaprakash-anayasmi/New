@@ -1,0 +1,45 @@
+File: DocumentServiceImpl.java
+
+Line-by-line Explanation (Hinglish):
+
+1-34: Imports and Class Declaration
+- Sabhi entity, repository, mapper, security, spring transaction aut util classes required hongi service architecture ke liye wo import hue hain. `@Service` tag spring boot auto discovery krta hai aur bean banata constructor chala kr. 
+
+36-52: Dependency Variable and Constructor Injection
+- Zaroori Repositories aur Services `private final` banaye jate hai to protect runtime re-initialization. Use hue @Value property folder configuration application data ki upload path read karne ke liye setup karta hai.
+
+54: @Override @Transactional
+- Annotation interface follow allow karti hi, `@Transactional` ensure kar raha ki database transaction fail hone par system partial info insert nahi krega, automatic completely wapas rollback.
+
+56-62: uploadDocument(MultipartFile file, String title)
+- Jab post command ai, check isEmpty(). Empty hui to language specific exception throw kra (ResourceNotFound ya IllegalArgument Exception). 
+
+64-67: File Directory setup
+- Java I/O code verify kr raha ki target config wala folder hard disk me exist karta. Missing hui toh mkdirs() banayega (like C:/user/dms-files..).
+
+69-71: Unique File saving process
+- Random UUID + original filename concatenate karke ban rhi hai. Pura save path likhte the Files.write method byte code ko read kr ke physical permanent storage file me copy paste complete karega server space me.
+
+73-74: Calculate Checksum and Current User
+- Checksum mathematical cryptography method ensure anti-bribery modification in sensitive forms like DMS. User info direct login context system extract.
+
+76-84: Document Builder
+- Entity data design pattern 'Builder' apply hua, DB specific mapping construct kar raha. Data (size, status UPLOADED, userId) object me ready kar deta.
+
+86-89: Save and Audit
+- documentRepository ki `.save()` API chalayega. Jab success tabhi `auditService.logAction` execute jisme likha jyga upload of activity DB me track k liye aur Response converter mapper response bna dega.
+
+92-102: getDocumentById
+- Method readOnly set, speed incremented. Optionale orElseThrow() lamba if condition chota 1 line me handle karne me helper class function kaam kr raha hai aur message error de deta missing document pe.
+
+104-110: getAllDocuments
+- Pure saare available docs map-> streams (modern java 8 features) use fast conversion speed m complete ho jate h DB to Response format loop over kr ke bht concise 5 line coding format mei.
+
+112-133: downloadDocument
+- Pehle doc table row object dhoondi gaei DB.  Milne pe DB stored file ke String text location se memory pe  `UrlResource` connection load kiya path se. Is object class handle bade files jisme Memory Overflow limit fail ni ho jate check karke direct core framework io package use read ho jayega.
+
+135-149: getCurrentUser
+- Ek common helper method hai current SecurityContext (jo jwt se load heh logged in context object) par downcast check se directly Username extract karne ka. Extract Username repository search mark kar DB lookup karti original complete user class info object.
+
+151-164: calculateChecksum Function
+- SHA-256 standard Java security MessageDigest pe setup. Ek For loop every single character byte binary hash number extract hexadecimal form format generate return kar de rha string validation matching form per file storage me update karta hai.

@@ -1,0 +1,12 @@
+File: MessageConstants.java
+
+Line-by-line Explanation (Hinglish):
+
+1-4: Imports and package
+- Exceptions custom folder import hook setup.
+
+5-9: Class limits setup constructor private
+- `public class MessageConstants` setup class framework . `private MessageConstants()` is class ka object instance new se mat banao , constructor prevent limit rule set error parameter. Koi code create variable class call error `UtilityClassInstantiationException` limit.  
+
+11-27: Final String properties Constants format map
+- Hard coded string message map key format property config format list (messages.properties file property names yaha set variables define abstract set karein). Jaise 'msg.user.not.found' ko var map "USER_NOT_FOUND" pe assign kia String . Code format read limit String variable access set  .

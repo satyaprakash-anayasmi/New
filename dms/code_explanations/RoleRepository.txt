@@ -1,0 +1,11 @@
+File: RoleRepository.java
+
+Line-by-line Explanation (Hinglish):
+
+1-8: Imports config
+- Class object string schema property module list format set db. Limit Jpa class setup. Optional framework map class variable limit list return. 
+
+9-13: Repository Method map logic abstraction
+- Component bean set `@Repository` . 
+- Map db data column properties Table Role ID type param Long format abstraction form Jpa limit variables query run setup parameters  .
+- method limit string query abstraction db findByName 'SELECT * FROM roles where name = XYZ' . Unique Role names DB column find query function result mapping Optional map framework object data limits schema .

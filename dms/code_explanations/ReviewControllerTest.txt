@@ -1,0 +1,17 @@
+File: ReviewControllerTest.java
+
+Line-by-line Explanation (Hinglish):
+
+1-22: Import parameter Test Framework config
+- Mockito mock data framework limits JSON map , JUNIT API limit test param annotation properties map imports list . 
+
+23-25: HTTP Annotations test module map
+- Mvc configuration filter properties limit .
+
+27-38: Setup Autowired Mock properties array limit format limit Config
+- Api runner object mockMvc , dummy test service object , data JSON convertor setup property.
+
+39-56: testReviewDocument params Logic setup
+- Fake Authentication `@WithMockUser(roles = "REVIEWER")` security pass module property check set validation abstract form review request param approval model JSON dummy payload request map create kia ("APPROVED", "LGTM").
+- `doNothing().when(reviewService)` mock param: Jb void mapping return function check limit aegi method `reviewDocument` dummy response de dega execute limit param fake db pass ok form pass format. 
+- API call `mockMvc` params route json object param post kregi  . And limits response verify `.andExpect` http 200 , JSON form limit value key `message: Reviewed successfully ` match verification set.

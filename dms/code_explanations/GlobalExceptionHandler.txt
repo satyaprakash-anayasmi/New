@@ -1,0 +1,31 @@
+File: GlobalExceptionHandler.java
+
+Line-by-line Explanation (Hinglish):
+
+1-18: Imports
+- Ye filter Exception handle karne k tools , logger slF4J interface , authentication module security se errors types imports format kar raha .
+
+19: @RestControllerAdvice
+- Ye AOP (Aspect-Oriented Programming) advice exception catch listener hook file hai Spring pehle call krega.  Pure project main controller / service per koi bi general crash fail ho jaaye throw hone per sabse pehle flow isi class per automatically ruka ke JSON user clean output throw hogi backend stack trace log chupane protection kelie.
+
+20: @Slf4j
+- Lombok tool setup kar log function enable krke logging.warn log.error chalana setup.  Backend terminal pr server developer ke track errors save karega.
+
+23-27: Message source setup
+- Message properties localized file fetch constant format se user understandable exception JSON error line string translation messages create layega.
+
+29-34: handleGenericException Exception setup
+- Sabse badi Exception base class `(Exception.class)`. Matlab agar DB band ho, Network toot jaye to generic 500 phek log save server k log record "An unexpected error" par Frontend pe Internal Server crash (Response status 500) json code format.
+
+36-40: handleRuntimeException setup
+- Jo business rules exception jese koi data na milna format wrong string wgara (RuntimeException) wo yaha aayegi , Bad_request code 400 k sath jaygi string trace text dikhega.
+
+42-47: handleBadCredentialsException setup
+- Login Failures. Login id galat psw type kia throw exception security BadCredentials yahan par HTTP 401 code deke Unauthorized text throw set karega string source pe .
+
+49-54: handleAccessDeniedException setup
+- Permission Fail. Bina Admin role Review function koi normal try url attack maara exception pdi , "hasRole(ADMIN)" check fail HTTP 403 Forbidden Access result denge log warning message  record track me hogi .
+
+56-72: handleValidationException setup
+- Frontend format se JSON body DTO ( jaise login class me password format ) wrong parameter bheja, form fields method error validation check Spring ne filter fail kara .
+- Pura loop form check chalakar dictionary mapping key string `errors` variable banaye property fields (jaise username) aur message errors collect karke "Validation failed" response send back karta  Http 400 status 400 response k under map daal.

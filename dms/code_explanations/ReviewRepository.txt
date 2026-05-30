@@ -1,0 +1,11 @@
+File: ReviewRepository.java
+
+Line-by-line Explanation (Hinglish):
+
+1-6: Import class map configuration
+- Framework db query format setup. Entity properties map list string. 
+
+9-14: Spring interface repository property abstraction DB map SQL run setup
+- `@Repository` bean create kr setup limit parameter abstract map Db object set param jpa query set framework hook mapping . 
+- Interface review class property parameter `Review` mapping schema db table form Id `Long`. 
+- Method limits format map `findByDocumentId` sql database string query check 'SELECT ... WHERE document_id =?'. Set returns map object review lists limits variable parameters setup database DB table search param form abstraction object mapping config module array list format loop .

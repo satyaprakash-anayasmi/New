@@ -1,0 +1,19 @@
+File: DocumentControllerTest.java
+
+Line-by-line Explanation (Hinglish):
+
+1-22: Framework config Import
+- JUnit mock dependencies. Security Auth test WithMockUser test frameworks spring param imports. 
+
+23-25: Annotation class property config Test limit setup
+- `@WebMvcTest` sirf document Controller web config container environment memory m init run karega map baaki service limit stop krega module memory abstraction . Filter property limits check false off security test focus logic validation setup map .  
+
+27-35: Setup Properties Injection Mock map
+- Abstract Mvc environment injection . DocumentService mock nakli service dummy create .  message property param mock object setup mapper. 
+
+36-53: testGetAllDocuments function Test logic definition
+- `@WithMockUser(roles = "UPLOADER")` Fake spring security context token profile property Uploader role check pass mock form run module set.
+- `DocumentResponse` dummy data model build param property form data schema form . 
+- `when(documentService...)` limit set kar method getAll fake 'doc' list Dto response array pass dega bina original schema DB ko touch kiye list limit setup.
+- `mockMvc.perform` get method Http request '/api/documents' API mock call set . 
+- `.andExpect` limits format Http `isOk()` 200 Http form mapping JSON body data limit array `$.success=true` checks . array list ki shuruaati 0th doc ka object 'Test Doc' theek form property match aagaya test limit params true pass green module test form.

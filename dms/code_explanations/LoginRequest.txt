@@ -1,0 +1,12 @@
+File: LoginRequest.java
+
+Line-by-line Explanation (Hinglish):
+
+1-6: Imports and Annotation
+- Validation checks limits parameter DTO import lagaya. `@Data` lombok getters setter toString equals method ek bar mein string create method abstraction add kar dega background. 
+
+7: public class LoginRequest
+- Object class Payload definition format. Controller m client frontend input json value iss form param mein receive mapping kregi.
+
+8-13: Properties String Attributes
+- `username` parameter form string property . `@NotBlank` agar frontend password khali bhej null payload form , exception global handle hook auto reject function trigger form limits constraint check API controller execute phle phek di HTTP error map json . Password property model same check .

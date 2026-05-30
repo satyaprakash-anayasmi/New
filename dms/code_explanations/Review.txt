@@ -1,0 +1,21 @@
+File: Review.java
+
+Line-by-line Explanation (Hinglish):
+
+1-9: Imports
+- Persistence database framework time framework java lombok boilerplate tool . Data table hibernate mapping package .
+
+10-17: Class Annotation setup
+- Tag @Entity hibernate module ko system btata map form structure record SQL object row database schema form property. @Table 'reviews' string db name create create table run framework name . Spring jpa audit filter Time hook enable (CreatedDate setup) . Lombok tools builder parameter inject config class.
+
+19-21: Variables properties
+- Id auto Increment DB SQL set sequence ID id . Data types setup object. 
+
+23-29: Relationship Links joins
+- @ManyToOne ForeignKey object relation mapper (ORB) setup 'document_id' id hook link file id aur 'reviewer_id' user ki link connect form kar row join  schema par. Lazy setting system optimization join load nahi karta direct file ID record time find k loop SQL command join find object k alawa read nahi hoga (Speed RAM protect object structure filter) . Note: Har review ka link Ek Doc aur ek User ko zaur refer join me null false dege SQL level par limit constraints checks pass hook kr rhaa properties set .
+
+31-35: Simple SQL mapping Data variable
+- String Action data text status ("APPROVED", "ASSIGNED") save and Comments parameter db length parameter TEXT db data map format schema column design property parameter data .
+
+37-43: Auditing variables property Dates
+- `CreatedDate` file Action row start banegi database auto insert save date row par . 'completedAt' custom LocalDateTime model me update status Service action m local date save review completion set function time track karega table.

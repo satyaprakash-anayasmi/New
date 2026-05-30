@@ -1,0 +1,39 @@
+File: JwtUtil.java
+
+Line-by-line Explanation (Hinglish):
+
+1-16: Imports
+- saari Jsonwebtoken (io.jsonwebtoken) related algorithms jisse token security hash or claim set banenge usko add kiye hue. Default java map, date system available for basic validation logics.
+
+17-18: Class Annotations
+- `@Component` taki component scan auto read se iski Bean initialize krwa le start-up pe hi. Default object ki availability dega Controller aur filters ko.
+
+20-24: Secret and Expiration
+- `@Value` application.properties folder ki set file se `${app.jwt.secret}` configuration (lambi passkey) ko read kr rhi aur secret ms expiration ko padh time format milliseconds ke roop pe nikal rhi hai var me. 
+
+26-28: getSigningKey
+- Secret string object string format hash ko java security class k byte sequence m tod kar JWT standard k according base signature secret token bnayega algorithm HMCA SHA . 
+
+30-32: extractUsername
+- Client ke diye Token paramater k ander k string subject(jo actual DB Username hoti hai default) nikal extract kar lega func pass on karke claim k roop mei.
+
+34-36: extractExpiration
+- Check karna token generate hoke kab khatm (expire) valid h claims ki class expiration details return degi util ko .
+
+38-41: extractClaim
+- Java generic function(<T>) bna rkhe. Ek badi JSON Claim tree payload se lambda pointer ki zriye parameter value retrieve krwati code chota concise rakne ke lie pattern structure.
+
+43-49: extractAllClaims
+- Actual Parser setup: Diye hue secret Sign k base pe token verify kholne/verify (parserBuilder()) ki kosis karega . Valid hona pr `getBody` token string ki actual payload values array output kr ke de dega.
+
+51-53: isTokenExpired
+- Uper bnayenge hue expiration check wale property time compare() ko basic system date current Date object timestamp before after check boolean output me denga ki expire go giya. 
+
+55-60: generateToken(UserDetails userDetails)
+- Asli method jab Register ya Login route pr server token banayega. `Map<String, Object>` banayega json dict format usme "roles" assign krega, aur Subject form m principal username bna ke token generator pe feed lga rha.
+
+62-70: createToken
+- Token ka Final body constructor builder (Subject, Issuer time setup , custom setExpiration limits properties calculation), phir signWith HMAC256 encryption lock lga compact() token code output string krti he "ey....". 
+
+72-76: validateToken
+- Authentication layer check (Security) token k andr likha string subject "Username" saccha wahi username database profile string aur Sath isTokenExpired true ya false time pass hai k nai condition par Boolean filter service ok krnge request verification flow.

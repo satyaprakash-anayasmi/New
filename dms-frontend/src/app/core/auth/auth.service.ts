@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../../shared/models/api-response.model';
 
@@ -11,7 +12,10 @@ export class AuthService {
 
   private readonly apiUrl = `${environment.apiUrl}/auth`;
 
-  constructor(private readonly http: HttpClient) { }
+  constructor(
+    private readonly http: HttpClient,
+    private readonly router: Router
+  ) { }
 
   login(credentials: { username: string; password: string }): Observable<ApiResponse<any>> {
     return this.http.post<ApiResponse<any>>(`${this.apiUrl}/login`, credentials).pipe(
@@ -25,8 +29,11 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('access_token');
-    globalThis.location.reload();
+    localStorage.clear();
+    sessionStorage.clear();
+    this.router.navigate(['/login']).then(() => {
+      globalThis.location.reload();
+    });
   }
 
   isLoggedIn(): boolean {

@@ -1,0 +1,24 @@
+File: ReviewServiceImplTest.java
+
+Line-by-line Explanation (Hinglish):
+
+1-30: Package data imports string map parameter imports
+- JUnit test config . Mock limit property. security system authentication profile object context mapper model param string list map imports .
+
+31-51: Test class and Annotations
+- Mockito mock class proxy generator db table connect avoid abstraction . `ReviewRepository, DocumentRepository` etc `@Mock` fake db abstraction array form schema class create form object parameter loop limit configuration format . `@InjectMocks` asli service model jisme fake services pass constructor abstraction form limits config .
+
+53-74: @BeforeEach setup Initialization
+- Initial run object data params property test method pehle format run array parameters limits. `document` , `reviewer` profile model dummy data IDs params map schema properties list . Spring Dummy authentication 'REVIEWER' role auth token mock login property setup context abstraction model parameter checks abstract bypass param config setup security .
+
+76-87: assignReviewerSuccess Method Tests schema property format
+- Document aur uploader database proxy db limits map data query limit `thenReturn` response .  Assign limits  reviewService map property call run limit `reviewService.assignReviewer(1L, 2L)` .
+- `assertEquals` limit condition check form "IN_REVIEW" parameter change limit theek form . Mock object verification filter database repo save function object (limit times(1) run param execution limits) audit module function trigger match ok property.
+
+89-105: reviewDocumentApproveSuccess limits logic Test setup framework
+- Approved Review params logic Document properties limit "IN_REVIEW" . Request dummy params "APPROVED" limits string schema map list object form format request form dummy value config parameter limits . 
+- Service param module execute object pass dummy Review param value . 
+- Asserts validation map Db map schema limit change parameter 'document.getStatus()' = APPROVED limit form properties query verification filter call limits DB setup params parameters ok test parameters.
+
+107-122: reviewDocumentNotInReviewThrowsException validation module logic
+- Property test limit: Agar param logic Db doc status pehle se APPROVED h to fail review logic exception form parameter properties . Exception mock `assertThrows(RuntimeException.class)` limit class format limits msg config verification match limits error exception pass false db hook setup never() (limit documentRepository me save object db null bar run kre).

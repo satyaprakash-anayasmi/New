@@ -1,0 +1,23 @@
+File: AuthController.java
+
+Line-by-line Explanation (Hinglish):
+
+1-15: Imports
+- User ke Login credentials class (LoginRequest) frontend se accept karne kelie, response bhejne ke liye DTO, aur AuthService import kie gaye hain.
+
+16-18: Class Annotations
+- @RestController: Ye normal web controller ko Json rest api structure dega.
+- @RequestMapping: API endpoint prefix set to `/api/auth`.
+- @Tag: API Documentation (Swagger) title aur detail setup karke de ra hai authentication module ki.
+
+21-27: Dependencies and injection
+- `AuthService` ka use hoga logical token generation me.
+- `MessageSource` localized message uthayega messages.properties file se language base pe. Inhe Constructor parameter list k trough inject kia Spring boot IOC se.
+
+29-30: @PostMapping("/login")
+- "/api/auth/login" POST request receive karega Swagger summary ke description is 'Login and get JWT Token' ke sath.
+
+31-35: login() Method
+- Parameters mein `@Valid @RequestBody LoginRequest request` ayega. `@Valid` check ensure krega ki body me email/password valid syntax format ka he ya empty hai(Spring boot validation run karega model ke paramaters pe based). 
+- Request directly AuthService pass on function call `authenticateAndGenerateToken` run karte token string laega aur map karta DTO record k under TokenResponse me (yaha logic encapsulate k dia controller lean hai).
+- Ek custom JSON Response standard `ApiResponse.success();` function pass karte data payload bheja jata Response Entity(Status code 200 OK k sath) Browser me token store karne ke liye.

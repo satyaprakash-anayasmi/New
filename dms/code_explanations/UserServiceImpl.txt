@@ -1,0 +1,17 @@
+File: UserServiceImpl.java
+
+Line-by-line Explanation (Hinglish):
+
+1-10: Imports
+- Service logic banane k lie entity , aur database data nikalne Repo interface code m bula lia gya hai. UserResponse map output denge isme shamil he.
+
+11-12: @Service public class
+- IoC register framework annotation . UserService implement over-ride rule base definition follow kar rahe he classes .
+
+14-18: Injection  
+- Repo (database class) user table query laa k paramterized karwa di he spring dwara instantiate karne par .
+
+20-31: getReviewers logic
+- Controller Reviewers dropdown maang rha hai API HTTP me , list generate hogi jisme List collections return jayegi . 
+- UserRepository me func call kiya `findByRoles_Name("ROLE_REVIEWER")`. Table me join search kr k unhi logo ki user profile object wapis lake `reviewers` list me store .
+- Pura array stream iteration loop , stream().map(). User profile ek badi size sensitive profile class hain password wla fields mita hata clear kar , nayi safe chhoti model "UserResponse.builder" run kr object response ready kardegi. .toList return krdia api ko.

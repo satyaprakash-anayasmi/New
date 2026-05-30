@@ -1,0 +1,6 @@
+File: AuditService.java
+
+Line-by-line Explanation (Hinglish):
+
+1-6: Interface and method abstraction map limits definition
+- Service abstract set , 'logAction' function limits params . String action type id String parameters interface map system architecture logic setup design definition .

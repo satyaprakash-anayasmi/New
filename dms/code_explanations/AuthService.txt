@@ -1,0 +1,6 @@
+File: AuthService.java
+
+Line-by-line Explanation (Hinglish):
+
+1-9: Setup Interface framework module
+- Login check object DTO class properties limit map import configuration . 'authenticateAndGenerateToken' interface abstract definition method type param limits .

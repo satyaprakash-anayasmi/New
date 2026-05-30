@@ -1,0 +1,9 @@
+File: TokenResponse.java
+
+Line-by-line Explanation (Hinglish):
+
+1-11: Imports and lombok
+- Package Dto Response structure. Data builder noargs Constructor setup limit abstract data. 
+
+12-17: Attributes format Login Map Property
+- Controller service Token string form format me DTO . `accessToken` param string JWT variable. `tokenType` parameter framework builder hook default 'Bearer'. "username" text data set form map request user context.

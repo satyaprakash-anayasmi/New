@@ -1,0 +1,12 @@
+File: AuditRepository.java
+
+Line-by-line Explanation (Hinglish):
+
+1-5: Imports configuration
+- Spring data JPA module map package format object . Audit Log filter class entity table  schema .
+
+9-10: Repository Tag annotation setup abstraction 
+- `@Repository` map Database logic Jpa method filter run db. `JpaRepository<AuditLog, Long>` abstraction object setup DB methods (save , delete function param form config limit set krega). Log record object form ID long  parameter format schema setup. 
+
+11-13: Derived Query Method format setup
+- `findByEntityTypeAndEntityId` interface func list banayi. Spring Data setup jese func db parameter function code SQL translate 'SELECT * from audit_logs WHERE entity_type = x AND entity_id = y' create kar param dega abstraction filter  limit pass format set query run. Limit db record fetch List setup variable list array. Same query findByUserId SQL function translate schema mapping run setup array.

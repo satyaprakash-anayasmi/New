@@ -1,0 +1,25 @@
+File: ApiResponse.java
+
+Line-by-line Explanation (Hinglish):
+
+1-13: Imports and Annotations Setup
+- Date framework set lombok plugins import property hide.
+- `@Data` getters setter, `@Builder` design pattern creation ,
+ NoArgs/AllArgs empty parameterized object property set abstract hide class properties set. 
+
+14-20: Generic Data Object property
+- `public class ApiResponse<T>` class structure DTO Generic Type <T> .
+ Isse class framework standard result (jese Reviewer List array v,
+  document response object file) ko T param wrap me badal dega.  
+- `success`: boolean True / False JSON key param form property map .
+ `message`: description text param. `data`: T generic value list object . 
+ `timestamp` variable json response map set property defaults current server check dateTime run setup  form parameter.
+
+21-27: success Helper method
+- Static Factory call abstraction logic function. 
+Successful API `success(msg, T data)`
+ T param leke pass model property variable build true success boolean map obj builder response.
+
+29-35: error Helper method Logic
+- API global exception reject fail response Error `error(String message)` 
+message format param bna generic T pass string false config send HTTP .

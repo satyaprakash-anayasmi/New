@@ -1,0 +1,45 @@
+/* 
+   Clean Mobile Structure Support
+   Only contains essential structural fixes for < 1024px screens.
+*/
+@media (max-width: 1023px) {
+
+    /* Ensure the body doesn't bounce/overflow horizontally */
+    body,
+    html {
+        overflow-x: hidden !important;
+        position: relative;
+    }
+
+    .container {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+    }
+
+    /* Fix for the side-scrolling table component */
+    app-data-table {
+        display: block !important;
+        width: 100% !important;
+        overflow: hidden !important;
+    }
+
+    /* Fixed Header for Mobile */
+    header {
+        height: 4rem !important;
+        padding: 0 1rem !important;
+    }
+
+    /* Ensure modals/viewers fit phone screens properly */
+    .fixed.inset-0 {
+        padding: 1rem !important;
+    }
+
+    /* Scaling rounded corners for mobile aesthetic */
+    .rounded-3xl,
+    .rounded-\[2\.5rem\],
+    .rounded-\[3rem\] {
+        border-radius: 1.25rem !important;
+    }
+}

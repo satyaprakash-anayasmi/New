@@ -1,0 +1,12 @@
+File: ResourceNotFoundException.java
+
+Line-by-line Explanation (Hinglish):
+
+1-4: Package Imports configuration
+- Spring module response error framework. 
+
+6-7: HTTP Annotation Setup Error Framework mapping
+- `@ResponseStatus(HttpStatus.NOT_FOUND)` Jab DB me get query search ID (Jaise Doc=50000 jo hai hi nahi schema parameter pe DB m null), Service is NotFound error ko fhekdegi throw me. Annotation global throw ko pakad string frontend Browser POSTMAN API me response code 404 (Not Found) convert trigger . 
+
+9-16: Constructor Abstract parameter map
+- Message feed run class parent property , Throwable format framework property pass string message property map.

@@ -1,0 +1,24 @@
+File: application.properties
+
+Line-by-line Explanation (Hinglish):
+
+1: spring.application.name=dms
+- Project application module string backend system name setup .
+
+3-7: Server Config properties format limit
+- backend spring boot 8080 default setup memory map network param . spring Profile config setup mapping . 
+
+9-14: Database postgres module URL configuration string map limit param validation
+- SQL db connect URL JDBC link set. Database name `dms_db` port sql `5432` properties . Admin string 'postgres' username connect db password check env variable format read map connect . Driver property setup limit driver parameter schema sql postgres .
+
+15-18: Hibernate JPA Object SQL logic Schema limits module abstraction properties param map object db config string format
+- `ddl-auto=update` Entity setup create database db mapping table auto limits create table format . `show_sql` Console sql hibernate SQL debug create query list format read limit property . `Dialect` PostgreSQL language format syntax limit . 
+
+21-22: File property setting upload param limits module setup config
+- `app.file.storage.location=./uploads` folder directory map hard drive save DB upload map limits directory properties text setup . 
+
+24-30: Secret Security Hash string properties password defaults limits API param hash create format map DB parameter set class form map schema setting. JWT string hash security set password . `expiration` token millisecond mapping format timeout string object properties limits . Defaults setup password module admin , set map param config format properties param list run properties params  . 
+
+32-42: Docs File limits properties format upload configuration param settings map object format object
+- Swagger route map URL `/api-docs` properties format UI  API docs `/swagger-ui.html` page GUI route configuration format limits class API object map param setup. Health info spring string metric set properties limits form parameters object format limits .
+- Multipart limit backend server param file storage module properties memory setting limits format file maximum  upload length param config 50 mb limits property params map format string module setting memory reject upload file fail validation string property file upload filter parameters properties framework settings .

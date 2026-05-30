@@ -1,0 +1,10 @@
+File: ReviewRequest.java
+
+Line-by-line Explanation (Hinglish):
+
+1-7: Imports and Setup
+- Validation checks parameters rules limitations set. `@Data` Lombok method auto boilerplate hide string class properties setter.
+
+8-12: Properties Setup Request format
+- DTO model parameter frontend approve reject request action parameter HTTP mapped.
+- `action` (APPROVED or REJECTED) string params validation empty `@NotBlank` reject check. `comments` string field model map property pass comment.

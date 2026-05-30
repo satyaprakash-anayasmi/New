@@ -1,0 +1,20 @@
+File: AuthServiceImpl.java
+
+Line-by-line Explanation (Hinglish):
+
+1-13: Imports
+- Security manager objects , Token services , aur basic payload record DTO class form imports hai service file.
+
+14-16: Component Annotation and declaration
+- `Service` Tag class container scope create provide .
+- `RequiredArgsConstructor` automatic boilerplate generated paramters final constructor ki zarurat nhi paregi code chota maintain hone madat he. Interfaces override `AuthService`.
+
+18-19: Injections
+- `AuthenticationManager` spring security framework main entry object match karega user service data credentials password check form pe. `JwtUtil` class custom methods hash generator setup object assign .
+
+21-35: authenticateAndGenerateToken Definition logic
+- Service implementation method frontend payload model accept kreta ha.
+- `authenticationManager.authenticate(...)` method Spring Security context m chalega . Payload id email aur pass form class me convert feed hoke UserDetail DB filter find check encrypt password verify .
+- Successful verification ke bad Principal User (actual Db loaded session ) data object nikaal userDetails cast kiya save store .
+- JWTUtil class generate token par role authority array params deke hash signature complete create kia gya generate token m var "token" save lera
+- Finally Response object `TokenResponse` custom builder() model apply  mapping DTO bna property set kia token p piche username , controller ko pass back.

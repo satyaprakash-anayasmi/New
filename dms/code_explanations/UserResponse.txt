@@ -1,0 +1,9 @@
+File: UserResponse.java
+
+Line-by-line Explanation (Hinglish):
+
+1-11: Package and Setup Lombok
+- User Data property API JSON model DTO import lombok getter set code builder abstract generate setup params hide.
+
+12-16: Attribute property param format Data
+- Password leak Db entity map rok filter DTO . "id" integer sql key id map object form . 'username', email. Secure payload param json form frontend.

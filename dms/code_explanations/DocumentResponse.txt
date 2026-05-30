@@ -1,0 +1,9 @@
+File: DocumentResponse.java
+
+Line-by-line Explanation (Hinglish):
+
+1-13: Imports and lombok Tags
+- Java 8 Date Time framework API import. Lombok configuration data setter getter object structure method generator tools Builder Pattern.  
+
+14-23: Attributes Properties Setup 
+- Controller / service jab database file document list nikaleinge, seedha Object frontend ko bhejte to password entity security DB schema foreign key database user model dikhe jaate jo risk leak param . Uske DTO Mapping filter object set schema property class data "id", "title" string file sizes status time format create kar copy k frontend json parameter bhejne k format. "uploaderUsername" string filter schema form.

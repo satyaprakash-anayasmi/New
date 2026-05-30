@@ -1,0 +1,20 @@
+File: User.java
+
+Line-by-line Explanation (Hinglish):
+
+1-8: Imports
+- ORM mapping SQL package hibernate collection parameter framework. Collection Hashset roles assign list form use property type . lombok library code abstraction use ki gae include .
+
+9-15: Entity Annotations configuration Set
+- Data Object Entity record framework read map SQL create kareyga start up . Tabla String 'users' name database me . Lombok plugin inject Data object model patterns builder setup.  
+
+17-28: User Schema parameters columns fields
+- Primary keys auto number identity system row db.
+- Schema form limit username pass email null False constraint. 'unique' email duplicate id reject kregi . Passowrd hashing me bada string database set mapping kar data db columns variable assign create set create param save karegi properties model schema map pe .
+
+30-32: isActive status setup
+- isActive login status Boolean DB constraint map property . Defaults pe flag = true create new register row db record set form . Spring security session interface object load pass read checks . 
+
+34-42: Roles List join Relation Table
+- `ManyToMany` (Bahut saare log boht saare Roles ex admin uploader ho skte h) complex relation mapping EAGER load fetch jisse turant saare roles list read sql memory aa jye cache form m find by query time pe (security module permission list error filter rokayga list read fast process ) . 
+- Join table DB intermediate linking `user_roles` new create schema create hoga linking table ids. Link 2 column name connect keys 'user_id' aur role connect 'role_id' sql query framework create kargia hook join DB constraint assign set table . List set hash set duplicate array list entry property avoid param builder role array.

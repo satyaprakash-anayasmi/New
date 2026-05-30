@@ -1,0 +1,13 @@
+File: DocumentRepository.java
+
+Line-by-line Explanation (Hinglish):
+
+1-9: Package and Entity module data import map
+- Form parameter Object repository spring module set . Optional list map string filter object mapping limit parameter create imports.
+
+10-15: Setup class method DB abstraction properties map
+- Repository annotation setup interface DB function parameter class filter run object db setup DB. 
+- JpaRepository Document string schema DB class variable Type 'Long' . 
+- `findByStatus` : filter property limit query function array parameter run setup . SELECT list document loop Status column value filter .
+- `findByUploaderId` : user document id sql database parameter setup array array form limit properties format limit format 
+- `findByChecksum` : Checksum unique filter object query Db limit map parameter Optional type return setup validation logic map format string create schema variable func DB.

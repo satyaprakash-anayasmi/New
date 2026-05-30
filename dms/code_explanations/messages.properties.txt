@@ -1,0 +1,7 @@
+File: messages.properties
+
+Line-by-line Explanation (Hinglish):
+
+1-16: Language string Localization translation file limit setup configuration map
+- Backend source `MessageSource` jab global dictionary translation English file param name translation map object properties  read message limits setup format string  .  
+- Validation text "format parameter" , security login text fail "success" fail limit error format. Hard-code string backend bchane parameters API code maintain abstract mapping limit text key parameter id `msg.login.success` -> string 'Login successful' output value map format settings format set limits properties format file mapping format parameter .

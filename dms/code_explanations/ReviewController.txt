@@ -1,0 +1,22 @@
+File: ReviewController.java
+
+Line-by-line Explanation (Hinglish):
+
+1-16: Imports
+- Service logic class, request payload structure aur api success messages k dto formats. Spring Security Annotations access levels set ke lie aaye.
+
+17-21: Annotations
+- `RestController` Web module aur `RequestMapping` pe '/api/reviews' base URL path set hia he. Swagger `SecurityRequirement` ye hint degi doc page par ke Token lagana jaruri hai bina headers token API click failed trigger degi postman browser se.
+
+23-29: Dependency Injection setup
+- `ReviewService` service business operation rules handle krega, `MessageSource` API json success format ke message. Constructor create parameterize final variables initializa karegi.
+
+31-38: assignReviewer API Setup
+- `@PostMapping("/{documentId}/assign/{reviewerId}")` Endpoint dynamic values leta parameter se jaise doc ki id aur reviewer person ki id (ex: /12/assign/5).  
+- `@PreAuthorize("hasRole('ADMIN')")` - Kewal "ADMIN" authorities roles hi ye URL hit ker ke service run karne k allowed hain .
+- Path k variables id parameters pass on ho rha theek method service me chala raha success message read nikal ke ok success bhejta.
+
+40-48: reviewDocument API Setup
+- `@PostMapping("/{documentId}/review")` Ek particular document pe Approval rejection comment bhej paayenge review param pass RequestBody me  (Jaise {"action": "APPROVED", "comments": "good"} aega).
+- `@PreAuthorize("hasRole('REVIEWER')")` - Jo assign hue he un per hi authorities permission is function per run execute karega . 
+- Security pass to ReviewService approve ya rejected ki detail le k DB entity record update krega, custom theek 'Document reviewed successfully' OK response jayenga .

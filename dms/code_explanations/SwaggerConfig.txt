@@ -1,0 +1,18 @@
+File: SwaggerConfig.java
+
+Line-by-line Explanation (Hinglish):
+
+1-10: Imports
+- Api documentation framework spring doc swagger classes package tools component . Configuration file bean .
+
+11-12: Annotations
+- `@Configuration` Spring ki system load level rules bean setup object setup btane k file tag.
+
+14: Constant Setup
+- `BEARER_AUTH` format string ek final value constant me define taki code duplication reference kam property. 
+
+16-32: customOpenAPI Object Bean Method setup
+- Builder chain pattern swagger ki definition schema doc create run generate karta function  .
+- `.info(new Info()...` API Docs HTML web page ki title heading 'Document Management System API' set version and summary configuration string.
+- `.addSecurityItem` ye tag method UI me "Authorize" lock ka green button add karwaega har API swagger list per token text p . 
+- `.components` backend ki JSON logic setup Swagger k rules padhane btane bearer string Auth Bearer k header par token header parse attach bheje web UI interface check run framework API pe property pass JWT auth format parameter feed setup.

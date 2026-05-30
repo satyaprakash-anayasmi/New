@@ -1,0 +1,23 @@
+File: UserDetailsServiceImpl.java
+
+Line-by-line Explanation (Hinglish):
+
+1-13: Imports
+- UserRepository, standard exception framework and UserDetail related object auth context list basic libraries code require karega import structure.
+
+14-15: @Service declaration
+- UserDetailsService interface framework Spring WebSecurity ka apna personal official code usko humne extend kar override overwrite krna pdega Service layer par connection provide karana hai security ko taaki DB se manual hook kr sake framework. 
+
+17-23: Dependencies and injection
+- `userRepository` db access findByUsers vagara chalane  kam aye. `MessageSource` localized message config set kar k message constant return karegi locale properties file padhne madad se. Injection parameterised complete he final set hone object instantiate pr .
+
+25-26: loadUserByUsername
+- Spring Framework login API run krega "username" dega as parameter interface ko function loadUserByUsername call mark karega request handle process layer internally .
+
+27-32: Fetching User Object from DB
+- Repositiory findByUsername parameter se lambda .orElseThrow check chalaya us username wali entity hai kya table? Nhi toh custom String system se Local exception throw "User not found" ki spring message format padke Exception error login response pe aaajayega 401 code deke. 
+
+34-45: Returning Spring User Object
+- Agar code database object successful user class db wala `User` le legi par spring Security apni format hi read krna janti he class ka nqm `org.springframework.security.core.userdetails.User`. 
+- Uski constructor feed required fields params map hoti hain , database Username, password string , boolean checks account lock nahi h `true true..` flag.
+- Finally roles String list ko .stream() API loop kar object .map class `SimpleGrantedAuthority` form me add or return framework ki demand pattern ki  fulfill list interface m convert kar de rha end security session check ready he.

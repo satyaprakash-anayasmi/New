@@ -1,0 +1,27 @@
+File: DataInitializer.java
+
+Line-by-line Explanation (Hinglish):
+
+1-15: Imports
+- User aur Role ki Entities aur unske database repositories include ki gayi. Setup component lombok password encrypt interface classes yhan imports he. 
+
+16-19: Class declaration and Setup Annotations
+- `@Component` IOC memory iska bean scan startup per set kardega run krega automatically. 
+- `@RequiredArgsConstructor` boilerplate hta di final variables. 
+- `CommandLineRunner` interface override framework hook karta . Jaise pehli bar application pura run server chalu hota ye script ek baar automatically trigger call chal jaygi (seeding DB setup admin password pe data dalna).
+
+21-23: Injections
+- final variable UserRepository RoleRepository data setup access read database aur `passwordEncoder` pswrd save hash map function.
+
+25-33: Password Properties Read
+- `@Value` annotation property files se `${app.default.admin.password}` admin/reviewer/upload string password read configuration pull kr rhe variables main mapping.
+
+34-70: run Method Logic (Startup Runner)
+- Jab app completely spring run process karegi func start . 
+- `createRoleIfNotFound("ROLE_ADMIN")` Pehle SQL DB me dhundha ye param text 'ROLE_ADMIN' roles row ghum rhe kya ? Nahi to custom private func function ne sql mein Role entity naya banaya table map create insert run kr dia aise REVIEWER UPLOADER ko start pe . 
+- `userRepository.findByUsername("admin").orElseGet(User::new)` Pehle DB me admin data dhunda nahi he naya User entity ban li setup property model map string. 
+- admin user data password `passwordEncoder.encode(adminPassword)` property value read config hash db mapping. Role set mapped role table pe object.
+- repository `userRepository.save` function db persist flush memory data hard drive schema object create mapping. Same flow dono Default Reviewer upload user pe same process create. 
+
+72-78: createRoleIfNotFound function
+- DB string name query name Role , .orElseGet lambda naya role function set name .save repo return wapas function pe list role create kar save run map schema krta return.

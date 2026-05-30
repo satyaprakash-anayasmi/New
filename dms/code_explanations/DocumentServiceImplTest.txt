@@ -1,0 +1,28 @@
+File: DocumentServiceImplTest.java
+
+Line-by-line Explanation (Hinglish):
+
+1-32: Test Framework parameter Setup imports
+- JUnit method Test param map mokito abstraction . Spring Security auth param mocking security data imports limit map setup  context framework class mapping params . 
+
+33-34: Class Annotation limits
+- `@ExtendWith(MockitoExtension.class)` mokito injection parameter filter run framework setup map object abstract property setup . 
+
+35-55: Setup Class data field limits mock params form 
+- `TEST_DOC` constant string logic value .
+- `@Mock` Database Repositories jinka connection SQL limit test check block proxy database class fake db form (documentRepository userRepository) . Mappers property message limits mock abstract form setup . 
+- `@InjectMocks` In sabi proxies (dummy obj) ko asal class `documentService` me setup form inject daldengr function create mock module logic . 
+
+57-80: Setup Map setUp function module array Logic context
+- `@BeforeEach` har ek Junit function (testUpload..) se limit phle parameter context run chalega . `ReflectionTestUtils` value tag limit path directory save 'target/test-uploads' string setup properties config bypass logic set variable uploadDir  . 
+- Uploader model fake setup dummy profile Doc param format limit values create. 
+- `SecurityContextHolder` Dummy spring security Context framework parameter assign auth token user setup filter logic limit system check bypass test configuration map properties. 
+
+82-100: uploadDocumentSuccess Method params Test logic string format
+- `MockMultipartFile` dummy limit test parameter bytes array memory create dummy object file fake . 
+- `when().thenReturn()` agar dummy property ID 1 aye list limit Db user nikal find param mock schema query run document db create file . Map DTO property .
+- Service call perform . Asserts param check value property `assertNotNull` null nhi property limits schema set param . Mockito method call times test check verify (audit database repo method theek 1 baari hi trigger object map call call hui hai) `times(1)` limits assert map logic params object format.
+
+102-114: uploadDocumentEmptyFileThrowsException Method Logic
+- Fail upload flow property. Fake file size 0 bytes object array mock create pass. 
+- `assertThrows` check framework properties form me upload param fail exception code return kr dega type checks error limit (IllegalArgumentException limit string map format property "File cannot be empty" message parameters test ok) verification pass parameter schema query test logic.

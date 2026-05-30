@@ -1,0 +1,42 @@
+File: JwtFilter.java
+
+Line-by-line Explanation (Hinglish):
+
+1-18: Imports
+- Web framework aur Security tools jaise `HttpServletRequest`, `SecurityContextHolder` import kiye hain jo filter layer me use aayenge.
+
+19-21: Class definition
+- `@Component` IOC memory container me iska object banayega.
+- `OncePerRequestFilter` extend karne ka matlb hai API pe kitni bhi lambi processing kyu na ho, ye filter har single HTTP Request me sirf EK BAR (exactly once) chalega.
+
+23-24: Dependencies
+- `jwtUtil` jo token k baare me detail or verification dega.
+- `userDetailsService` user ka asli record database se fetch krega.
+- Lombok k `@RequiredArgsConstructor` ne unko add krwa di dependencies as final.
+
+26-28: doFilterInternal Method
+- Ye method core Security check loop. Har external request se HttpServletRequest parameters k through HTTP headers aati hai usse filter karega. Exception aa gae toh ServletException bhej dega.
+
+30: final String authHeader = request.getHeader("Authorization");
+- HTTP requests me check kiya ki `Authorization` naam ki koy header key aisi ayi kya HTTP packet me?
+
+31-32: variables
+- do variables liye hai "username" aur "jwt". Pata chalte inko bhara jayega.
+
+34-41: Extracting JWT Token
+- Agar authHeader khali nhi hai or starting mein "Bearer " text pass h (Standard Format JSON WEB TOKEN), tab wo usme se 0 to 6 letters ignore karke array 'substring(7)' baki code token bna leta hai.
+- `try` k andr us 'jwt' bacha h us se jwtUtil madat krke 'username' bahr (Extract) nikal dega. Exception ayi to system ko log msg throw hogi.
+
+43: Checking Username and existing Authentication context
+- username mil gaya, aur server ka security Context completely null h mtlb ab tk kisi aur filter me is connection login register try ni kiyya, to process andar ja jayegi.
+
+44: UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+- Token wala username saccha h aur hmare system k UserDetailService mein (jo userRepositary) waha exist karta confirm krlia gaya.
+
+46-51: Validating and Registering auth session
+- Agar sach me Token validate ho k sach bol kr boolean True dia.
+- Toh Spring Security framework ki bhasha `UsernamePasswordAuthenticationToken` class  jo role and grant leti h us object me is user ki current Authorities (Admin, Uploader) dal denge.
+- Final set kr di gae complete profile `SecurityContextHolder.getContext().setAuthentication(authToken);` Context k andar jisse controller samajhh jaega ye genuine authenticated session chal ri he ab permission dedo.
+
+53-54: filterChain.doFilter(request, response);
+- Sab kaam pura hone k bd, allow kia request and response aage k other system aur Controller api layer ko flow aane pass on pass forward krdte the.

@@ -1,0 +1,9 @@
+File: UtilityClassInstantiationException.java
+
+Line-by-line Explanation (Hinglish):
+
+1-3: Package and class creation
+- Ye exception class setup property hai . Jo parent UnsupportedOperationException extend mapping krengi .
+
+5-8: Logic configuration Method
+- Utility (helper) class jism sab variables static ho jaise constants string values ya Utils format unhe java me `new` object banana jarurat nhi hota , memory waste krtei he. Koi galti object create karta , ye default constructor function parameter error string fhekta message property me 'cannot be instantiated'.

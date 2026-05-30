@@ -1,0 +1,54 @@
+File: SecurityConfig.java
+
+Line-by-line Explanation (Hinglish):
+
+1-24: Imports
+- Sabhi zaroori security classes, JWT, filters, aur cryptography ki files ko yahan import kiya gaya hai.
+
+25: @Configuration
+- Spring ko batata hai ki is file me Security ki configuration settings likhi hui hain.
+
+26: @EnableWebSecurity
+- Spring Security framework ko is project me active (chalu) karta hai.
+
+27: @EnableMethodSecurity
+- Iski madad se hum Method-level security laga sakte hain jaise `@PreAuthorize("hasRole('ADMIN')")`.
+
+28: @RequiredArgsConstructor
+- Lombok ka annotation hai. Ye automatically final variables wale constructor bana deta hai taaki dependencies inject ho sakein.
+
+29: public class SecurityConfig {
+- Class declaration.
+
+31-32: private final JwtFilter jwtFilter; private final UserDetailsService userDetailsService;
+- Ye dependencies hain. JwtFilter token verify karega, aur userDetailsService database se user ka detail check karega.
+
+34-35: @Bean public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+- Ye Web Security ka master function hai. Ye tay karta hai kaun allowed hai aur kaun blocked hai.
+
+36-38: http.cors(cors -> cors.configurationSource(...)).csrf(AbstractHttpConfigurer::disable)
+- CORS frontend (localhost:4200) ko request bhejne allow karta hai. 
+- CSRF disable kiya gaya hai kyunki hum session nahi, balki stateless JWT tokens use kar rahe hain.
+
+39-45: .authorizeHttpRequests(...)
+- "/api/auth/**" aur Swagger (Docs) ki APIs ko permitAll() kiya gaya hai. Matlab koi bhi bina login ke inhe dekh aur use kar sakta hai.
+- .anyRequest().authenticated() ka matlab hai inke ilawa project ka koi bhi URL ho, uspar pehle login required hai.
+
+46: .sessionManagement(...)
+- Policy ko STATELESS mark kiya hai. Matlab server kisi ka bhi session yaad nahi rakhega. Har bar request ke sath JWT token dena zaroori hoga.
+
+47-48: .authenticationProvider(...).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+- authenticationProvider (login id password check karne wala) setup kiya hai.
+- addFilterBefore ka matlab DB check hone se theek pehle hamara JWT Filter Token verify karega.
+
+53-59: authenticationProvider()
+- DaoAuthenticationProvider setup kiya hai jo UserDetailsService se username aur PasswordEncoder se encode hua password leke match karta hai.
+
+61-64: authenticationManager()
+- Spring security ka actual Authentication manager bean expose kiya hai taki AuthController ise direct use kar sake login ke doran.
+
+66-69: passwordEncoder()
+- BCryptPasswordEncoder use kiya hai jo passwords ko DB mein encrypt karke secure karta hai jisse koi hacker plain text password na padh paye.
+
+71-81: corsConfigurationSource()
+- Frontend ko allow karne ki setting. "http://localhost:4200" ko origins me dala hai, aur sabhi Http methods (GET, POST, etc) aur Headers ko allow kiya hai.

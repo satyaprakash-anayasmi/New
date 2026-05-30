@@ -1,0 +1,12 @@
+File: UserRepository.java
+
+Line-by-line Explanation (Hinglish):
+
+1-8: Package entity logic module maps db string limits framework
+- Class setup configuration mapping database object table users query list . Optional java class params limits . 
+
+9-21: Abstraction map SQL object Db run setup schema list params
+- Database Spring SQL object User table object map . Id Type Long . 
+- `findByUsername` username string parameters find query Optional return map.  `findByEmail` query setup database . 
+- `findByRoles_Name` parameter Limit sql mapping join relation 'roles' table se db param schema read function limit List param loop data map. 
+- `existsByUsername` Boolean true false form SQL LIMIT limit 1  result query db run param format exists check variable config setup check framework form map database validation map parameter module object .

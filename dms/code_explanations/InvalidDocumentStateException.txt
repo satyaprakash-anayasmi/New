@@ -1,0 +1,12 @@
+File: InvalidDocumentStateException.java
+
+Line-by-line Explanation (Hinglish):
+
+1-4: Imports
+- Web framework error HTTP response Status set krne error code setup .
+
+5-7: Class and Status Annotation
+- `@ResponseStatus(HttpStatus.BAD_REQUEST)` ye Spring framework handle setup he . Jab bhi application code me InvalidDocumentStateException error fekega (jese document pehle se approve tha aur koi firse reject dabye toh), backend HTTP error 400 Bad Request Browser ko string phek kr trace throw set kregi class. Extend karti `RuntimeException` se usko .
+
+8-16: Constructors Message String
+- Custom message ya root exception catch param code likhane ko Exception framework pass krega 'super' constructor base run kar.

@@ -1,0 +1,27 @@
+File: AuditLog.java
+
+Line-by-line Explanation (Hinglish):
+
+1-9: Imports
+- Database map Entity annotation and Datetime frameworks . Lombok plugins tools .
+
+10-17: Table Annotations
+- `@Entity` hibernate Data object representation structure schema DB ko .
+- `@Table(name = "audit_logs")` audit schema table name create hogi psql mysql koi ho "audit_logs" naam leke .  
+- `@EntityListeners` auto Date fill logic tool framework chalayga query DB me jaane se per .
+- Lombok setup tag getters setters ( Data ) empty aur sab parameterized variables constructor create builder tag pattern.  
+
+19-21: Id Primary key Setup
+- @Id Auto SQL Increment id ban jaygi jisse har log save me nayi ID record save hogi database column par identity feature k zariye.
+
+23-30: Columns property
+- System Table properties name 'action' type variable set , data limit nullable=false means record m in param k bina null row insert db reject dega false nahi . Entity type record document save limit 50 id integer pass kiya gya columns define kia  karega object map p.
+
+32-34: Relationship Join
+- Audit Log kisa user ne trigger action kari  , db `ManyToOne` (bht sare log sirf Ek single user ID k hain). Fetch Lazy  se join query read optimize hoga `user_id` record table pe foreign key hook ban gyi hai DB scheme schema connect pe .  
+
+36-37: Long Text Type
+- ColumnDefinition text type , variable Details properties String jisme badi paragraph audit string message save read k log string record store ayegi .
+
+39-42: Date Timestamp automatic setup
+- Entity param property  `CreatedDate` automatic sql column save data create record ki date daldega timestamp . `updatable` false mark matlab ki bad DB m koi row audit is field time  badl modify ya overwrite update error fail deny deny update query protect krega tamper prevent .

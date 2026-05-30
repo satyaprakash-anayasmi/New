@@ -1,0 +1,6 @@
+File: DocumentService.java
+
+Line-by-line Explanation (Hinglish):
+
+1-19: Setup Map module function limits class
+- Interface upload doc file properties parameters string abstraction . methods `uploadDocument`, `getDocumentById`, `getAllDocuments`,  `downloadDocument` framework limit function structure abstract object .

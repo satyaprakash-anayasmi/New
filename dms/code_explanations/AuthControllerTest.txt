@@ -1,0 +1,22 @@
+File: AuthControllerTest.java
+
+Line-by-line Explanation (Hinglish):
+
+1-24: Imports Configuration Test frameworks  
+- Junit aur mockito testing framework tools imports . Object mapper JSON data convert param and MockMvc API UI mocking simulate framework test setup imports.  
+
+25-27: Test Annotations limit module setup
+- `@WebMvcTest(controllers = ...)` Spring ka slice configuration test framework sirf controller class (API HTTP layer) isolated memory m load start run karega .  
+- `@AutoConfigureMockMvc(addFilters = false)` Spring security jwt token filter module temporary off disable property (Login me lock/permission jaruat ni test focus controller logic verify param) .  
+
+29-43: Injections mapping limits variable parameter mock
+- `@Autowired` setup interface MockMvc aur Jackson Object Mapper. 
+- `@MockBean` controller ke aage ki service `authService` , property msg source, JWT util filter object nakli (mock/fake param) inject module dependency bna liye (Jisse Original DB run na ho aur Unit test controller logic ki bounds limit run setup me fast execute pass set ho). 
+
+45-64: loginSuccess API Test logic definition
+- `@Test` annotation marker batata he ki method property test runner execute property check krega  . 
+- `LoginRequest` dummy object 'admin' 'admin123' parameter model map set kiya gaya config setup . Token Response fake object builder map . 
+- `when(...).thenReturn(...)` mockito ka function limits fake service setup : Jab authService function call ayega to aslee Db nahi bs dummy "tokenResponse" object seedha limits param form me wapas fek dega filter  . Msg source param message translation value fake data ok "Login successful".  
+- `mockMvc.perform` mock API post Request fire "/api/auth/login" map params content JSON parameter convert feed kar . 
+- `.andExpect` Testing assertions conditions checks (Response status limit HTTP code 200 hona chaye aur boolean .success format json list True pass  message form json pass check match ). 
+- Agar sab conditions object result limits params theek form true hui logic m to test configuration success passed green check mark pass limit module .

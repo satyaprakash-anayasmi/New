@@ -1,0 +1,63 @@
+File: DocumentController.java
+
+Line-by-line Explanation (Hinglish):
+
+1-21: Imports
+- Zaroori web, security, service aur DTO classes ko import kiya gaya hai.
+
+22: @RestController
+- Ye batata hai ki ye class ek API Controller hai jo JSON responses return karegi (Frontend ke samjhne ke liye).
+
+23: @RequestMapping("/api/documents")
+- Base URL route set kar raha hai. Is file ki sab APIs ke shuru me /api/documents lagega.
+
+24-25: @Tag(...) aur @SecurityRequirement(...)
+- Ye dono Swagger UI (Documentation) ke annotations hain jo show karega ki is endpoint pe JWT bearer token lagta hai.
+
+28-34: Constructor Injection
+- DocumentService (logic execution ke liye) aur MessageSource (custom success/error message padhne ke liye) dependencies inject ho rahi hain.
+
+36: @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+- File upload krne ke liye HTTP POST call setup. 'Multipart' matlab text data aur file data ek sath aayega.
+
+37: @PreAuthorize("hasAnyRole('UPLOADER', 'ADMIN')")
+- Yahan check hota hai ki kya HTTP request wale user ke paas UPLOADER ya ADMIN ka haq hai? Agar sirf REVIEWER hai to ye wapis Error phek dega.
+
+39-41: public ResponseEntity<ApiResponse<DocumentResponse>> uploadDocument(...)
+- Frontend se 'file' object aur 'title' text string HTTP parameter me nikal kar function ko de raha hai.
+
+43-47: try block
+- documentService ka method uploadDocument run hota hai jo asli mein DB and Hard Drive me save krega. 
+- Success message leke ek 'ResponseEntity.ok()' jisme humara custom format ApiResponse return ho jata hai JSON mein.
+
+48-50: catch block
+- Agar file me problem, server ka disk full hona, ya uploadService se bhi Exception aye to ye pakad ke frontend ko 400 Bad Request error theek forms me dikhata hai.
+
+53: @GetMapping("/{id}")
+- Specific Id wale document ka detail nikalne ke liye GET call setup.
+
+54: @PreAuthorize(...)
+- Yaha allow sabko (Uploader, Reviewer, Admin) hai taaki har koi detail dekh sake.
+
+56-60: public ResponseEntity<ApiResponse<DocumentResponse>> getDocument(@PathVariable Long id)
+- Path me se ID extract kiya, custom message banaya, aur service se 'getDocumentById' le kar response fek diya.
+
+62-69: getAllDocuments()
+- Same pattern ki API hai par iss bar saare documents list form me GET call ke zariye frontend pe return karega.
+
+71: @GetMapping("/{id}/download")
+- Document as a file download hone ki api route setup ki gai hai.
+
+74: public ResponseEntity<org.springframework.core.io.Resource> downloadDocument(@PathVariable Long id)
+- Is function se pura backend DB JSON me nahi, stream response dega jise memory me directly process kiya ja sakta hai file ki tarah.
+
+75: org.springframework.core.io.Resource resource = documentService.downloadDocument(id);
+- Ye DocumentServiceImpl wali class se UrlResource uthata hai DB search ke bad.
+
+76-81: try-catch block for contentType
+- `Files.probeContentType(Paths.get(resource.getURI()))` file ki extension dhundhti hai ki .pdf ayi hai ya .txt ya .png ayi hai. Default me octet-stream (general binary data) le raha hai.
+
+82-87: ResponseEntity return setup
+- `contentType` btati browser ko file kaise behand krni.
+- `CONTENT_DISPOSITION, "inline"` se ye file direct browser tab me khulegi (like resume pdf open krna) balki zabardasti Download popup window nhi degi ('attachment' deta vo krna).
+- Final resource byte by byte stream karta hua chala jayega (Memory ki saving is best part for this logic).

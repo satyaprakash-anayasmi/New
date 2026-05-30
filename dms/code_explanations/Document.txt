@@ -1,0 +1,28 @@
+File: Document.java
+
+Line-by-line Explanation (Hinglish):
+
+1-10: Imports
+- Jakarta standard persistence Entity Mapping configuration. Time frameworks import. Lombok framework use tools import.
+
+11-21: Entity Object Class Annotations setup
+- `@Entity` class persistence (data data map karega row records database m) hibernate module k sath. 
+- `@Table` 'documents'  naam k  Table SQL bnayega DB and Indexes add filter apply for optimization speed access (jaise database search uploader id aur file status type fast query execution optimization run engine indexing process par create kar di) . 
+- `@EntityListeners(AuditingEntityListener.class)` Spring auditing data created time , modify update parameter variables auto set record map trigger kregi .
+- `@Data` , Constructor annotations code property hide short design Pattern Builders .
+
+23-40: Attributes / Column properties database Schema
+- @Id aur Generation auto id increment properties sequence database set row column mapping data integer value long class variable. 
+- Properties columns `title`, `filePath`, `fileSize`, `fileType`, `checksum` configuration . Schema validation parameters `nullable=false` matlab DB limit SQL error database fek denge fail string null gya bina form validate data pe length constraints.
+
+42-44: Enumerated property DB form
+- `DocumentStatus` Object string db map text mode format parameter set string sql form m 'UPLOADED' save row kar dega DB enum parse String column length 50 string max DB m.
+
+46-48: Join setup
+- One Uploader user object parameter upload kiya gaya join column DB 'uploader_id'. Type foreign hook relationship . Single Person uploads multiple Document `ManyToOne` schema form database.
+
+50-52: Optimistic Locking
+- Database lock control variable `@Version`. Agar ek he Document (Id: 10) do alg admins Review save action process chal ra , toh first request id version + 1 incremnt DB par save kar update hogi . Jab dusra admin aega request id conflict DB usko 'OptimisticLockException' error save reject fail kregi jisse DB corruption conflict  system stop data overwrite overlap bach jaega . Default 0 schema par add hota save initial row create krte create.
+
+54-61: Automatic Entity DB log Audit dates
+- Object Entity save time `@CreatedDate` create param form record save data column "created_at" property DB likega, updatable prevent database check. Modification `LastModifiedDate` Har Document update (Review Approve status badha save) pe time updated column modify over-rite time change time set kr dege spring jpa entity object framework query par automatically intercept filter .

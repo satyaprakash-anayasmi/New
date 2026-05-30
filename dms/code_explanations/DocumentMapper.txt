@@ -1,0 +1,15 @@
+File: DocumentMapper.java
+
+Line-by-line Explanation (Hinglish):
+
+1-5: Imports and package 
+- DTO aur entity map class. @Component class property IOC add spring krega map.
+
+7-10: Class Setup Function configuration
+- Document Mapper format logic convert krta class. function mapping param object 'document' entity class me receive convert mapping 'DocumentResponse' me set convert return back controller logic dega abstraction form.
+
+11-13: Validation limit check param
+- Input object document file entity string model null aaya toh check bypass filter kar ke mapping param set return array null object .
+
+15-25: Object mapping conversion builder loop
+- Entity db 'document' model password leak rok proper secure DTO Response JSON class properties me manual data get( ) set function nikal object Builder pass property map karegi return convert kr legi. Uploader profile username name extract schema form aur Date status enum cast String method limit filter mapping  .

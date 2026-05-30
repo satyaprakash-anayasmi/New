@@ -1,0 +1,18 @@
+File: UserController.java
+
+Line-by-line Explanation (Hinglish):
+
+1-16: Imports
+- Sabhi zaroori classes import ki gyi hain jaise `UserService` records niklaane k lie aur response formate krne k liye standard DTO classes.
+
+17-21: Class Declarations
+- `@RestController` API configuration activate krega.
+- API base url is set to `/api/users`. API k upar Token authorization jaruri hogi request hit hone lie.
+
+23-27: Dependencies
+- `UserService` interface declare inject kiya in constructor for user list query execution business process.
+
+29-36: getReviewers API definition
+- `@GetMapping("/reviewers")` path URL define krke get method map kia HTTP me .
+- `@PreAuthorize("hasRole('ADMIN')")` Keval aur Keval Admin assign krte time drop-down fetch k liye is endpoint se data list mango list le paayega.
+- Service `userService.getReviewers()` se list DB se manga aegi userResponse format me (Password filter kr dia gya hide). Aur normal HTTP 200 payload form list json bheja jayega "Reviewers retrieved successfully" .

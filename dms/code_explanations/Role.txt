@@ -1,0 +1,13 @@
+File: Role.java
+
+Line-by-line Explanation (Hinglish):
+
+1-5: Imports
+- ORM (Object-Relational Mapping) annotations import form aur Lombok plugin framework.
+
+6-12: Component properties setup
+- Class ko Data Object `@Entity` banaya. Database mein yeh class 'roles' naam ki table mein convert hogi schema mein. Boilerplate code hide karne k liye `@Data`, Configs add pattern setup Builder set constructor.
+
+14-20: Properties
+- `id`: Unique AutoIncrement number database primary key column property.  
+- `name`: String column jo ki DB null allow false, Aur saath mein `unique = true` limit constraints check laga he. Iska matlab DB schema mein 2 role ke ek jese same string naam (example dono Admin) save duplicate prevent check error pass reject ho gayenge DB query constraint failed. Length string size 50 set.

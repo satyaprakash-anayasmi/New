@@ -1,0 +1,10 @@
+File: JpaConfig.java
+
+Line-by-line Explanation (Hinglish):
+
+1-4: Imports
+- Context aur Data Jpa frame import .
+
+6-9: Class Configuration Setup Annotations
+- `@Configuration` application level module rule batane wali configuration set file Spring framework padhega sabse phle pe.
+- `@EnableJpaAuditing` database module listener hook tag . Iske wajah se file save aur update  pe automatic create entity classes (jaise Auditing entity Document m thi CreationDate ) listener automatically Timestamp Date property chalayenge function sql param DB .

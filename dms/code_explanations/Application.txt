@@ -1,0 +1,31 @@
+File: Application.java
+
+Line-by-line Explanation (Hinglish):
+
+1: package com.example.documentmanagement;
+- Ye package declaration hai. Ye batata hai ki ye file is directory structure ka hissa hai.
+
+3-4: import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+- Spring Boot ke main classes ko import kiya gaya hai jiski madad se application start hoti hai.
+
+5: @SpringBootApplication
+- Ye ek master annotation hai. Ye 3 chizon ka kaam karta hai:
+  1. @Configuration (Ye class config class hai)
+  2. @EnableAutoConfiguration (Spring boot apne aap jarurat ki settings on kar dega)
+  3. @ComponentScan (Is class ke folder aur niche ke folders me sabhi components, controllers, services ko dhoondh kar memory me load karega).
+
+6: public class Application {
+- Ye main class hai jiska naam Application hai.
+
+8:     public static void main(String[] args) {
+- Ye standard main method hai jahan se koi bhi Java program chalna shuru karta hai.
+
+9:         SpringApplication.run(Application.class, args);
+- Ye Spring Boot application ko start karne ka command hai. Ye internal Tomcat server (port 8080) ko start karta hai aur poore application ko host karta hai.
+
+10-12:     } }
+- Class aur method ki closing brackets.
+
+Conclusion:
+Ye file project ka Entry point hai. Debug process me isme koi debug point nahi lagaya jata, ise simply Run kiya jata hai.
