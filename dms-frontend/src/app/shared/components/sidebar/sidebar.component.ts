@@ -30,7 +30,7 @@ export class SidebarComponent implements OnInit {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
         if (payload.roles && Array.isArray(payload.roles)) {
-          userRoles = payload.roles.map((r: any) => r.authority);
+          userRoles = payload.roles.map((r: any) => r.authority || r);
         }
       } catch (error) {
         console.error('Error parsing token in sidebar:', error);

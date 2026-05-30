@@ -26,7 +26,7 @@ export class RoleGuard implements CanActivate {
 
             // Standard spring boot JWT structure parsing
             if (payload.roles && Array.isArray(payload.roles)) {
-                userRoles = payload.roles.map((r: any) => r.authority);
+                userRoles = payload.roles.map((r: any) => r.authority || r);
             }
 
             if (expectedRoles && !expectedRoles.some(role => userRoles.includes(role))) {

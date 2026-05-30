@@ -49,7 +49,7 @@ export class AppComponent implements OnInit {
 
         let roles: string[] = [];
         if (payload.roles && Array.isArray(payload.roles)) {
-          roles = payload.roles.map((r: { authority: string }) => r.authority);
+          roles = payload.roles.map((r: any) => r.authority || r);
         }
 
         // Format role nicely

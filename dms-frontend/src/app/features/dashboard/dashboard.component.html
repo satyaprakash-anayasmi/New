@@ -92,11 +92,27 @@
         </div>
     </div>
 
+    <!-- Registry Tabs -->
+    <div class="flex items-center gap-4 mb-6">
+        <button (click)="setTab('ACTIVE')"
+            [class]="activeTab === 'ACTIVE' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' : 'bg-white text-gray-500 hover:bg-gray-50'"
+            class="px-8 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all">
+            Active Files
+        </button>
+        <button *ngIf="isAdmin" (click)="setTab('INACTIVE')"
+            [class]="activeTab === 'INACTIVE' ? 'bg-slate-900 text-white shadow-lg shadow-slate-200' : 'bg-white text-gray-500 hover:bg-gray-50'"
+            class="px-8 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all">
+            Inactive/Deleted
+        </button>
+    </div>
+
     <!-- DYNAMIC MASTER TABLE -->
-    <app-data-table title="Document Repository" [headers]="tableHeaders" [data]="documents"
-        [totalElements]="totalElements" [totalPages]="totalPages" [currentPage]="currentPage" [pageSize]="pageSize"
-        [isLast]="isLast" [isLoading]="isLoading" (pageChange)="loadDocuments($event)"
-        (pageSizeChange)="onPageSizeChange($event)" (rowClick)="openDocument($event.id)">
+    <app-data-table [title]="activeTab === 'ACTIVE' ? 'Active Document Repository' : 'Inactive Archives'"
+        [headers]="tableHeaders" [data]="documents" [totalElements]="totalElements" [totalPages]="totalPages"
+        [currentPage]="currentPage" [pageSize]="pageSize" [isLast]="isLast" [isLoading]="isLoading" [isAdmin]="isAdmin"
+        (pageChange)="loadDocuments($event)" (pageSizeChange)="onPageSizeChange($event)"
+        (rowClick)="openDocument($event.id)" (delete)="deleteDocument($event.id)"
+        (restore)="restoreDocument($event.id)">
     </app-data-table>
 
     <!-- Document Viewer Modal -->
