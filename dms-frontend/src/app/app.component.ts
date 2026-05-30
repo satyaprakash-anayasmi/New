@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, Router } from '@angular/router';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 import { AuthService } from './core/auth/auth.service';
 import { ToastComponent } from './shared/components/toast/toast.component';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -16,8 +17,20 @@ export class AppComponent implements OnInit {
   title = 'dms-frontend';
   username = 'User';
   roleDisplay = '';
+  sidebarOpen = false;
 
-  constructor(private readonly authService: AuthService, private readonly router: Router) { }
+  constructor(private readonly authService: AuthService, private readonly router: Router) {
+    // Automatically close sidebar on mobile when navigation ends
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.sidebarOpen = false;
+    });
+  }
+
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
 
   get isLoginPage(): boolean {
     return this.router.url === '/login' || this.router.url === '/';

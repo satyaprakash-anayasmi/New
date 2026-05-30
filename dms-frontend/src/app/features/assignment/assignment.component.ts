@@ -27,7 +27,7 @@ export class AssignmentComponent implements OnInit {
     // Table Config
     tableHeaders = [
         { label: 'Document', key: 'title' },
-        { label: 'Status', key: 'status' }
+        { label: 'Status', key: 'status', type: 'status' }
     ];
 
     // Pagination properties
@@ -109,5 +109,11 @@ export class AssignmentComponent implements OnInit {
 
     formatStatus(status: string): string {
         return status === 'UPLOADED' ? 'Waiting for Assignment' : status;
+    }
+
+    formatSize(bytes?: number): string {
+        if (!bytes) return '0 KB';
+        const kb = bytes / 1024;
+        return kb > 1024 ? (kb / 1024).toFixed(2) + ' MB' : kb.toFixed(2) + ' KB';
     }
 }

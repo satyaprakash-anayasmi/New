@@ -85,7 +85,13 @@ public class DocumentController {
     @GetMapping("/{id}/download")
     @PreAuthorize("hasAnyRole('UPLOADER', 'REVIEWER', 'ADMIN')")
     @Operation(summary = "Download or stream a document")
-    public ResponseEntity<Resource> downloadDocument(@PathVariable Long id) throws IOException {
+    public ResponseEntity<Resource> downloadDocument(
+            @PathVariable Long id,
+            @RequestParam(value = "token", required = false) String token) throws IOException {
+        
+        // Note: Spring Security will already have validated the token if provided in header
+        // This @RequestParam is just to allow it to be passed via URL for mobile browsers
+        
         Resource resource = documentService.downloadDocument(id);
         String contentType = "application/octet-stream";
         try {
@@ -96,7 +102,7 @@ public class DocumentController {
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "inline; filename=\"" + resource.getFilename() + "\"")
+                        "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
     }
 }

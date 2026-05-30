@@ -25,11 +25,11 @@ export class DashboardComponent implements OnInit {
 
   // Table Config
   tableHeaders = [
-    { label: 'ID', key: 'id' },
-    { label: this.text.labels.title, key: 'title' },
-    { label: this.text.common.status, key: 'status' },
-    { label: 'Owner', key: 'uploaderUsername' },
-    { label: this.text.common.action, key: 'actions' }
+    { label: 'ID', key: 'id', type: 'id' },
+    { label: 'Document Title', key: 'title' },
+    { label: 'Status', key: 'status', type: 'status' },
+    { label: 'Owner', key: 'uploaderUsername', type: 'user' },
+    { label: 'Action', key: 'actions', type: 'action', btnLabel: 'Open Doc' }
   ];
 
   // Pagination properties
