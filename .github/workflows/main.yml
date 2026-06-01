@@ -84,7 +84,10 @@ jobs:
       - name: Build Android APK
         run: |
           cd dms-frontend
-          npx cap sync
+          npm run build -- --configuration=production
+          npx cap sync android
+          npx cap copy android
+          npx cap update android
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
