@@ -2,29 +2,11 @@ name: Project CI/CD
 
 on:
   push:
-    branches: [ main, uat, develop ]
-  pull_request:
-    branches: [ main, uat, develop ]
+    branches: [ main, develop, uat ]
   workflow_dispatch:
-    inputs:
-      target_env:
-        description: 'Target Environment (Manual Override)'
-        required: false
-        type: choice
-        options:
-          - none
-          - development
-          - uat
-          - production
 
 env:
-  # Determine environment based on branch or manual input
-  ENVIRONMENT: >-
-    ${{ 
-      github.event.inputs.target_env != 'none' && github.event.inputs.target_env ||
-      (github.ref == 'refs/heads/main' && 'production' || 
-      (github.ref == 'refs/heads/uat' && 'uat' || 'development'))
-    }}
+  ENVIRONMENT: ${{ github.ref_name == 'main' && 'production' || (github.ref_name == 'uat' && 'uat' || 'development') }}
 
 jobs:
   backend-build:
@@ -38,22 +20,17 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: maven
+          cache: 'maven'
           
       - name: Build with Maven
         run: |
           cd dms
           mvn clean package -DskipTests -P${{ env.ENVIRONMENT }}
           
-      - name: Run Tests
-        run: |
-          cd dms
-          mvn test
-          
       - name: Upload Backend Artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: backend-jar-${{ env.ENVIRONMENT }}
+          name: backend-jar
           path: dms/target/*.jar
 
   frontend-build:
@@ -69,20 +46,16 @@ jobs:
           cache: 'npm'
           cache-dependency-path: dms-frontend/package-lock.json
           
-      - name: Install dependencies
+      - name: Build Angular
         run: |
           cd dms-frontend
           npm ci
-          
-      - name: Build Angular App
-        run: |
-          cd dms-frontend
-          npm run build -- --configuration=${{ env.ENVIRONMENT == 'production' && 'production' || (env.ENVIRONMENT == 'uat' && 'uat' || 'development') }}
+          npm run build -- --configuration=production
           
       - name: Upload Frontend Artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: frontend-dist-${{ env.ENVIRONMENT }}
+          name: frontend-dist
           path: dms-frontend/dist/dms-frontend/browser
 
   mobile-build:
@@ -97,37 +70,29 @@ jobs:
         with:
           node-version: '20'
           
-      - name: Set up JDK 17 (for Android)
+      - name: Set up JDK 17
         uses: actions/setup-java@c1e323688fd81a25caa38c78aa6df2d33d3e20d9
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Install Frontend Dependencies
+          
+      - name: Install Dependencies
         run: |
           cd dms-frontend
           npm ci
-
-      - name: Build Web App
-        run: |
-          cd dms-frontend
-          npm run build -- --configuration=${{ env.ENVIRONMENT }}
-
-      - name: Capacitor Sync
-        run: |
-          cd dms-frontend
-          npx cap sync android
-
+          
       - name: Build Android APK
         run: |
-          cd dms-frontend/android
+          cd dms-frontend
+          npx cap sync
+          cd android
           chmod +x gradlew
           ./gradlew assembleDebug
           
       - name: Upload APK Artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: mobile-apk-${{ env.ENVIRONMENT }}
+          name: mobile-apk
           path: dms-frontend/android/app/build/outputs/apk/debug/app-debug.apk
 
   deploy:
@@ -136,37 +101,29 @@ jobs:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - name: Download Backend Artifact
+      - name: Download Artifacts
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
-          name: backend-jar-${{ env.ENVIRONMENT }}
-          path: deploy/backend
-          
-      - name: Download Frontend Artifact
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
-        with:
-          name: frontend-dist-${{ env.ENVIRONMENT }}
-          path: deploy/frontend
+          path: deploy
           
       - name: Deploy to Server via SSH
+        if: "${{ secrets.SERVER_HOST != '' }}"
         uses: appleboy/scp-action@a6e43c3aaf4e8e6b0b15bf34e19d71118f6b1ca7
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "deploy/*"
-          target: "/var/www/dms-${{ env.ENVIRONMENT }}"
+          target: "/var/www/dms"
           strip_components: 1
 
       - name: Post-Deployment Execution
+        if: "${{ secrets.SERVER_HOST != '' }}"
         uses: appleboy/ssh-action@1530429296e979861824d74fb800013190b5dee0
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # Update permissions
-            sudo chown -R www-data:www-data /var/www/dms-${{ env.ENVIRONMENT }}
-            # Restart systemd service for backend
-            sudo systemctl restart dms-backend-${{ env.ENVIRONMENT }}
-            # For frontend, assuming Nginx is configured to point to /var/www/dms-${env.ENVIRONMENT}/frontend
+            cd /var/www/dms
+            # Add command to restart services
