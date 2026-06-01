@@ -107,8 +107,8 @@ jobs:
           path: deploy
           
       - name: Deploy to Server via SSH
-        if: "${{ secrets.SERVER_HOST != '' }}"
         uses: appleboy/scp-action@a6e43c3aaf4e8e6b0b15bf34e19d71118f6b1ca7
+        continue-on-error: true
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
@@ -118,8 +118,8 @@ jobs:
           strip_components: 1
 
       - name: Post-Deployment Execution
-        if: "${{ secrets.SERVER_HOST != '' }}"
         uses: appleboy/ssh-action@1530429296e979861824d74fb800013190b5dee0
+        continue-on-error: true
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
