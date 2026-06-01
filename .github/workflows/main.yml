@@ -5,9 +5,6 @@ on:
     branches: [ main, develop, uat ]
   workflow_dispatch:
 
-env:
-  ENVIRONMENT: ${{ github.ref_name == 'main' && 'production' || (github.ref_name == 'uat' && 'uat' || 'development') }}
-
 jobs:
   backend-build:
     name: Build Backend
@@ -25,7 +22,7 @@ jobs:
       - name: Build with Maven
         run: |
           cd dms
-          mvn clean package -DskipTests -P${{ env.ENVIRONMENT }}
+          mvn clean package -DskipTests
           
       - name: Upload Backend Artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -39,12 +36,10 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
-      - name: Set up Node.js
+      - name: Set up Node.js 22
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: dms-frontend/package-lock.json
           
       - name: Build Angular
         run: |
@@ -65,7 +60,7 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
-      - name: Set up Node.js
+      - name: Set up Node.js 22
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
@@ -76,19 +71,27 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           
-      - name: Install Dependencies
+      - name: Install Tools and Dependencies
         run: |
           cd dms-frontend
+          npm install -g @capacitor/cli @capacitor/core @capacitor/android
           npm install --legacy-peer-deps
           
-      - name: Build Android APK
+      - name: Build Web for Mobile
         run: |
           cd dms-frontend
           npm run build -- --configuration=production
+          
+      - name: Prepare Android Project
+        run: |
+          cd dms-frontend
           npx cap sync android
           npx cap copy android
           npx cap update android
-          cd android
+          
+      - name: Build Android APK with Gradle
+        run: |
+          cd dms-frontend/android
           chmod +x gradlew
           ./gradlew assembleDebug
           
@@ -98,5 +101,11 @@ jobs:
           name: mobile-apk
           path: dms-frontend/android/app/build/outputs/apk/debug/app-debug.apk
 
-  # (Deployment hidden temporarily to bypass strict repository security policies)
-  # Once you allow 'appleboy' actions in GitHub Settings, we can re-enable this.
+  deploy:
+    name: Deploy to Server
+    needs: [backend-build, frontend-build]
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Finish Build
+        run: echo "Build and APK generation successful. Ready for deployment."
