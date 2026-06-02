@@ -22,5 +22,5 @@ COPY --from=backend-build /app/target/*.jar app.jar
 
 EXPOSE 8080
 
-# Convert postgres(ql):// to jdbc:postgresql:// and append sslmode=require
-ENTRYPOINT ["sh", "-c", "JDBC=$(echo \"$SPRING_DATASOURCE_URL\" | sed 's|^postgresql://|jdbc:postgresql://|;s|^postgres://|jdbc:postgresql://|'); exec java -jar app.jar --spring.profiles.active=prod \"--spring.datasource.url=${JDBC}?sslmode=require\" \"--spring.datasource.username=${SPRING_DATASOURCE_USERNAME}\" \"--spring.datasource.password=${SPRING_DATASOURCE_PASSWORD}\""]
+# DB config is hardcoded in application-prod.properties (PTSI-style)
+ENTRYPOINT ["java", "-jar", "app.jar", "--spring.profiles.active=prod"]
