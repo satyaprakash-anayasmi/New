@@ -14,8 +14,6 @@ services:
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
-      - key: API_URL
-        sync: false # Set this to your live URL after the first build
       - key: DB_HOST
         fromDatabase:
           name: dms-db-prod-2026
@@ -29,13 +27,9 @@ services:
           name: dms-db-prod-2026
           property: database
       - key: DB_USER
-        fromDatabase:
-          name: dms-db-prod-2026
-          property: user
+        value: postgres
       - key: DB_PASS
-        fromDatabase:
-          name: dms-db-prod-2026
-          property: password
+        value: root
       - key: JWT_SECRET
         generateValue: true
       - key: ADMIN_PASSWORD
