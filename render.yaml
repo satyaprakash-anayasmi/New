@@ -1,6 +1,7 @@
 databases:
   - name: dms-db-prod-2026
     plan: free
+    region: ohio
 
 services:
   - type: web
@@ -17,7 +18,7 @@ services:
       - key: SPRING_DATASOURCE_URL
         fromDatabase:
           name: dms-db-prod-2026
-          property: internalConnectionString
+          property: connectionString
       - key: SPRING_DATASOURCE_USERNAME
         fromDatabase:
           name: dms-db-prod-2026
