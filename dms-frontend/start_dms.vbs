@@ -4,7 +4,7 @@ Set WshShell = CreateObject("WScript.Shell")
 WshShell.Run "cmd /k cd ..\dms && mvn spring-boot:run", 1, False
 
 ' 2. Start the Angular Frontend
-WshShell.Run "cmd /k cd .\ && npm start", 1, False
+WshShell.Run "cmd /k cd .\ && npm start -- --disable-host-check", 1, False
 
 ' 3. Start the Global Tunnel
 WshShell.Run "cmd /k npx localtunnel --port 4200", 1, False
