@@ -67,11 +67,13 @@ export class LoginComponent {
         console.error('Login error detail:', err);
 
         if (err.status === 0) {
-          this.toast.showError('Cannot connect to server. Please check your network and API URL.', 'Network Error');
+          this.toast.showError('Cannot connect to server. Status: 0. URL: ' + environment.apiUrl, 'Network Error');
         } else if (err.status === 401) {
           this.toast.showError(this.config.get('messages.login_error'), 'Login Failed');
         } else {
-          this.toast.showError(err.error?.message || 'An unexpected error occurred', 'Error');
+          // Show technical details for 500/502/503 errors
+          const technicalMsg = `Status: ${err.status}. Message: ${err.error?.message || err.message || 'Unexpected'}`;
+          this.toast.showError(technicalMsg, 'Server Error');
         }
       }
     });
