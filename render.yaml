@@ -14,10 +14,18 @@ services:
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
-      - key: DATABASE_URL
+      - key: SPRING_DATASOURCE_URL
         fromDatabase:
           name: dms-db-prod-2026
-          property: connectionString
+          property: internalConnectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: dms-db-prod-2026
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: dms-db-prod-2026
+          property: password
       - key: JWT_SECRET
         generateValue: true
       - key: ADMIN_PASSWORD
