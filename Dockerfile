@@ -11,9 +11,7 @@ FROM maven:3.9.6-eclipse-temurin-21 AS backend-build
 WORKDIR /app
 COPY dms/pom.xml .
 COPY dms/src ./src
-# Create the static resources folder if it doesn't exist
 RUN mkdir -p src/main/resources/static
-# Copy the built Angular app into the Spring Boot static folder
 COPY --from=frontend-build /app/dist/dms-frontend/browser/ src/main/resources/static/
 RUN mvn clean package -DskipTests
 
@@ -22,16 +20,7 @@ FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 COPY --from=backend-build /app/target/*.jar app.jar
 
-# Port 8080 is the standard for Railway
 EXPOSE 8080
 
-# Run with Production Profile
-# Copy startup script and set permissions
-COPY start-app.sh .
-RUN chmod +x start-app.sh
-
-# Run using the robust startup script
-ENTRYPOINT ["./start-app.sh"]
-
-
-
+# DB config is handled purely by application-prod.properties using env vars from render.yaml
+ENTRYPOINT ["java", "-jar", "app.jar", "--spring.profiles.active=prod"]
