@@ -22,5 +22,5 @@ COPY --from=backend-build /app/target/*.jar app.jar
 
 EXPOSE 8080
 
-# Ultra-Lean profile for Render Free Tier (512MB Total)
-ENTRYPOINT ["java", "-Xmx200m", "-Xms128m", "-jar", "app.jar", "--spring.profiles.active=prod"]
+# G1GC is more efficient at managing memory in fragmented, small containers
+ENTRYPOINT ["java", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-Xmx200m", "-Xms128m", "-jar", "app.jar", "--spring.profiles.active=prod"]
