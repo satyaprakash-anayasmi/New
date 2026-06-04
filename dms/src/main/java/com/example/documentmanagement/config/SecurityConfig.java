@@ -44,6 +44,8 @@ public class SecurityConfig {
                                 "/api-docs", "/swagger-ui.html")
                         .permitAll()
                         .requestMatchers("/actuator/**").permitAll()
+                        // Allow all other UI routes for Angular routing
+                        .requestMatchers("/dashboard/**", "/login", "/register", "/documents/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
