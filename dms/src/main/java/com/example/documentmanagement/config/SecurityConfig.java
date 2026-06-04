@@ -37,15 +37,15 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index.html", "/*.js", "/*.css", "/*.ico", "/assets/**").permitAll()
+                        // Permit ALL non-API and non-Actuator routes to support Angular SPA routing
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(
-                                "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**",
-                                "/api-docs", "/swagger-ui.html")
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html")
                         .permitAll()
                         .requestMatchers("/actuator/**").permitAll()
-                        // Allow all other UI routes for Angular routing
-                        .requestMatchers("/dashboard/**", "/login", "/register", "/documents/**").permitAll()
+                        // This catch-all permits the ForwardController and static assets
+                        .requestMatchers("/", "/index.html", "/*.js", "/*.css", "/*.ico", "/assets/**").permitAll()
+                        .requestMatchers("/dashboard/**", "/login", "/register", "/documents/**", "/error").permitAll()
+                        // Fallback for everything else that is not an API
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
