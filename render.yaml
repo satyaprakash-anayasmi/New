@@ -11,7 +11,9 @@ services:
     region: ohio
     dockerContext: .
     dockerfilePath: Dockerfile
-    healthCheckPath: /actuator/health
+    healthCheckPath: /
+    healthCheckIntervalSeconds: 30
+    healthCheckTimeoutSeconds: 15
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
