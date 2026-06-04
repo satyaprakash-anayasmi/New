@@ -20,8 +20,7 @@ FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 COPY --from=backend-build /app/target/*.jar app.jar
 
-# No hardcoded EXPOSE - Render uses dynamic PORT
+EXPOSE 8080
 
-# RENDER_DB_URL is NOT a Spring magic name, so it won't auto-override.
-# We convert postgresql:// -> jdbc:postgresql:// and pass it as the ONLY datasource.url
-ENTRYPOINT ["sh", "-c", "JDBC=$(echo $RENDER_DB_URL | sed 's|^postgresql://|jdbc:postgresql://|;s|^postgres://|jdbc:postgresql://|' | sed 's|//.*@|//|') && echo 'DMS Booting...' && exec java -Xmx300m -Xms128m -jar app.jar --spring.profiles.active=prod \"--spring.datasource.url=${JDBC}?sslmode=require\" --spring.datasource.username=$RENDER_DB_USER --spring.datasource.password=$RENDER_DB_PASS"]
+# Clean startup - all URL logic is now inside Java (Application.java)
+ENTRYPOINT ["java", "-Xmx300m", "-Xms128m", "-jar", "app.jar", "--spring.profiles.active=prod", "--spring.datasource.username=${RENDER_DB_USER}", "--spring.datasource.password=${RENDER_DB_PASS}"]
