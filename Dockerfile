@@ -20,7 +20,7 @@ FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 COPY --from=backend-build /app/target/*.jar app.jar
 
-EXPOSE 8080
+# No hardcoded EXPOSE - Render uses dynamic PORT
 
 # RENDER_DB_URL is NOT a Spring magic name, so it won't auto-override.
 # We convert postgresql:// -> jdbc:postgresql:// and pass it as the ONLY datasource.url
