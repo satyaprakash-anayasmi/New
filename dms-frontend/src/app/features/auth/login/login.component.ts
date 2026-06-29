@@ -8,6 +8,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 
 import { ToastService } from '../../../core/services/toast.service';
 import { ConfigService } from '../../../core/services/config.service';
+import { LoggerService } from '../../../core/services/logger.service';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -28,7 +29,8 @@ export class LoginComponent {
     private readonly router: Router,
     private readonly toast: ToastService,
     private readonly translate: TranslateService,
-    private readonly http: HttpClient
+    private readonly http: HttpClient,
+    private readonly logger: LoggerService
   ) { }
 
   onSubmit() {
@@ -66,7 +68,7 @@ export class LoginComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        console.error('Login error detail:', err);
+        this.logger.error('Login error detail:', err);
         // Error is now handled by GlobalErrorInterceptor
       }
     });

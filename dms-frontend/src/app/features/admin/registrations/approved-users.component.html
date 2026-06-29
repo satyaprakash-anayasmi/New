@@ -1,32 +1,37 @@
-<div class="pending-container fade-in">
-    <!-- Header Section -->
-    <div class="header-section">
-        <div class="header-content">
-            <h1 class="header-title">{{ 'ADMIN.APPROVED_USERS.TITLE' | translate }}</h1>
-            <p class="header-subtitle">{{ 'ADMIN.APPROVED_USERS.SUBTITLE' | translate }}</p>
-        </div>
-        <div class="header-stats">
-            <div class="stat-badge">
-                <span class="stat-value">{{ totalElements }}</span>
-                <span class="stat-label">ACTIVE USERS</span>
-            </div>
-        </div>
-    </div>
+<div class="min-h-screen bg-[#060818] p-4 md:p-8">
+    <div class="max-w-7xl mx-auto space-y-8">
 
-    <!-- Table Card -->
-    <div class="ledger-card">
-        <div class="card-header">
-            <div class="card-title-group">
-                <h2 class="card-title">System User Access Ledger</h2>
-                <span class="card-subtitle">CENTRALIZED IDENTITY CONTROL</span>
+        <!-- Header Section -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="space-y-2">
+                <h1 class="text-4xl font-black text-white tracking-tight flex items-center gap-4">
+                    {{ 'ADMIN.APPROVED_USERS.TITLE' | translate }}
+                </h1>
+                <p class="text-slate-400 font-medium">{{ 'ADMIN.APPROVED_USERS.SUBTITLE' | translate }}</p>
             </div>
+
         </div>
 
-        <div class="card-body">
-            <app-data-table [headers]="headers" [data]="users" [isLoading]="isLoading" [totalElements]="totalElements"
-                [totalPages]="totalPages" [currentPage]="currentPage" [pageSize]="pageSize"
-                (pageChange)="loadUsers($event)" (pageSizeChange)="onPageSizeChange($event)">
-            </app-data-table>
-        </div>
+        <!-- Data Table (Search + Active/Inactive Tabs built-in) -->
+        <app-data-table
+            [title]="'ADMIN.APPROVED_USERS.TABLE_TITLE' | translate"
+            [headers]="headers"
+            [data]="users"
+            [isLoading]="isLoading"
+            [totalElements]="totalElements"
+            [totalPages]="totalPages"
+            [currentPage]="currentPage"
+            [pageSize]="pageSize"
+            [isLast]="isLast"
+            [searchable]="true"
+            [showActiveInactiveFilter]="true"
+            [activeTab]="activeTab"
+            [activeTabLabel]="'ADMIN.APPROVED_USERS.ACTIVE_USERS' | translate"
+            [inactiveTabLabel]="'ADMIN.APPROVED_USERS.INACTIVE_USERS' | translate"
+            (activeTabChange)="onTabChange($event)"
+            (pageChange)="loadUsers($event)"
+            (pageSizeChange)="onPageSizeChange($event)">
+        </app-data-table>
+
     </div>
 </div>

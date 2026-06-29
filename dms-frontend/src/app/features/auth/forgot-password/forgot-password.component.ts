@@ -14,7 +14,8 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrl: './forgot-password.component.css'
 })
 export class ForgotPasswordComponent {
-  email = '';
+  identifier = '';
+  method: 'EMAIL' | 'PHONE' = 'EMAIL';
   isLoading = false;
 
   constructor(
@@ -24,18 +25,22 @@ export class ForgotPasswordComponent {
   ) { }
 
   onSubmit() {
-    if (!this.email.includes('@gmail.com')) {
-      this.toastService.showError('Please enter a valid Gmail address');
+    if (this.method === 'EMAIL' && !this.identifier.includes('@')) {
+      this.toastService.showError('Please enter a valid email address');
+      return;
+    }
+    if (this.method === 'PHONE' && this.identifier.length < 10) {
+      this.toastService.showError('Please enter a valid phone number');
       return;
     }
 
     this.isLoading = true;
-    this.authService.forgotPassword(this.email).subscribe({
+    this.authService.forgotPassword(this.identifier, this.method).subscribe({
       next: (response) => {
         this.isLoading = false;
         if (response.success) {
-          this.toastService.showSuccess('Reset code sent to your email');
-          this.router.navigate(['/reset-password'], { queryParams: { email: this.email } });
+          this.toastService.showSuccess('Reset code sent successfully');
+          this.router.navigate(['/reset-password'], { queryParams: { identifier: this.identifier, method: this.method } });
         }
       },
       error: (error) => {

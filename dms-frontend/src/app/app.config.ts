@@ -14,7 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
     provideTranslateHttpLoader({
-      prefix: './assets/i18n/',
+      prefix: '/assets/i18n/',
       suffix: '.json'
     }),
     importProvidersFrom(
@@ -24,7 +24,7 @@ export const appConfig: ApplicationConfig = {
           provide: TranslateLoader,
           useClass: TranslateHttpLoader
         },
-        defaultLanguage: 'en'
+        fallbackLang: 'en'
       })
     ),
     provideServiceWorker('ngsw-worker.js', {

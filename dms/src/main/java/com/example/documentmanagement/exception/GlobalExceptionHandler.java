@@ -44,6 +44,30 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(ex.getMessage()));
     }
 
+    @ExceptionHandler(FileUploadException.class)
+    public ResponseEntity<ApiResponse<Void>> handleFileUploadException(FileUploadException ex) {
+        log.warn("File upload failed: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(ex.getMessage()));
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleFileNotFoundException(FileNotFoundException ex) {
+        log.warn("File not found: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(ex.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidFileException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInvalidFileException(InvalidFileException ex) {
+        log.warn("Invalid file: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(ex.getMessage()));
+    }
+
+    @ExceptionHandler(StorageException.class)
+    public ResponseEntity<ApiResponse<Void>> handleStorageException(StorageException ex) {
+        log.error("Storage error: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(MessageConstants.Error.FILE_STORAGE_ERROR));
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiResponse<Void>> handleIllegalArgumentException(IllegalArgumentException ex) {
         log.warn("Illegal argument: {}", ex.getMessage());
@@ -53,7 +77,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiResponse<Void>> handleBadCredentialsException(BadCredentialsException ex) {
         log.warn("Authentication failed: {}", ex.getMessage());
-        String msg = messageSource.getMessage(MessageConstants.ERROR_BAD_CREDENTIALS, null,
+        String msg = messageSource.getMessage(MessageConstants.Error.ERROR_BAD_CREDENTIALS, null,
                 "Invalid username or password", LocaleContextHolder.getLocale());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.error(msg));
     }
@@ -61,7 +85,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiResponse<Void>> handleAccessDeniedException(AccessDeniedException ex) {
         log.warn("Unauthorized access attempt: {}", ex.getMessage());
-        String msg = messageSource.getMessage(MessageConstants.UNAUTHORIZED_ACCESS, null, "Unauthorized",
+        String msg = messageSource.getMessage(MessageConstants.Error.UNAUTHORIZED_ACCESS, null, "Unauthorized",
                 LocaleContextHolder.getLocale());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.error(msg));
     }
@@ -74,7 +98,7 @@ public class GlobalExceptionHandler {
                 .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
 
         log.warn("Validation error: {}", errors);
-        String msg = messageSource.getMessage(MessageConstants.VALIDATION_ERROR, null, "Validation failed",
+        String msg = messageSource.getMessage(MessageConstants.Validation.VALIDATION_ERROR, null, "Validation failed",
                 LocaleContextHolder.getLocale());
 
         ApiResponse<Map<String, String>> response = new ApiResponse<>(false, msg, errors);
@@ -82,18 +106,39 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDataIntegrityViolationException(
+            org.springframework.dao.DataIntegrityViolationException ex) {
+        log.warn("Database constraint violation: {}", ex.getMessage().split("\n")[0]);
+        String msg = messageSource.getMessage("error.db.constraint", null,
+                "A database error occurred due to invalid or duplicate data. Please check your inputs.",
+                LocaleContextHolder.getLocale());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(msg));
+    }
+
+    @ExceptionHandler(org.springframework.web.HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleMethodNotSupportedException(org.springframework.web.HttpRequestMethodNotSupportedException ex) {
+        log.warn("Method not supported: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(ApiResponse.error(ex.getMessage()));
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ApiResponse<Void>> handleRuntimeException(RuntimeException ex) {
-        log.error("Business error caught: {}", ex.getMessage(), ex);
-        String msg = ex.getMessage() != null ? ex.getMessage() : "An unexpected business error occurred";
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(msg));
+        log.warn("[RUNTIME ERROR] {} : {}", ex.getClass().getSimpleName(), ex.getMessage());
+        Throwable cause = ex.getCause();
+        while (cause != null) {
+            if (cause instanceof jakarta.validation.ConstraintViolationException || cause.getClass().getName().contains("ConstraintViolationException")) {
+                String errorMsg = cause.getMessage() != null ? cause.getMessage() : "A database constraint or validation error occurred.";
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(errorMsg));
+            }
+            cause = cause.getCause();
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(ex.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception ex) {
-        log.error("CRITICAL ERROR: Unhandled exception caught: {}", ex.getMessage(), ex);
-        String msg = messageSource.getMessage("error.internal.server", null,
-                "An unexpected system error occurred. Please contact support.", LocaleContextHolder.getLocale());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(msg));
+        log.error("[UNHANDLED ERROR] {} : {}", ex.getClass().getSimpleName(), ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(ex.getMessage()));
     }
 }

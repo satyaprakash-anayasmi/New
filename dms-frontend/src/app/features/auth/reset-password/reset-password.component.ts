@@ -15,7 +15,8 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class ResetPasswordComponent implements OnInit {
   data = {
-    email: '',
+    identifier: '',
+    method: 'EMAIL',
     otpCode: '',
     newPassword: '',
     confirmPassword: ''
@@ -31,9 +32,11 @@ export class ResetPasswordComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.data.email = this.route.snapshot.queryParamMap.get('email') || '';
-    if (!this.data.email) {
-      this.toastService.showError('No email provided for password reset');
+    this.data.identifier = this.route.snapshot.queryParamMap.get('identifier') || '';
+    this.data.method = this.route.snapshot.queryParamMap.get('method') || 'EMAIL';
+    
+    if (!this.data.identifier) {
+      this.toastService.showError('No identifier provided for password reset');
       this.router.navigate(['/forgot-password']);
     }
   }

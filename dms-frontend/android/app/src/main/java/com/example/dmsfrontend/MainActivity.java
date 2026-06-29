@@ -1,4 +1,4 @@
-package com.example.dmsfrontend;
+package com.example.smartbazar;
 
 import com.getcapacitor.BridgeActivity;
 

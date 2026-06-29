@@ -1,28 +1,26 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../../shared/models/api-response.model';
+import { ApiService } from '../services/api.service';
+import { LoggerService } from '../services/logger.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private readonly apiUrl = `${environment.apiUrl}/auth`;
-
   constructor(
-    private readonly http: HttpClient,
-    private readonly router: Router
+    private readonly apiService: ApiService,
+    private readonly router: Router,
+    private readonly logger: LoggerService
   ) { }
 
   login(credentials: { username: string; password: string }): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/login`, credentials).pipe(
+    return this.apiService.login(credentials).pipe(
       tap(response => {
         if (response.success && response.data?.accessToken) {
           localStorage.setItem('access_token', response.data.accessToken);
-          // Optional: decode roles and store them in memory/state
         }
       })
     );
@@ -31,7 +29,7 @@ export class AuthService {
   logout(): void {
     localStorage.clear();
     sessionStorage.clear();
-    this.router.navigate(['/login']).then(() => {
+    this.router.navigate(['/welcome']).then(() => {
       globalThis.location.reload();
     });
   }
@@ -46,62 +44,67 @@ export class AuthService {
     try {
       return JSON.parse(atob(token.split('.')[1]));
     } catch (e) {
-      console.error('Error decoding token', e);
+      this.logger.error('Error decoding token', e);
       return null;
     }
   }
 
-  register(userData: any): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/register`, userData);
+  register(userData: any, photo?: File): Observable<ApiResponse<any>> {
+    const formData = new FormData();
+    formData.append('data', new Blob([JSON.stringify(userData)], { type: 'application/json' }));
+    if (photo) {
+      formData.append('photo', photo);
+    }
+    return this.apiService.register(formData);
   }
 
-  sendRegisterOtp(email: string): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/register/otp?email=${email}`, {});
+  sendRegisterOtp(identifier: string, method: 'EMAIL' | 'PHONE' = 'EMAIL'): Observable<ApiResponse<any>> {
+    return this.apiService.sendRegisterOtp(identifier, method);
   }
 
-  verifyRegisterOtp(email: string, otp: string): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/register/verify?email=${email}&otp=${otp}`, {});
+  verifyRegisterOtp(identifier: string, otp: string, method: 'EMAIL' | 'PHONE' = 'EMAIL'): Observable<ApiResponse<any>> {
+    return this.apiService.verifyRegisterOtp(identifier, otp, method);
   }
 
-  forgotPassword(email: string): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/forgot-password`, { email });
+  forgotPassword(identifier: string, method: 'EMAIL' | 'PHONE' = 'EMAIL'): Observable<ApiResponse<any>> {
+    return this.apiService.forgotPassword(identifier, method);
   }
 
-  verifyForgotPasswordOtp(email: string, otp: string): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/forgot-password/verify?email=${email}&otp=${otp}`, {});
+  verifyForgotPasswordOtp(identifier: string, otp: string, method: 'EMAIL' | 'PHONE' = 'EMAIL'): Observable<ApiResponse<any>> {
+    return this.apiService.verifyForgotPasswordOtp(identifier, otp, method);
   }
 
   resetPassword(data: any): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/reset-password`, data);
+    return this.apiService.resetPassword(data);
   }
 
   // Admin Registration Management
   getPendingRegistrations(page: number = 0, size: number = 5): Observable<ApiResponse<any>> {
-    return this.http.get<ApiResponse<any>>(`${environment.apiUrl}/admin/registrations/pending?page=${page}&size=${size}`);
+    return this.apiService.getPendingRegistrations(page, size);
   }
 
   getInactiveRegistrations(page: number = 0, size: number = 5): Observable<ApiResponse<any>> {
-    return this.http.get<ApiResponse<any>>(`${environment.apiUrl}/admin/registrations/inactive?page=${page}&size=${size}`);
+    return this.apiService.getInactiveRegistrations(page, size);
   }
 
-  getApprovedUsers(page: number = 0, size: number = 5): Observable<ApiResponse<any>> {
-    return this.http.get<ApiResponse<any>>(`${environment.apiUrl}/admin/registrations/approved?page=${page}&size=${size}`);
+  getApprovedUsers(page: number = 0, size: number = 5, active?: boolean): Observable<ApiResponse<any>> {
+    return this.apiService.getApprovedUsers(page, size, active);
   }
 
   approveRegistration(userId: number, role: string): Observable<ApiResponse<any>> {
-    return this.http.put<ApiResponse<any>>(`${environment.apiUrl}/admin/registrations/approve/${userId}?role=${role}`, {});
+    return this.apiService.approveRegistration(userId, role);
   }
 
   rejectRegistration(userId: number): Observable<ApiResponse<any>> {
-    return this.http.put<ApiResponse<any>>(`${environment.apiUrl}/admin/registrations/reject/${userId}`, {});
+    return this.apiService.rejectRegistration(userId);
   }
 
   softDeleteRegistration(userId: number): Observable<ApiResponse<any>> {
-    return this.http.put<ApiResponse<any>>(`${environment.apiUrl}/admin/registrations/soft-delete/${userId}`, {});
+    return this.apiService.softDeleteRegistration(userId);
   }
 
   restoreRegistration(userId: number): Observable<ApiResponse<any>> {
-    return this.http.put<ApiResponse<any>>(`${environment.apiUrl}/admin/registrations/restore/${userId}`, {});
+    return this.apiService.restoreRegistration(userId);
   }
 }
 

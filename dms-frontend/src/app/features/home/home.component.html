@@ -9,89 +9,77 @@
     <section class="hero-container">
         <div class="hero-main">
             <div class="floating-badge">
-                <span class="shimmer-text">v2.0 Experience</span>
+                <span class="shimmer-text">{{ 'HOME.BADGE' | translate }}</span>
             </div>
             <h1 class="main-title">
-                Next-Gen <span class="gradient-text">Document</span><br>
-                Control Center
+                {{ 'HOME.TITLE_PART1' | translate }} <span class="gradient-text">{{ 'HOME.TITLE_PART2' | translate }}</span><br>
+                {{ 'HOME.TITLE_PART3' | translate }}
             </h1>
             <p class="main-subtitle">
-                Experience the fusion of high-performance architecture and intuitive design.
-                Secure your enterprise assets with Nexus Intelligence.
+                {{ 'HOME.SUBTITLE' | translate }}
             </p>
             <div class="cta-group">
                 <button routerLink="/dashboard" class="btn-glow-primary">
-                    <span>Explore Dashboard</span>
+                    <span>{{ 'HOME.BTN_DASHBOARD' | translate }}</span>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path d="M5 12h14m-7-7l7 7-7 7" />
                     </svg>
                 </button>
                 <button class="btn-glass">
-                    Documentation
+                    {{ 'HOME.BTN_BROWSE' | translate }}
                 </button>
             </div>
         </div>
 
-        <!-- Interactive Visual Cards with REAL Content -->
+        <!-- Interactive Visual Cards -->
         <div class="hero-visual-box">
-            <!-- Card 1: Live System Stats Dashboard -->
+            <!-- Card 1: Grocery Items Showcase -->
             <div class="floating-card c-1">
                 <div class="c-header">
                     <div class="dot red"></div>
                     <div class="dot yellow"></div>
                     <div class="dot green"></div>
-                    <span class="c-header-title">System Monitor</span>
+                    <span class="c-header-title">{{ 'HOME.FEATURED_TITLE' | translate }}</span>
                 </div>
                 <div class="stats-mini-grid">
                     <div class="stat-mini-item">
                         <div class="stat-mini-icon blue-glow">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                <polyline points="14 2 14 8 20 8" />
-                                <line x1="16" y1="13" x2="8" y2="13" />
-                                <line x1="16" y1="17" x2="8" y2="17" />
-                                <polyline points="10 9 9 9 8 9" />
-                            </svg>
+                            <img src="assets/images/products/flour.png" alt="Flour"
+                                style="width:28px;height:28px;object-fit:contain;border-radius:6px;">
                         </div>
                         <div class="stat-mini-info">
-                            <span class="stat-mini-value">1,284</span>
-                            <span class="stat-mini-label">Documents</span>
+                            <span class="stat-mini-value">{{ 'PRODUCTS.FLOUR' | translate }}</span>
+                            <span class="stat-mini-label">5 {{ 'UNITS.KG' | translate }}</span>
                         </div>
                     </div>
                     <div class="stat-mini-item">
                         <div class="stat-mini-icon purple-glow">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                                <circle cx="9" cy="7" r="4" />
-                                <path d="M23 21v-2a4 4 0 00-3-3.87" />
-                                <path d="M16 3.13a4 4 0 010 7.75" />
-                            </svg>
+                            <img src="assets/images/products/salt.png" alt="Salt"
+                                style="width:28px;height:28px;object-fit:contain;border-radius:6px;">
                         </div>
                         <div class="stat-mini-info">
-                            <span class="stat-mini-value">48</span>
-                            <span class="stat-mini-label">Active Users</span>
+                            <span class="stat-mini-value">{{ 'PRODUCTS.SALT' | translate }}</span>
+                            <span class="stat-mini-label">1 {{ 'UNITS.KG' | translate }}</span>
                         </div>
                     </div>
                     <div class="stat-mini-item">
                         <div class="stat-mini-icon emerald-glow">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                            </svg>
+                            <img src="assets/images/products/oil.png" alt="Oil"
+                                style="width:28px;height:28px;object-fit:contain;border-radius:6px;">
                         </div>
                         <div class="stat-mini-info">
-                            <span class="stat-mini-value">99.8%</span>
-                            <span class="stat-mini-label">Uptime</span>
+                            <span class="stat-mini-value">{{ 'PRODUCTS.OIL' | translate }}</span>
+                            <span class="stat-mini-label">1 {{ 'UNITS.LITRE' | translate }}</span>
                         </div>
                     </div>
                     <div class="stat-mini-item">
                         <div class="stat-mini-icon amber-glow">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                            </svg>
+                            <img src="assets/images/products/pulses.png" alt="Dal"
+                                style="width:28px;height:28px;object-fit:contain;border-radius:6px;">
                         </div>
                         <div class="stat-mini-info">
-                            <span class="stat-mini-value">AES-256</span>
-                            <span class="stat-mini-label">Encryption</span>
+                            <span class="stat-mini-value">{{ 'PRODUCTS.DAL' | translate }}</span>
+                            <span class="stat-mini-label">1 {{ 'UNITS.KG' | translate }}</span>
                         </div>
                     </div>
                 </div>
@@ -112,34 +100,35 @@
                 <div class="c2-header-row">
                     <div class="icon-orb">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                            <path
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
                     </div>
                     <div class="c2-header-text">
-                        <span class="c2-title">Recent Activity</span>
-                        <span class="c2-badge live-badge">● Live</span>
+                        <span class="c2-title">{{ 'HOME.FRESH_ITEMS' | translate }}</span>
+                        <span class="c2-badge live-badge">● {{ 'HOME.LIVE' | translate }}</span>
                     </div>
                 </div>
                 <div class="activity-feed">
                     <div class="activity-item">
                         <div class="activity-dot success"></div>
                         <div class="activity-content">
-                            <span class="activity-action">Invoice_Q4.pdf</span>
-                            <span class="activity-meta">Approved • 2 min ago</span>
+                            <span class="activity-action">{{ 'HOME.WHOLE_WHEAT_ATTA' | translate }}</span>
+                            <span class="activity-meta">{{ 'HOME.FRESH' | translate }} • 5 {{ 'UNITS.KG' | translate }}</span>
                         </div>
                     </div>
                     <div class="activity-item">
                         <div class="activity-dot warning"></div>
                         <div class="activity-content">
-                            <span class="activity-action">Contract_Draft.docx</span>
-                            <span class="activity-meta">In Review • 15 min ago</span>
+                            <span class="activity-action">{{ 'HOME.PURE_IODIZED_SALT' | translate }}</span>
+                            <span class="activity-meta">{{ 'HOME.IN_STOCK' | translate }} • 1 {{ 'UNITS.KG' | translate }}</span>
                         </div>
                     </div>
                     <div class="activity-item">
                         <div class="activity-dot info"></div>
                         <div class="activity-content">
-                            <span class="activity-action">Report_2026.xlsx</span>
-                            <span class="activity-meta">Uploaded • 1 hr ago</span>
+                            <span class="activity-action">{{ 'HOME.GOLDEN_SUNFLOWER_OIL' | translate }}</span>
+                            <span class="activity-meta">{{ 'HOME.POPULAR' | translate }} • 1 {{ 'UNITS.LITRE' | translate }}</span>
                         </div>
                     </div>
                 </div>
@@ -150,11 +139,9 @@
                 <div class="gauge-header">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="gauge-icon">
                         <path
-                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                        <line x1="12" y1="22.08" x2="12" y2="12" />
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
-                    <span class="gauge-title">Storage</span>
+                    <span class="gauge-title">{{ 'HOME.PRODUCTS' | translate }}</span>
                 </div>
                 <div class="storage-ring-wrapper">
                     <svg viewBox="0 0 80 80" class="storage-ring">
@@ -169,12 +156,12 @@
                         </defs>
                     </svg>
                     <div class="ring-text">
-                        <span class="ring-value">75%</span>
-                        <span class="ring-label">Used</span>
+                        <span class="ring-value">500+</span>
+                        <span class="ring-label">{{ 'HOME.ITEMS' | translate }}</span>
                     </div>
                 </div>
                 <div class="storage-meta">
-                    <span>18.4 GB</span> / <span class="storage-total">24 GB</span>
+                    <span>10K+</span> / <span class="storage-total">{{ 'HOME.CUSTOMERS' | translate }}</span>
                 </div>
             </div>
         </div>
@@ -183,27 +170,195 @@
     <!-- Features Section -->
     <section class="features-grid">
         <div class="feature-card">
-            <div class="f-icon-box blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg></div>
-            <h3>Military Security</h3>
-            <p>End-to-end encryption for every single byte of your data.</p>
+            <div class="f-icon-box blue">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <h3>{{ 'HOME.QUALITY_TITLE' | translate }}</h3>
+            <p>{{ 'HOME.QUALITY_DESC' | translate }}</p>
         </div>
         <div class="feature-card">
-            <div class="f-icon-box purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-                </svg></div>
-            <h3>Neural Speed</h3>
-            <p>Optimized indexing architecture for near-instant document retrieval.</p>
+            <div class="f-icon-box purple">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+            </div>
+            <h3>{{ 'HOME.FAST_DELIVERY_TITLE' | translate }}</h3>
+            <p>{{ 'HOME.FAST_DELIVERY_DESC' | translate }}</p>
         </div>
         <div class="feature-card">
-            <div class="f-icon-box emerald"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M23 21v-2a4 4 0 00-3-3.87m-4-12a4 4 0 010 7.75" />
-                </svg></div>
-            <h3>Smart Teams</h3>
-            <p>Role-based access control refined for large-scale organizations.</p>
+            <div class="f-icon-box emerald">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <h3>{{ 'HOME.BEST_PRICES_TITLE' | translate }}</h3>
+            <p>{{ 'HOME.BEST_PRICES_DESC' | translate }}</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- Facilities Section -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="facilities-section">
+        <div class="facilities-inner">
+            <div class="section-label-row">
+                <span class="section-chip">{{ 'HOME.OUR_FACILITIES' | translate }}</span>
+                <h2 class="section-heading">{{ 'HOME.FACILITIES_TITLE' | translate }}</h2>
+                <p class="section-sub">{{ 'HOME.FACILITIES_DESC' | translate }}</p>
+            </div>
+
+            <div class="facilities-grid">
+
+                <!-- Grain / Atta Warehouse -->
+                <div class="facility-card">
+                    <div class="facility-icon-wrap grain-bg">
+                        <svg class="facility-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M9 22V12h6v10"/>
+                            <circle cx="12" cy="7" r="1.5" fill="currentColor" stroke="none"/>
+                        </svg>
+                    </div>
+                    <div class="facility-body">
+                        <h3 class="facility-title">{{ 'HOME.GRAIN_WAREHOUSE_TITLE' | translate }}</h3>
+                        <p class="facility-desc">{{ 'HOME.GRAIN_WAREHOUSE_DESC' | translate }}</p>
+                        <div class="facility-stats-row">
+                            <div class="fstat">
+                                <span class="fstat-num">50,000+</span>
+                                <span class="fstat-lbl">{{ 'HOME.METRIC_TONS' | translate }}</span>
+                            </div>
+                            <div class="fstat">
+                                <span class="fstat-num">6</span>
+                                <span class="fstat-lbl">{{ 'HOME.LOCATIONS' | translate }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="facility-glow grain-glow"></div>
+                </div>
+
+                <!-- Sugar Warehouse -->
+                <div class="facility-card">
+                    <div class="facility-icon-wrap sugar-bg">
+                        <svg class="facility-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                        </svg>
+                    </div>
+                    <div class="facility-body">
+                        <h3 class="facility-title">{{ 'HOME.SUGAR_WAREHOUSE_TITLE' | translate }}</h3>
+                        <p class="facility-desc">{{ 'HOME.SUGAR_WAREHOUSE_DESC' | translate }}</p>
+                        <div class="facility-stats-row">
+                            <div class="fstat">
+                                <span class="fstat-num">20,000+</span>
+                                <span class="fstat-lbl">{{ 'HOME.METRIC_TONS' | translate }}</span>
+                            </div>
+                            <div class="fstat">
+                                <span class="fstat-num">4</span>
+                                <span class="fstat-lbl">{{ 'HOME.LOCATIONS' | translate }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="facility-glow sugar-glow"></div>
+                </div>
+
+                <!-- Corporate Office -->
+                <div class="facility-card">
+                    <div class="facility-icon-wrap office-bg">
+                        <svg class="facility-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0H5m14 0H3"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M9 7h1m4 0h1M9 11h1m4 0h1M9 15h1m4 0h1"/>
+                        </svg>
+                    </div>
+                    <div class="facility-body">
+                        <h3 class="facility-title">{{ 'HOME.OFFICE_TITLE' | translate }}</h3>
+                        <p class="facility-desc">{{ 'HOME.OFFICE_DESC' | translate }}</p>
+                        <div class="facility-stats-row">
+                            <div class="fstat">
+                                <span class="fstat-num">200+</span>
+                                <span class="fstat-lbl">{{ 'HOME.STAFF' | translate }}</span>
+                            </div>
+                            <div class="fstat">
+                                <span class="fstat-num">24/7</span>
+                                <span class="fstat-lbl">{{ 'HOME.OPERATIONS' | translate }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="facility-glow office-glow"></div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- How It Works Section -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="how-it-works">
+        <div class="hiw-inner">
+            <div class="section-label-row">
+                <span class="section-chip hiw-chip">{{ 'HOME.HOW_IT_WORKS' | translate }}</span>
+                <h2 class="section-heading">{{ 'HOME.HOW_TITLE' | translate }}</h2>
+                <p class="section-sub">{{ 'HOME.HOW_DESC' | translate }}</p>
+            </div>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-num">01</div>
+                    <div class="step-icon-wrap step-blue">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                    </div>
+                    <h4 class="step-title">{{ 'HOME.STEP1_TITLE' | translate }}</h4>
+                    <p class="step-desc">{{ 'HOME.STEP1_DESC' | translate }}</p>
+                    <div class="step-connector"></div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-num">02</div>
+                    <div class="step-icon-wrap step-purple">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h4 class="step-title">{{ 'HOME.STEP2_TITLE' | translate }}</h4>
+                    <p class="step-desc">{{ 'HOME.STEP2_DESC' | translate }}</p>
+                    <div class="step-connector"></div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-num">03</div>
+                    <div class="step-icon-wrap step-emerald">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                    </div>
+                    <h4 class="step-title">{{ 'HOME.STEP3_TITLE' | translate }}</h4>
+                    <p class="step-desc">{{ 'HOME.STEP3_DESC' | translate }}</p>
+                    <div class="step-connector"></div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-num">04</div>
+                    <div class="step-icon-wrap step-amber">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+                    <h4 class="step-title">{{ 'HOME.STEP4_TITLE' | translate }}</h4>
+                    <p class="step-desc">{{ 'HOME.STEP4_DESC' | translate }}</p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -211,22 +366,20 @@
     <section class="about-modern">
         <div class="about-flex">
             <div class="about-image-stack">
-                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2426&ixlib=rb-4.0.3"
-                    alt="Analytics" class="img-base">
+                <img src="assets/images/products/pulses.png" alt="Fresh Grocery Products" class="img-base"
+                    style="object-fit:contain;background:rgba(255,255,255,0.05);padding:2rem;border-radius:1.5rem;">
                 <div class="floating-stats glass-premium">
-                    <span class="stat">+42%</span>
-                    <p>Efficiency Boost</p>
+                    <span class="stat">500+</span>
+                    <p>{{ 'HOME.PRODUCTS_AVAILABLE' | translate }}</p>
                 </div>
             </div>
             <div class="about-content">
-                <span class="label-gradient">Discovery</span>
-                <h2>The Nexus Philosophy</h2>
-                <p>We believe that enterprise software should be as beautiful as it is powerful. Our mission is to
-                    transform the way organizations interact with their knowledge base through futuristic UI and robust
-                    engineering.</p>
+                <span class="label-gradient">{{ 'HOME.ABOUT_BADGE' | translate }}</span>
+                <h2>{{ 'HOME.ABOUT_TITLE' | translate }}</h2>
+                <p>{{ 'HOME.ABOUT_DESC' | translate }}</p>
                 <div class="milestones">
-                    <div class="m-item"><span class="m-num">150+</span><span class="m-txt">Global Clients</span></div>
-                    <div class="m-item"><span class="m-num">1.2M</span><span class="m-txt">Docs Managed</span></div>
+                    <div class="m-item"><span class="m-num">500+</span><span class="m-txt">{{ 'HOME.PRODUCTS' | translate }}</span></div>
+                    <div class="m-item"><span class="m-num">10K+</span><span class="m-txt">{{ 'HOME.HAPPY_CUSTOMERS' | translate }}</span></div>
                 </div>
             </div>
         </div>
@@ -236,24 +389,24 @@
     <footer class="footer-premium">
         <div class="footer-wrap">
             <div class="footer-brand">
-                <div class="logo-orb">N</div>
-                <h3>Nexus DMS</h3>
+                <div class="brand-logo mb-6">
+                    <img src="/assets/images/logo.png" alt="Bazaar Janakalyan Logo" class="w-12 h-12 object-contain" />
+                    <span class="text-2xl font-black text-white tracking-tight">{{ 'COMMON.BRAND_NAME' | translate }}</span>
+                </div>
             </div>
             <div class="footer-links">
                 <div class="link-col">
-                    <h4>Contact</h4>
-                    <p>support&#64;nexus-dms.com</p>
-                    <p>+1-800-NEXUS-DOC</p>
+                    <h4>{{ 'HOME.CONTACT' | translate }}</h4>
+                    <p>support&#64;bazaarjanakalyan.com</p>
+                    <p>+91-800-BAZAAR-JK</p>
                 </div>
                 <div class="link-col">
-                    <h4>Location</h4>
-                    <p>San Francisco, CA</p>
-                    <p>Innovation District</p>
+                    <h4>{{ 'HOME.LOCATION' | translate }}</h4>
+                    <p>{{ 'HOME.BHUBANESWAR' | translate }}</p>
+                    <p>{{ 'HOME.INDIA' | translate }}</p>
                 </div>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Nexus Document Management Systems. All rights reserved.</p>
-        </div>
+
     </footer>
 </div>

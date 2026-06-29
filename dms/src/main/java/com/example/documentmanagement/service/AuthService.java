@@ -5,19 +5,20 @@ import com.example.documentmanagement.dto.response.TokenResponse;
 import com.example.documentmanagement.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface AuthService {
     TokenResponse authenticateAndGenerateToken(LoginRequest loginRequest);
 
-    void register(com.example.documentmanagement.dto.request.RegisterRequest registerRequest);
+    void register(com.example.documentmanagement.dto.request.RegisterRequest registerRequest, MultipartFile photo);
 
-    void sendRegistrationOtp(String email);
+    String sendRegistrationOtp(String identifier, String method);
 
-    void verifyRegistrationOtp(String email, String code);
+    void verifyRegistrationOtp(String identifier, String code, String method);
 
-    void forgotPassword(com.example.documentmanagement.dto.request.ForgotPasswordRequest request);
+    String forgotPassword(com.example.documentmanagement.dto.request.ForgotPasswordRequest request);
 
-    void verifyForgotPasswordOtp(String email, String code);
+    void verifyForgotPasswordOtp(String identifier, String code, String method);
 
     void resetPassword(com.example.documentmanagement.dto.request.ResetPasswordRequest request);
 
@@ -25,7 +26,7 @@ public interface AuthService {
 
     Page<User> getInactiveRegistrationRequests(Pageable pageable);
 
-    Page<User> getApprovedUsers(Pageable pageable);
+    Page<User> getApprovedUsers(Boolean active, Pageable pageable);
 
     void approveRegistration(Long userId, String finalRole);
 
@@ -34,4 +35,6 @@ public interface AuthService {
     void softDeleteRegistration(Long userId);
 
     void restoreRegistration(Long userId);
+
+    void validatePromoCode(String code);
 }

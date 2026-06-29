@@ -3,22 +3,179 @@
 
 <head>
   <meta charset="utf-8">
-  <title>DmsFrontend</title>
+  <title>Bazaar Janakalyan</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/images/logo.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+  
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="DMS">
-  <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
+  <meta name="apple-mobile-web-app-title" content="Bazaar Janakalyan">
+  <link rel="apple-touch-icon" href="/assets/images/logo.png">
+
+  <style>
+    /* ═══ GLOBAL LOADING SCREEN ═══ */
+    #sb-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: #05070a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    #sb-loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    /* Ambient background blobs */
+    .sb-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+    .sb-blob-1 { width: 400px; height: 400px; background: rgba(22,163,74,0.12); top: -100px; right: -100px; }
+    .sb-blob-2 { width: 350px; height: 350px; background: rgba(99,102,241,0.08); bottom: -80px; left: -80px; }
+    .sb-blob-3 { width: 200px; height: 200px; background: rgba(74,222,128,0.06); top: 50%; left: 50%; transform: translate(-50%,-50%); }
+
+    /* ─── Logo wrapper ─── */
+    .sb-logo-wrap {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: sb-pulse 2s ease-in-out infinite;
+    }
+    
+    .sb-logo-wrap img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    @keyframes sb-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* ─── Brand name ─── */
+    .sb-brand-name {
+      margin-top: 22px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      background: linear-gradient(90deg, #4ade80, #ffffff, #fde68a);
+      background-size: 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: sb-shimmer 2.5s linear infinite;
+    }
+    @keyframes sb-shimmer {
+      0%   { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    /* ─── Loading dots ─── */
+    .sb-dots {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .sb-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      animation: sb-bounce 1.2s ease-in-out infinite;
+    }
+    .sb-dot:nth-child(1) { background: #22c55e; animation-delay: 0s; }
+    .sb-dot:nth-child(2) { background: #fde68a; animation-delay: 0.18s; }
+    .sb-dot:nth-child(3) { background: #38bdf8; animation-delay: 0.36s; }
+    .sb-dot:nth-child(4) { background: #c084fc; animation-delay: 0.54s; }
+    .sb-dot:nth-child(5) { background: #fb923c; animation-delay: 0.72s; }
+
+    @keyframes sb-bounce {
+      0%, 100% { transform: translateY(0);  opacity: 0.4; }
+      50%       { transform: translateY(-9px); opacity: 1; }
+    }
+
+    /* ─── Sub text ─── */
+    .sb-sub-text {
+      margin-top: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(100,116,139,0.8);
+    }
+  </style>
 </head>
 
 <body>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!--       GLOBAL LOADING SCREEN (pre-bootstrap)   -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div id="sb-loader">
+    <!-- ambient blobs -->
+    <div class="sb-blob sb-blob-1"></div>
+    <div class="sb-blob sb-blob-2"></div>
+    <div class="sb-blob sb-blob-3"></div>
+
+    <!-- Logo -->
+    <div class="sb-logo-wrap">
+      <img src="/assets/images/logo.png" alt="Bazaar Janakalyan Logo" />
+    </div>
+
+    <!-- Brand name with shimmer -->
+    <div class="sb-brand-name">Bazaar Janakalyan</div>
+
+    <!-- Bouncing dots -->
+    <div class="sb-dots">
+      <div class="sb-dot"></div>
+      <div class="sb-dot"></div>
+      <div class="sb-dot"></div>
+      <div class="sb-dot"></div>
+      <div class="sb-dot"></div>
+    </div>
+
+    <div class="sb-sub-text">The World of Happiness</div>
+  </div>
+
+  <!-- Angular App Root -->
   <app-root></app-root>
+
+  <script>
+    // Remove loader once Angular has bootstrapped
+    window.addEventListener('load', function () {
+      setTimeout(function () {
+        var loader = document.getElementById('sb-loader');
+        if (loader) {
+          loader.classList.add('hidden');
+          setTimeout(function () { loader.remove(); }, 600);
+        }
+      }, 800);
+    });
+  </script>
+
 </body>
 
 </html>

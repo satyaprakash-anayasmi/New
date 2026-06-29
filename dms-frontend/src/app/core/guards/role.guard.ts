@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { LoggerService } from '../services/logger.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class RoleGuard implements CanActivate {
 
-    constructor(private readonly router: Router) { }
+    constructor(private readonly router: Router, private readonly logger: LoggerService) { }
 
     canActivate(
         route: ActivatedRouteSnapshot,
@@ -15,7 +16,7 @@ export class RoleGuard implements CanActivate {
         const token = localStorage.getItem('access_token');
 
         if (!token) {
-            this.router.navigate(['/login']);
+            this.router.navigate(['/welcome']);
             return false;
         }
 
@@ -35,8 +36,8 @@ export class RoleGuard implements CanActivate {
             }
             return true;
         } catch (error) {
-            console.error('Error decoding token:', error);
-            this.router.navigate(['/login']);
+            this.logger.error('Error decoding token:', error);
+            this.router.navigate(['/welcome']);
             return false;
         }
     }

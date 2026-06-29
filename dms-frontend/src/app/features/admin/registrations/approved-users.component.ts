@@ -4,6 +4,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTableComponent } from '../../../shared/components/data-table/data-table.component';
+import { TABLE_CONFIG } from '../../../shared/config/table-config';
 
 @Component({
     selector: 'app-approved-users',
@@ -15,6 +16,7 @@ import { DataTableComponent } from '../../../shared/components/data-table/data-t
 export class ApprovedUsersComponent implements OnInit {
     users: any[] = [];
     isLoading = false;
+    activeTab: 'ACTIVE' | 'INACTIVE' = 'ACTIVE';
 
     // Pagination State
     currentPage = 0;
@@ -23,20 +25,47 @@ export class ApprovedUsersComponent implements OnInit {
     totalPages = 0;
     isLast = true;
 
-    headers = [
-        { label: 'User Details', key: 'username', type: 'user' },
-        { label: 'Email Address', key: 'email' },
-        { label: 'Active Role', key: 'roles', type: 'roles' },
-        { label: 'Account Created', key: 'createdAt' }
-    ];
+    // ── Central Table Config ─────────────────────────────────────────────
+    readonly TABLE_CONFIG = TABLE_CONFIG;
+
+    headers: any[] = [];
 
     constructor(
         private readonly authService: AuthService,
         private readonly toastService: ToastService,
         private readonly translate: TranslateService
-    ) { }
+    ) {
+        this.updateHeaders();
+    }
+
+    updateHeaders() {
+        const cfg = TABLE_CONFIG['APPROVED_USERS'];
+        if (cfg) {
+            this.headers = Object.keys(cfg.desktopColumns).map((key: string) => {
+                let label = cfg.desktopColumns[key];
+                if (key === 'username') label = this.translate.instant('ADMIN.APPROVED_USERS.COL_USER_DETAILS') || label;
+                if (key === 'email') label = this.translate.instant('ADMIN.APPROVED_USERS.COL_EMAIL') || label;
+                if (key === 'roles') label = this.translate.instant('ADMIN.APPROVED_USERS.COL_ROLES') || label;
+                if (key === 'createdAt') label = this.translate.instant('ADMIN.APPROVED_USERS.COL_CREATED_AT') || label;
+                return {
+                    key,
+                    label,
+                    type: cfg.columnTypes?.[key]
+                };
+            });
+        }
+    }
 
     ngOnInit(): void {
+        this.translate.onLangChange.subscribe(() => {
+            this.updateHeaders();
+        });
+        this.loadUsers();
+    }
+
+    onTabChange(tab: 'ACTIVE' | 'INACTIVE') {
+        this.activeTab = tab;
+        this.currentPage = 0;
         this.loadUsers();
     }
 
@@ -44,7 +73,10 @@ export class ApprovedUsersComponent implements OnInit {
         this.isLoading = true;
         this.currentPage = page;
 
-        this.authService.getApprovedUsers(this.currentPage, this.pageSize).subscribe({
+        // Pass active=true for ACTIVE tab, active=false for INACTIVE tab
+        const activeFilter = this.activeTab === 'ACTIVE' ? true : false;
+
+        this.authService.getApprovedUsers(this.currentPage, this.pageSize, activeFilter).subscribe({
             next: (response) => {
                 this.isLoading = false;
                 if (response.success && response.data) {

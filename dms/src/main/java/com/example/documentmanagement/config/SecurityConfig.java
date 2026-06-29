@@ -39,6 +39,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Permit all authentication and API documentation routes
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/profile/photo/**").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/upload").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html")
                         .permitAll()
                         .requestMatchers("/actuator/**").permitAll()

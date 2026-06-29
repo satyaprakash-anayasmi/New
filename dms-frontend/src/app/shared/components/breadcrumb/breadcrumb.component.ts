@@ -44,8 +44,11 @@ export class BreadcrumbComponent implements OnInit {
                 url += `/${routeURL}`;
             }
 
-            const label = child.snapshot.data['breadcrumb'] || routeURL;
-            if (label) {
+            // Only add breadcrumb if a proper translation key is provided in route data
+            // This prevents raw URL segments ('admin', 'nav', etc.) from showing up
+            const label = child.snapshot.data['breadcrumb'];
+            if (label && label.includes('.')) {
+                // Only accept dotted i18n keys (e.g. 'NAV.HOME', 'NAV.DASHBOARD')
                 breadcrumbs.push({ label, url });
             }
 

@@ -56,7 +56,7 @@ class AuthControllerTest {
                                 .build();
 
                 when(authService.authenticateAndGenerateToken(any(LoginRequest.class))).thenReturn(tokenResponse);
-                when(messageSource.getMessage(eq(MessageConstants.LOGIN_SUCCESS), any(), anyString(), any()))
+                when(messageSource.getMessage(eq(MessageConstants.Success.LOGIN_SUCCESS), any(), anyString(), any()))
                                 .thenReturn("Login successful");
 
                 mockMvc.perform(post("/api/auth/login")

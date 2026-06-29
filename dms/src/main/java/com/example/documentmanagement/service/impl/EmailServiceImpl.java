@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import com.example.documentmanagement.util.MessageConstants;
 
 @Service
 @Slf4j
@@ -34,7 +35,7 @@ public class EmailServiceImpl implements EmailService {
         } catch (Exception e) {
             log.error("Failed to send OTP email to {}: {}", to, e.getMessage());
             if (!otpDebug) {
-                throw new RuntimeException("Could not send OTP email. Please try again later.");
+                throw new RuntimeException(MessageConstants.Error.EMAIL_OTP_FAILED);
             }
         }
     }
@@ -56,7 +57,7 @@ public class EmailServiceImpl implements EmailService {
             if (otpDebug) {
                 log.warn("DEBUG MODE: Approval email failed but registration was updated in database.");
             } else {
-                throw new RuntimeException("Account approved, but notification email failed to send.");
+                throw new RuntimeException(MessageConstants.Error.EMAIL_NOTIFICATION_FAILED);
             }
         }
     }
@@ -95,6 +96,46 @@ public class EmailServiceImpl implements EmailService {
             log.info("Deletion email sent successfully to {}", to);
         } catch (Exception e) {
             log.error("Failed to send deletion email to {}: {}", to, e.getMessage());
+        }
+    }
+
+    @Override
+    public void sendFacilityInterestEmail(String adminEmail, String username, com.example.documentmanagement.entity.User user, String facilityName) {
+        log.info("Sending Facility Interest email to admin {}", adminEmail);
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(adminEmail);
+        message.setSubject("New Facility Interest Expressed: " + facilityName);
+
+        String userDetails = "Username: " + username + "\n";
+        if (user != null) {
+            log.info("Facility Interest User Address Details - Address: {}, Block: {}, Town: {}, State: {}, Village: {}, Landmark: {}, District: {}, Country: {}, PIN: {}", 
+                     user.getAddress(), user.getBlock(), user.getTown(), user.getState(), user.getVillage(), user.getLandmark(), user.getDistrict(), user.getCountry(), user.getPinCode());
+            if (user.getFullName() != null) userDetails += "Full Name: " + user.getFullName() + "\n";
+            if (user.getEmail() != null) userDetails += "Email: " + user.getEmail() + "\n";
+            if (user.getPhoneNumber() != null) userDetails += "Phone Number: " + user.getPhoneNumber() + "\n";
+            if (user.getAddress() != null) userDetails += "Address: " + user.getAddress() + "\n";
+            if (user.getVillage() != null) userDetails += "Village: " + user.getVillage() + "\n";
+            if (user.getLandmark() != null) userDetails += "Landmark: " + user.getLandmark() + "\n";
+            if (user.getDistrict() != null) userDetails += "District: " + user.getDistrict() + "\n";
+            if (user.getBlock() != null) userDetails += "Block: " + user.getBlock() + "\n";
+            if (user.getTown() != null) userDetails += "Town: " + user.getTown() + "\n";
+            if (user.getState() != null) userDetails += "State: " + user.getState() + "\n";
+            if (user.getCountry() != null) userDetails += "Country: " + user.getCountry() + "\n";
+            if (user.getPinCode() != null) userDetails += "PIN Code: " + user.getPinCode() + "\n";
+        }
+
+        message.setText("Hello Admin,\n\nA user has expressed interest in a facility.\n\n"
+                + "Facility Selected: " + facilityName + "\n\n"
+                + "--- User Details ---\n"
+                + userDetails
+                + "--------------------\n\n"
+                + "Please reach out to them and follow up.\n\nBazaar Janakalyan System");
+
+        try {
+            mailSender.send(message);
+            log.info("Facility Interest email sent successfully to {}", adminEmail);
+        } catch (Exception e) {
+            log.error("Failed to send facility interest email to {}: {}", adminEmail, e.getMessage());
         }
     }
 }

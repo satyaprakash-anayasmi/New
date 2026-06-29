@@ -53,11 +53,16 @@ public class JwtUtil {
     }
 
     public String generateToken(UserDetails userDetails) {
+        return generateToken(userDetails, true);  // default: active (for backward compat)
+    }
+
+    /** Generates a token that also embeds the isActive flag as a JWT claim. */
+    public String generateToken(UserDetails userDetails, boolean isActive) {
         Map<String, Object> claims = new HashMap<>();
-        // Add roles to claims as a list of strings
         claims.put("roles", userDetails.getAuthorities().stream()
                 .map(org.springframework.security.core.GrantedAuthority::getAuthority)
                 .toList());
+        claims.put("isActive", isActive);
         return createToken(claims, userDetails.getUsername());
     }
 

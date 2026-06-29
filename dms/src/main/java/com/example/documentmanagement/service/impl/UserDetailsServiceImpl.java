@@ -26,15 +26,17 @@ public class UserDetailsServiceImpl implements CustomUserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> {
-                    String msg = messageSource.getMessage(MessageConstants.USER_NOT_FOUND, null, "User not found",
+                    String msg = messageSource.getMessage(MessageConstants.Error.USER_NOT_FOUND, null, "User not found",
                             LocaleContextHolder.getLocale());
                     return new UsernameNotFoundException(msg + ": " + username);
                 });
 
+        // Use otpVerified as the enabled flag so users can login after OTP verification
+        // regardless of payment or admin-approval status.
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                user.isActive(),
+                user.isOtpVerified(),  // enabled = OTP verified
                 true,
                 true,
                 true,

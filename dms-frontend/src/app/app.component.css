@@ -1,0 +1,307 @@
+/* ══════════════════════════════════════════════════════
+   ROUTE-CHANGE LOADING OVERLAY  — Bazaar Janakalyan
+   ══════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════
+   GLOBAL FOOTER — appears on every page
+   ══════════════════════════════════════════════════════ */
+
+.sb-global-footer {
+  flex-shrink: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  background: linear-gradient(
+    90deg,
+    rgba(5, 7, 10, 0.95) 0%,
+    rgba(10, 12, 24, 0.98) 50%,
+    rgba(5, 7, 10, 0.95) 100%
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+/* Colorful top border line */
+.sb-global-footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1.5px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #6366f1 20%,
+    #8b5cf6 40%,
+    #ec4899 60%,
+    #f59e0b 80%,
+    transparent 100%
+  );
+}
+
+.sb-footer-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0.85rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Left: SB logo + name */
+.sb-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.sb-footer-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 60%, #ec4899 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Outfit', 'Arial Black', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 0.03em;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+  flex-shrink: 0;
+}
+
+.sb-footer-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: rgba(148, 163, 184, 0.8);
+  letter-spacing: 0.02em;
+}
+
+/* Center: copyright text */
+.sb-footer-copy {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: rgba(100, 116, 139, 0.85);
+  margin: 0;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
+.sb-footer-author {
+  font-weight: 700;
+  background: linear-gradient(90deg, #6366f1, #a78bfa, #ec4899);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Right: tagline */
+.sb-footer-tagline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(71, 85, 105, 0.7);
+  margin: 0;
+  text-align: right;
+}
+
+/* Responsive: stack on small screens */
+@media (max-width: 640px) {
+  .sb-footer-inner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.4rem;
+    padding: 0.75rem 1rem;
+  }
+  .sb-footer-tagline {
+    text-align: center;
+  }
+}
+
+.sb-route-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 99998;
+  background: rgba(5, 7, 10, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.sb-route-loader.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* ── Logo container ── */
+.sb-rl-wrap {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Outer spinning rainbow ring */
+.sb-rl-ring-outer {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 4px solid transparent;
+  background:
+    linear-gradient(#05070a, #05070a) padding-box,
+    conic-gradient(
+      from 0deg,
+      #22c55e 0%,
+      #38bdf8 25%,
+      #c084fc 50%,
+      #fb923c 75%,
+      #fde68a 88%,
+      #22c55e 100%
+    ) border-box;
+  animation: rl-spin 1.2s linear infinite;
+}
+
+/* Inner gold ring (reverse) */
+.sb-rl-ring-inner {
+  position: absolute;
+  inset: 11px;
+  border-radius: 50%;
+  border: 2.5px solid transparent;
+  background:
+    linear-gradient(#05070a, #05070a) padding-box,
+    conic-gradient(
+      from 180deg,
+      #fde68a 0%,
+      #4ade80 50%,
+      #fde68a 100%
+    ) border-box;
+  animation: rl-spin-rev 1.8s linear infinite;
+}
+
+@keyframes rl-spin     { to { transform: rotate(360deg);  } }
+@keyframes rl-spin-rev { to { transform: rotate(-360deg); } }
+
+/* Center logo circle */
+.sb-rl-circle {
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Sheen sweep */
+.sb-rl-circle::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.22) 0%, transparent 50%);
+  animation: rl-sheen 2.5s linear infinite;
+}
+
+@keyframes rl-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(74,222,128,0.2), 0 0 30px rgba(22,163,74,0.5), 0 0 60px rgba(22,163,74,0.15); }
+  50%       { box-shadow: 0 0 0 6px rgba(74,222,128,0.35), 0 0 50px rgba(22,163,74,0.7), 0 0 90px rgba(22,163,74,0.3); }
+}
+
+@keyframes rl-sheen {
+  to { transform: rotate(360deg); }
+}
+
+/* SB text */
+.sb-rl-text {
+  font-family: 'Outfit', 'Arial Black', sans-serif;
+  font-size: 1.85rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 0.03em;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+}
+
+/* Brand label below */
+.sb-rl-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  margin: 0;
+  background: linear-gradient(90deg, #4ade80, #ffffff 50%, #fde68a);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rl-shimmer 2s linear infinite;
+}
+
+@keyframes rl-shimmer {
+  0%   { background-position: 0% 50%;   }
+  100% { background-position: 200% 50%; }
+}
+
+/* ══════════════════════════════════════════════════════
+   LANGUAGE DROPDOWN — body-level animation
+   ══════════════════════════════════════════════════════ */
+@keyframes lang-drop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.lang-dropdown-anim {
+  animation: lang-drop-in 0.18s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  transform-origin: top right;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(2, 6, 23, 0.97);
+}
+
+/* ══════════════════════════════════════════════════════
+   MOBILE HEADER — full responsiveness
+   ══════════════════════════════════════════════════════ */
+
+/* Ensure the header never overflows on mobile */
+@media (max-width: 480px) {
+  /* Compact header on very small screens */
+  .sb-header-compact {
+    height: 3.5rem !important;
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+}
+
+/* Animate fade-in used in router outlet */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fadeIn 0.35s ease forwards;
+}

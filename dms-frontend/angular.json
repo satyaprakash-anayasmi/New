@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "dms-frontend": {
+    "smart-bazar": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/dms-frontend",
+            "outputPath": "dist/smart-bazar",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -21,7 +21,8 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "src/favicon.ico",
+              "src/favicon.svg",
+              "src/favicon.png",
               "src/assets",
               "src/manifest.webmanifest"
             ],
@@ -38,7 +39,16 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "optimization": true,
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": {
+                  "inline": false
+                }
+              },
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
@@ -51,8 +61,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "15kb",
-                  "maximumError": "20kb"
+                  "maximumWarning": "20kb",
+                  "maximumError": "30kb"
                 }
               ],
               "serviceWorker": "src/ngsw-config.json"
@@ -64,7 +74,16 @@
                   "with": "src/environments/environment.uat.ts"
                 }
               ],
-              "optimization": true,
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": {
+                  "inline": false
+                }
+              },
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
@@ -77,8 +96,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "15kb",
-                  "maximumError": "20kb"
+                  "maximumWarning": "20kb",
+                  "maximumError": "30kb"
                 }
               ],
               "serviceWorker": "src/ngsw-config.json"
@@ -95,10 +114,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "dms-frontend:build:production"
+              "buildTarget": "smart-bazar:build:production"
             },
             "development": {
-              "buildTarget": "dms-frontend:build:development"
+              "buildTarget": "smart-bazar:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -106,7 +125,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "dms-frontend:build"
+            "buildTarget": "smart-bazar:build"
           }
         },
         "test": {
@@ -118,7 +137,7 @@
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
-              "src/favicon.ico",
+              "src/favicon.svg",
               "src/assets"
             ],
             "styles": [

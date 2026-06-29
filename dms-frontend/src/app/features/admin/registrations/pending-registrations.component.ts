@@ -4,6 +4,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTableComponent } from '../../../shared/components/data-table/data-table.component';
+import { TABLE_CONFIG } from '../../../shared/config/table-config';
 
 @Component({
     selector: 'app-pending-registrations',
@@ -24,13 +25,10 @@ export class PendingRegistrationsComponent implements OnInit {
     totalPages = 0;
     isLast = true;
 
-    headers = [
-        { label: 'User Details', key: 'username', type: 'user' },
-        { label: 'Requested Role', key: 'requestedRole' },
-        { label: 'Applied On', key: 'createdAt' },
-        { label: 'Status', key: 'registrationStatus', type: 'status' },
-        { label: 'Actions', key: 'actions', type: 'registration_actions' }
-    ];
+    // ── Central Table Config ─────────────────────────────────────────────
+    readonly TABLE_CONFIG = TABLE_CONFIG;
+
+    headers: any[] = [];
 
     constructor(
         private readonly authService: AuthService,
@@ -40,34 +38,44 @@ export class PendingRegistrationsComponent implements OnInit {
 
     ngOnInit(): void {
         this.updateHeaders();
+        this.translate.onLangChange.subscribe(() => {
+            this.updateHeaders();
+        });
         this.loadRequests();
     }
 
     updateHeaders() {
-        if (this.currentTab === 'active') {
-            this.headers = [
-                { label: 'User Details', key: 'username', type: 'user' },
-                { label: 'Requested Role', key: 'requestedRole' },
-                { label: 'Applied On', key: 'createdAt' },
-                { label: 'Status', key: 'registrationStatus', type: 'status' },
-                { label: 'Actions', key: 'actions', type: 'registration_actions' }
-            ];
+        const configKey = this.currentTab === 'active' ? 'PENDING_REGISTRATIONS' : 'ARCHIVED_REGISTRATIONS';
+        const cfg = TABLE_CONFIG[configKey];
+        if (cfg) {
+            this.headers = Object.keys(cfg.desktopColumns).map((key: string) => {
+                let label = cfg.desktopColumns[key];
+                if (key === 'username') label = this.translate.instant('ADMIN.REGISTRATION.COL_USER_DETAILS') || label;
+                if (key === 'requestedRole') label = this.translate.instant('ADMIN.REGISTRATION.COL_REQUESTED_ROLE') || label;
+                if (key === 'createdAt') label = this.translate.instant('ADMIN.REGISTRATION.COL_APPLIED_ON') || label;
+                if (key === 'registrationStatus') label = this.translate.instant('ADMIN.REGISTRATION.COL_STATUS') || label;
+                if (key === 'actions') label = this.translate.instant('ADMIN.REGISTRATION.COL_ACTIONS') || label;
+
+                return {
+                    key,
+                    label,
+                    type: cfg.columnTypes?.[key]
+                };
+            });
         } else {
-            this.headers = [
-                { label: 'User Details', key: 'username', type: 'user' },
-                { label: 'Requested Role', key: 'requestedRole' },
-                { label: 'Applied On', key: 'createdAt' },
-                { label: 'Status', key: 'registrationStatus', type: 'status' },
-                { label: 'Actions', key: 'actions', type: 'archived_actions' }
-            ];
+            this.headers = [];
         }
     }
 
     setTab(tab: 'active' | 'inactive') {
         this.currentTab = tab;
-        this.currentPage = 0; // Reset page on tab change
+        this.currentPage = 0;
         this.updateHeaders();
         this.loadRequests();
+    }
+
+    onTabChange(tab: 'ACTIVE' | 'INACTIVE') {
+        this.setTab(tab === 'ACTIVE' ? 'active' : 'inactive');
     }
 
     loadRequests(page: number = this.currentPage) {

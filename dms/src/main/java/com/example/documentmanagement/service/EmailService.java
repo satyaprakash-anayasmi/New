@@ -8,4 +8,6 @@ public interface EmailService {
     void sendRejectionEmail(String to, String reason);
 
     void sendDeletionEmail(String to);
+
+    void sendFacilityInterestEmail(String adminEmail, String username, com.example.documentmanagement.entity.User user, String facilityName);
 }

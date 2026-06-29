@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +19,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
@@ -41,8 +43,12 @@ public class JwtFilter extends OncePerRequestFilter {
         if (jwt != null) {
             try {
                 username = jwtUtil.extractUsername(jwt);
+            } catch (io.jsonwebtoken.ExpiredJwtException e) {
+                log.warn("[JWT] Token expired for request {} - {}", request.getRequestURI(), e.getMessage().split("\\.")[0]);
+            } catch (io.jsonwebtoken.JwtException e) {
+                log.warn("[JWT] Invalid token on {}: {}", request.getRequestURI(), e.getMessage());
             } catch (Exception e) {
-                logger.error("Could not extract JWT token", e);
+                log.warn("[JWT] Token error on {}: {}", request.getRequestURI(), e.getMessage());
             }
         }
 

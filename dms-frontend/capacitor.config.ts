@@ -1,9 +1,9 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-    appId: 'com.example.dmsfrontend',
-    appName: 'DmsFrontend',
-    webDir: 'dist/dms-frontend/browser',
+    appId: 'com.example.smartbazar',
+    appName: 'Smart Bazar',
+    webDir: 'dist/smart-bazar/browser',
     server: {
         androidScheme: 'https',
         cleartext: true,

@@ -1,4 +1,17 @@
 <app-toast></app-toast>
+
+<!-- ══ Route-Change Loading Overlay ══ -->
+<div class="sb-route-loader" [class.visible]="isLoading">
+  <div class="sb-rl-wrap">
+    <div class="sb-rl-ring-outer"></div>
+    <div class="sb-rl-ring-inner"></div>
+    <div class="sb-rl-circle">
+      <img src="/assets/images/logo.png" alt="Bazaar Janakalyan Logo" class="w-8 h-8 object-contain" />
+    </div>
+  </div>
+  <p class="sb-rl-label">Bazaar Janakalyan</p>
+</div>
+
 <ng-container *ngIf="!isLoginPage">
   <div class="flex h-screen bg-[#05070a] overflow-hidden relative font-['Outfit']">
     <!-- Animated background ambient glow -->
@@ -22,56 +35,136 @@
     <div class="flex-1 flex flex-col overflow-hidden relative">
       <!-- Header -->
       <header
-        class="h-20 bg-slate-950/40 backdrop-blur-xl flex items-center justify-between px-6 md:px-10 border-b border-white/5 relative z-20">
-        <div class="flex items-center gap-6">
+        class="h-14 sm:h-16 md:h-20 bg-slate-950/60 backdrop-blur-xl flex items-center justify-between px-3 sm:px-5 md:px-8 border-b border-white/5 relative z-20 shrink-0">
+
+        <!-- LEFT: Hamburger + Brand -->
+        <div class="flex items-center gap-2 sm:gap-3 min-w-0">
           <button (click)="toggleSidebar()" title="Toggle Sidebar" aria-label="Toggle Sidebar"
-            class="lg:hidden p-2.5 bg-white/5 hover:bg-white/10 rounded-xl transition-all border border-white/10 active:scale-90">
-            <svg class="h-6 w-6 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            class="lg:hidden shrink-0 p-2 bg-white/5 hover:bg-white/10 rounded-xl transition-all border border-white/10 active:scale-90">
+            <svg class="h-5 w-5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
             </svg>
           </button>
-          <div>
-            <h1 class="text-xl md:text-2xl font-bold text-white tracking-tight">DMS <span
-                class="text-indigo-500">Portal</span></h1>
-            <p class="hidden md:block text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em] mt-0.5">Enterprise
-              Document Management</p>
+          <div class="flex items-center gap-2 min-w-0">
+            <img src="/assets/images/logo.png" alt="Bazaar Janakalyan Logo"
+              class="w-7 h-7 sm:w-9 sm:h-9 md:w-10 md:h-10 shrink-0 object-contain rounded-lg" />
+            <div class="hidden sm:block min-w-0">
+              <h1 class="text-sm sm:text-base md:text-lg font-bold text-white tracking-tight truncate">
+                Bazaar Janakalyan<span class="text-indigo-400 hidden md:inline"> Portal</span>
+              </h1>
+              <p class="hidden lg:block text-[9px] text-slate-500 font-bold uppercase tracking-[0.18em] mt-0.5">
+                {{ 'COMMON.TAGLINE' | localize }}
+              </p>
+            </div>
           </div>
         </div>
 
-        <div class="flex items-center gap-4 md:gap-8">
-          <div class="hidden sm:flex flex-col items-end">
-            <span class="text-xs font-bold text-slate-400 capitalize tracking-wide">{{ roleDisplay }}</span>
-            <span class="text-[10px] text-emerald-500 font-bold uppercase tracking-widest animate-pulse">● System
-              Online</span>
+        <!-- RIGHT: Lang + Role + Logout -->
+        <div class="flex items-center gap-1.5 sm:gap-2 md:gap-4 shrink-0">
+
+          <!-- Language Selector -->
+          <button (click)="toggleLangDropdown($event)"
+            class="flex items-center gap-1 sm:gap-1.5 bg-slate-900/80 hover:bg-slate-800 border border-white/10 hover:border-indigo-500/40 rounded-xl px-2 py-1.5 sm:px-3 sm:py-2 text-slate-300 hover:text-white font-semibold outline-none cursor-pointer transition-all active:scale-95">
+            <span class="text-sm sm:text-base leading-none">{{ getActiveLangFlag() }}</span>
+            <span class="hidden sm:inline text-xs">{{ getActiveLangName() }}</span>
+            <svg class="w-3 h-3 text-slate-500 transition-transform duration-300 hidden sm:block"
+              [class.rotate-180]="isLangDropdownOpen" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <!-- Role + Status (md and up only) -->
+          <div class="hidden md:flex flex-col items-end leading-tight">
+            <span class="text-xs font-bold text-slate-400 capitalize">{{ roleDisplay ? ('COMMON.ROLES.' + roleDisplay | localize) : '' }}</span>
+            <span class="text-[9px] text-emerald-500 font-bold uppercase tracking-widest animate-pulse">● {{ 'COMMON.SYSTEM_ONLINE' | localize }}</span>
           </div>
 
-          <div class="h-10 w-[1px] bg-white/10 hidden sm:block"></div>
+          <div class="h-8 w-px bg-white/10 hidden md:block"></div>
 
+          <!-- Logout -->
           <button (click)="logout()"
-            class="group relative flex items-center gap-2 bg-white/5 hover:bg-white/10 text-white px-5 py-2.5 rounded-xl text-sm transition-all font-bold border border-white/10 shadow-lg active:scale-95 overflow-hidden">
-            <div
-              class="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500">
-            </div>
-            <svg class="w-4 h-4 text-slate-400 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
+            class="group relative flex items-center justify-center gap-1.5 bg-white/5 hover:bg-red-500/10 text-white p-2 sm:px-4 sm:py-2 rounded-xl transition-all font-semibold border border-white/10 hover:border-red-500/30 active:scale-95 overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-r from-red-500/0 to-red-500/0 group-hover:from-red-500/5 group-hover:to-red-500/10 transition-all duration-300"></div>
+            <svg class="w-4 h-4 text-slate-400 group-hover:text-red-400 transition-colors shrink-0 relative" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
-            <span class="relative">Logout</span>
+            <span class="relative hidden sm:inline text-xs md:text-sm">{{ 'COMMON.LOGOUT' | localize }}</span>
           </button>
         </div>
       </header>
 
       <!-- Page Content Router -->
       <main
-        class="flex-1 overflow-x-hidden overflow-y-auto p-4 md:p-10 bg-[radial-gradient(circle_at_50%_50%,_#0a0c12_0%,_#05070a_100%)]">
-        <div class="max-w-7xl mx-auto animate-fade-in">
-          <app-breadcrumb></app-breadcrumb>
-          <router-outlet></router-outlet>
+        class="flex-1 overflow-x-hidden overflow-y-auto bg-[radial-gradient(circle_at_50%_50%,_#0a0c12_0%,_#05070a_100%)]"
+        style="display:flex; flex-direction:column;">
+        <div class="flex-1 p-4 md:p-10">
+          <div class="max-w-7xl mx-auto animate-fade-in">
+            <app-breadcrumb></app-breadcrumb>
+            <router-outlet></router-outlet>
+          </div>
         </div>
+
+        <!-- ══ GLOBAL FOOTER — appears on every page ══ -->
+        <footer class="sb-global-footer">
+          <div class="sb-footer-inner">
+            <!-- Left: logo + brand -->
+            <div class="sb-footer-brand">
+              <img src="/assets/images/logo.png" alt="Bazaar Janakalyan Logo" class="w-6 h-6 object-contain" />
+              <span class="sb-footer-name">{{ 'COMMON.BRAND_NAME' | localize }}</span>
+            </div>
+
+            <!-- Center: copyright -->
+            <p class="sb-footer-copy">
+              &copy; {{ '2026' | localize }} {{ 'COMMON.ALL_RIGHTS_RESERVED' | localize }}
+              <span class="sb-footer-author">Satyaprakash Parida</span>
+            </p>
+
+            <!-- Right: tagline -->
+            <p class="sb-footer-tagline">{{ 'COMMON.TAGLINE' | localize }}</p>
+          </div>
+        </footer>
       </main>
+
     </div>
   </div>
 </ng-container>
+
+<!-- ══ Global Language Dropdown — rendered at body root level ══ -->
+<!-- Uses fixed positioning so it floats above ALL stacking contexts -->
+<div *ngIf="isLangDropdownOpen"
+     [ngStyle]="dropdownStyle"
+     (click)="$event.stopPropagation()"
+     class="fixed w-48 bg-slate-950 border border-white/10 rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.7)] overflow-hidden z-[99999] py-1.5 lang-dropdown-anim">
+  <button (click)="selectLanguage('en')"
+          [ngClass]="{'bg-indigo-500/10': translate.currentLang === 'en'}"
+          class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-indigo-500/10 font-semibold transition-all text-left">
+    <span class="text-base leading-none">🇬🇧</span>
+    <span class="flex-grow">English</span>
+    <span *ngIf="translate.currentLang === 'en'" class="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0"></span>
+  </button>
+  <button (click)="selectLanguage('or')"
+          [ngClass]="{'bg-indigo-500/10': translate.currentLang === 'or'}"
+          class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-indigo-500/10 font-semibold transition-all text-left">
+    <span class="text-base leading-none">🇮🇳</span>
+    <span class="flex-grow">ଓଡ଼ିଆ</span>
+    <span *ngIf="translate.currentLang === 'or'" class="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0"></span>
+  </button>
+  <button (click)="selectLanguage('hi')"
+          [ngClass]="{'bg-indigo-500/10': translate.currentLang === 'hi'}"
+          class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-indigo-500/10 font-semibold transition-all text-left">
+    <span class="text-base leading-none">🇮🇳</span>
+    <span class="flex-grow">हिन्दी</span>
+    <span *ngIf="translate.currentLang === 'hi'" class="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0"></span>
+  </button>
+  <button (click)="selectLanguage('te')"
+          [ngClass]="{'bg-indigo-500/10': translate.currentLang === 'te'}"
+          class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-indigo-500/10 font-semibold transition-all text-left">
+    <span class="text-base leading-none">🇮🇳</span>
+    <span class="flex-grow">తెలుగు</span>
+    <span *ngIf="translate.currentLang === 'te'" class="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0"></span>
+  </button>
+</div>
 
 <router-outlet *ngIf="isLoginPage"></router-outlet>

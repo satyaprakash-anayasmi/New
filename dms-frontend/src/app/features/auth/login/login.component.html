@@ -7,8 +7,16 @@
         <div
             class="w-full bg-white/[0.03] backdrop-blur-2xl p-8 md:p-12 rounded-[2.5rem] shadow-[0_0_50px_rgba(0,0,0,0.3)] border border-white/10 relative overflow-hidden">
             <!-- Glass gloss effect -->
-            <div
-                class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/10 to-transparent pointer-events-none">
+            <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/10 to-transparent pointer-events-none"></div>
+
+            <!-- Back to Home -->
+            <div class="relative mb-4 flex justify-start">
+                <a routerLink="/welcome" class="back-home-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="h-3.5 w-3.5 mr-1.5 inline-block align-middle">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    <span class="align-middle">{{ 'AUTH.LOGIN.BACK_HOME' | translate }}</span>
+                </a>
             </div>
 
             <!-- Content Header -->
