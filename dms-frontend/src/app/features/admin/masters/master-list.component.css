@@ -1,0 +1,83 @@
+/* ─── Category Card ───────────────────────────────── */
+.category-card {
+  position: relative;
+  overflow: hidden;
+}
+.category-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(249,115,22,0.04) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.category-card:hover::before {
+  opacity: 1;
+}
+
+/* ─── Action Button (inside cards) ───────────────── */
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+.action-btn:hover {
+  transform: scale(1.08);
+}
+
+/* ─── Pagination Buttons ─────────────────────────── */
+.pager-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 0.5rem;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.pager-btn:hover:not(:disabled) {
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+.pager-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.pager-btn.pager-active {
+  background: rgb(249,115,22);
+  border-color: rgb(249,115,22);
+  color: white;
+  box-shadow: 0 4px 12px rgba(249,115,22,0.3);
+}
+
+/* ─── Modal animation ────────────────────────────── */
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.96) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.animate-modal-in { animation: modalIn 0.22s ease-out both; }
+
+@media (max-width: 640px) {
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .animate-modal-in { animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) both; }
+}

@@ -1,0 +1,349 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 font-['Outfit']">
+
+  <!-- ── Header ──────────────────────────────────────────────────────────── -->
+  <div class="px-4 md:px-8 lg:px-12 pt-8 pb-6">
+    <!-- Breadcrumb + Back -->
+    <div class="flex items-center gap-3 mb-5">
+      <button (click)="goBack()"
+        class="flex items-center gap-2 px-3.5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white rounded-xl text-xs font-bold transition-all group">
+        <svg class="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+        </svg>
+        {{ 'ADMIN.MASTER.ALL_CATEGORIES' | translate }}
+      </button>
+      <span class="text-slate-600">›</span>
+      <span class="text-xs text-slate-400 font-medium truncate">{{ header?.dropdownName ?? ('ADMIN.MASTER.LOADING' | translate) }}</span>
+    </div>
+
+    <!-- Page Title -->
+    <div class="flex items-start justify-between gap-4 flex-wrap">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-2xl bg-indigo-500/15 border border-indigo-500/25 flex items-center justify-center flex-shrink-0">
+          <svg class="w-6 h-6 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h7"/>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-3 flex-wrap">
+            <h1 class="text-2xl md:text-3xl font-black text-white tracking-tight">
+              {{ header ? header.dropdownName : ('ADMIN.MASTER.LOADING' | translate) }}
+            </h1>
+            <span *ngIf="header"
+              class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border"
+              [style.background]="header.status === 'ACTIVE' ? 'rgba(16,185,129,0.12)' : 'rgba(100,116,139,0.12)'"
+              [style.color]="header.status === 'ACTIVE' ? '#34d399' : '#94a3b8'"
+              [style.borderColor]="header.status === 'ACTIVE' ? 'rgba(16,185,129,0.3)' : 'rgba(100,116,139,0.25)'">
+              <span class="flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full inline-block"
+                  [class.bg-emerald-400]="header.status === 'ACTIVE'"
+                  [class.bg-slate-500]="header.status !== 'ACTIVE'"
+                  [class.animate-pulse]="header.status === 'ACTIVE'"></span>
+                {{ header.status }}
+              </span>
+            </span>
+          </div>
+          <p class="text-slate-400 text-sm mt-0.5">{{ 'ADMIN.MASTER.MANAGE_OPTIONS' | translate }}</p>
+        </div>
+      </div>
+
+      <!-- Add Option button -->
+      <button *ngIf="header?.status === 'ACTIVE'" (click)="openAddDetail()"
+        class="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-indigo-500/25 flex-shrink-0">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+        {{ 'ADMIN.MASTER.ADD_OPTION' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Toolbar ──────────────────────────────────────────────────────────── -->
+  <div class="px-4 md:px-8 lg:px-12 mb-6">
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+
+      <!-- Active / Inactive Tabs -->
+      <div class="flex p-1 bg-white/5 border border-white/10 rounded-xl self-start">
+        <button (click)="onTabChange('ACTIVE')"
+          class="px-5 py-2 text-xs font-bold rounded-lg transition-all"
+          [class.text-white]="activeTab === 'ACTIVE'"
+          [class.text-slate-400]="activeTab !== 'ACTIVE'"
+          [style.backgroundColor]="activeTab === 'ACTIVE' ? 'rgba(99,102,241,0.3)' : 'transparent'">
+          <span class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full"
+              [class.bg-indigo-400]="activeTab === 'ACTIVE'"
+              [class.bg-emerald-400]="activeTab !== 'ACTIVE'"></span>
+            {{ 'ADMIN.MASTER.ACTIVE' | translate }}
+          </span>
+        </button>
+        <button (click)="onTabChange('INACTIVE')"
+          class="px-5 py-2 text-xs font-bold rounded-lg transition-all"
+          [class.text-white]="activeTab === 'INACTIVE'"
+          [class.text-slate-400]="activeTab !== 'INACTIVE'"
+          [style.backgroundColor]="activeTab === 'INACTIVE' ? 'rgba(255,255,255,0.08)' : 'transparent'">
+          <span class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full"
+              [class.bg-white]="activeTab === 'INACTIVE'"
+              [class.bg-slate-600]="activeTab !== 'INACTIVE'"></span>
+            {{ 'ADMIN.MASTER.INACTIVE' | translate }}
+          </span>
+        </button>
+      </div>
+
+      <!-- Search -->
+      <div class="relative flex-1 max-w-sm">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input [(ngModel)]="searchTerm" [placeholder]="'ADMIN.MASTER.SEARCH_OPTIONS' | translate"
+          class="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 text-white text-xs font-semibold rounded-xl placeholder-slate-500 focus:outline-none focus:border-indigo-500/50 focus:bg-white/8 transition-all"/>
+      </div>
+
+      <!-- Stats badge + Page size -->
+      <div class="flex items-center gap-3 ml-auto flex-wrap">
+        <div class="flex items-center gap-2 px-3.5 py-2 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
+          <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+          <span class="text-[10px] font-black text-indigo-400 uppercase tracking-widest">{{ totalElements }} {{ 'ADMIN.MASTER.RECORDS' | translate }}</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest whitespace-nowrap">{{ 'ADMIN.MASTER.PER_PAGE' | translate }}</span>
+          <select [(ngModel)]="pageSize" (change)="onPageSizeChange()"
+            class="bg-white/5 border border-white/10 text-white text-xs font-bold rounded-lg px-3 py-2 outline-none cursor-pointer">
+            <option *ngFor="let o of pageSizeOptions" [value]="o" class="bg-slate-900">{{ o }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Loading ─────────────────────────────────────────────────────────── -->
+  <div *ngIf="isLoading" class="px-4 md:px-8 lg:px-12 space-y-3">
+    <div *ngFor="let _ of [1,2,3,4,5]" class="h-16 rounded-2xl bg-white/5 border border-white/8 animate-pulse"></div>
+  </div>
+
+  <!-- ── Empty State ─────────────────────────────────────────────────────── -->
+  <div *ngIf="!isLoading && filteredDetails.length === 0"
+    class="px-4 md:px-8 lg:px-12 flex flex-col items-center justify-center py-20 text-center">
+    <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/8 flex items-center justify-center mb-4">
+      <svg class="w-7 h-7 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 10h16M4 14h16M4 18h7"/>
+      </svg>
+    </div>
+    <h3 class="text-base font-bold text-slate-400 mb-2">{{ 'ADMIN.MASTER.NO_OPTIONS' | translate }}</h3>
+    <p class="text-sm text-slate-600 mb-6">
+      {{ searchTerm ? (('ADMIN.MASTER.NO_MATCHES' | translate) + ' "' + searchTerm + '"') : (activeTab === 'ACTIVE' ? ('ADMIN.MASTER.NO_ACTIVE_OPTIONS' | translate) : ('ADMIN.MASTER.NO_INACTIVE_OPTIONS' | translate)) }}
+    </p>
+    <button *ngIf="activeTab === 'ACTIVE' && header?.status === 'ACTIVE' && !searchTerm" (click)="openAddDetail()"
+      class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-bold transition-all">
+      {{ 'ADMIN.MASTER.ADD_FIRST_OPTION' | translate }}
+    </button>
+  </div>
+
+  <!-- ── Details Table ────────────────────────────────────────────────────── -->
+  <div *ngIf="!isLoading && filteredDetails.length > 0" class="px-4 md:px-8 lg:px-12">
+
+    <!-- Desktop Table -->
+    <div class="hidden md:block bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
+      <!-- Table Head -->
+      <div class="grid detail-grid px-6 py-3 border-b border-white/8 bg-white/3">
+        <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest">#</span>
+        <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest">{{ 'ADMIN.MASTER.COL_NAME' | translate }}</span>
+        <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest">{{ 'ADMIN.MASTER.COL_PATH' | translate }}</span>
+        <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest">{{ 'ADMIN.MASTER.COL_STATUS' | translate }}</span>
+        <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest">{{ 'ADMIN.MASTER.COL_ACTIONS' | translate }}</span>
+      </div>
+
+      <!-- Table Rows -->
+      <div class="divide-y divide-white/5">
+        <div *ngFor="let d of filteredDetails; let i = index"
+          class="grid detail-grid px-6 py-4 hover:bg-white/3 transition-colors items-center">
+
+          <!-- # -->
+          <span class="text-[10px] font-black text-slate-600 font-mono">#{{ currentPage * pageSize + i + 1 }}</span>
+
+          <!-- Name -->
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/15 flex items-center justify-center flex-shrink-0">
+              <span class="text-[10px] font-black text-indigo-400">{{ (d.displayName || '?').charAt(0).toUpperCase() }}</span>
+            </div>
+            <span class="text-sm font-semibold text-white">{{ d.displayName }}</span>
+          </div>
+
+          <!-- Hierarchy Path -->
+          <div class="text-xs text-slate-400 font-medium flex items-center gap-1.5 truncate">
+            <span *ngIf="d.parentPath !== '—'" class="w-1 h-1 rounded-full bg-indigo-500/50 flex-shrink-0"></span>
+            <span class="truncate">{{ d.parentPath }}</span>
+          </div>
+
+          <!-- Status -->
+          <div>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border"
+              [style.background]="d.status === 'ACTIVE' ? 'rgba(16,185,129,0.1)' : 'rgba(100,116,139,0.1)'"
+              [style.color]="d.status === 'ACTIVE' ? '#34d399' : '#94a3b8'"
+              [style.borderColor]="d.status === 'ACTIVE' ? 'rgba(16,185,129,0.25)' : 'rgba(100,116,139,0.2)'">
+              <span class="w-1.5 h-1.5 rounded-full inline-block"
+                [class.bg-emerald-400]="d.status === 'ACTIVE'"
+                [class.bg-slate-500]="d.status !== 'ACTIVE'"></span>
+              {{ d.status }}
+            </span>
+          </div>
+
+          <!-- Actions: state-driven -->
+          <div class="flex items-center gap-1.5">
+            <!-- ACTIVE → Edit + Deactivate -->
+            <ng-container *ngIf="!d.status || d.status === 'ACTIVE'">
+              <button (click)="openEditDetail(d)"
+                class="action-btn text-blue-400 hover:bg-blue-500/15 border-blue-500/20" [title]="'ADMIN.MASTER.EDIT' | translate">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+              </button>
+              <button (click)="deleteDetail(d)"
+                class="action-btn text-rose-400 hover:bg-rose-500/15 border-rose-500/20" [title]="'ADMIN.MASTER.DEACTIVATE' | translate">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              </button>
+            </ng-container>
+            <!-- INACTIVE → Restore + Perm Delete -->
+            <ng-container *ngIf="d.status === 'INACTIVE'">
+              <button (click)="restoreDetail(d)"
+                class="action-btn text-emerald-400 hover:bg-emerald-500/15 border-emerald-500/20" [title]="'ADMIN.MASTER.RESTORE' | translate">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              </button>
+              <button (click)="permanentDeleteDetail(d)"
+                class="action-btn text-rose-400 hover:bg-rose-500/15 border-rose-500/20" [title]="'ADMIN.MASTER.PERMANENT_DELETE' | translate">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              </button>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Cards -->
+    <div class="md:hidden space-y-3">
+      <div *ngFor="let d of filteredDetails; let i = index"
+        class="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/15 flex items-center justify-center flex-shrink-0">
+              <span class="text-[10px] font-black text-indigo-400">{{ (d.displayName || '?').charAt(0).toUpperCase() }}</span>
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm font-bold text-white truncate">{{ d.displayName }}</p>
+              <p *ngIf="d.parentPath !== '—'" class="text-[10px] text-slate-500 truncate">{{ d.parentPath }}</p>
+            </div>
+          </div>
+          <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border flex-shrink-0"
+            [style.background]="d.status === 'ACTIVE' ? 'rgba(16,185,129,0.1)' : 'rgba(100,116,139,0.1)'"
+            [style.color]="d.status === 'ACTIVE' ? '#34d399' : '#94a3b8'"
+            [style.borderColor]="d.status === 'ACTIVE' ? 'rgba(16,185,129,0.25)' : 'rgba(100,116,139,0.2)'">
+            <span class="w-1.5 h-1.5 rounded-full inline-block"
+              [class.bg-emerald-400]="d.status === 'ACTIVE'"
+              [class.bg-slate-500]="d.status !== 'ACTIVE'"></span>
+            {{ d.status }}
+          </span>
+        </div>
+
+        <!-- Mobile Action Buttons -->
+        <div class="flex gap-2">
+          <ng-container *ngIf="!d.status || d.status === 'ACTIVE'">
+            <button (click)="openEditDetail(d)" class="flex-1 py-2 text-[10px] font-black uppercase bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-xl hover:bg-blue-600 hover:text-white transition-all">
+              {{ 'ADMIN.MASTER.EDIT' | translate }}
+            </button>
+            <button (click)="deleteDetail(d)" class="flex-1 py-2 text-[10px] font-black uppercase bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-xl hover:bg-rose-600 hover:text-white transition-all">
+              {{ 'ADMIN.MASTER.DEACTIVATE' | translate }}
+            </button>
+          </ng-container>
+          <ng-container *ngIf="d.status === 'INACTIVE'">
+            <button (click)="restoreDetail(d)" class="flex-1 py-2 text-[10px] font-black uppercase bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl hover:bg-emerald-600 hover:text-white transition-all">
+              {{ 'ADMIN.MASTER.RESTORE' | translate }}
+            </button>
+            <button (click)="permanentDeleteDetail(d)" class="flex-1 py-2 text-[10px] font-black uppercase bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-xl hover:bg-rose-600 hover:text-white transition-all">
+              {{ 'ADMIN.MASTER.PERMANENT_DELETE' | translate }}
+            </button>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Pagination ─────────────────────────────────────────────────────── -->
+  <div *ngIf="!isLoading && totalPages >= 1 && filteredDetails.length > 0"
+    class="px-4 md:px-8 lg:px-12 py-8">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white/5 border border-white/10 rounded-2xl px-6 py-4">
+      <p class="text-xs text-slate-400 font-semibold">
+        {{ 'ADMIN.MASTER.SHOWING' | translate }} <span class="text-white font-bold">{{ currentPage * pageSize + 1 }}–{{ ((currentPage + 1) * pageSize > totalElements ? totalElements : (currentPage + 1) * pageSize) }}</span>
+        {{ 'ADMIN.MASTER.OF' | translate }} <span class="text-white font-bold">{{ totalElements }}</span> {{ 'ADMIN.MASTER.OPTIONS' | translate }}
+      </p>
+      <div class="flex items-center gap-2">
+        <button (click)="prevPage()" [disabled]="isFirst" class="pager-btn">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <button *ngFor="let p of pages" (click)="goToPage(p)"
+          class="pager-btn min-w-[36px]" [class.pager-active]="p === currentPage">
+          {{ p + 1 }}
+        </button>
+        <button (click)="nextPage()" [disabled]="isLast" class="pager-btn">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="pb-8"></div>
+</div>
+
+<!-- ══ Add/Edit Option Modal ══ -->
+<div *ngIf="showDetailForm" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" (click)="closeDetailForm()"></div>
+  <div class="relative w-full max-w-md bg-slate-900 border border-white/12 rounded-3xl p-6 shadow-2xl animate-modal-in">
+    <div class="flex items-center gap-3 mb-2">
+      <div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/25 flex items-center justify-center">
+        <svg class="w-5 h-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h7"/>
+        </svg>
+      </div>
+      <h3 class="text-lg font-bold text-white">{{ editingDetail ? ('ADMIN.MASTER.EDIT_OPTION' | translate) : ('ADMIN.MASTER.NEW_OPTION' | translate) }}</h3>
+    </div>
+
+    <!-- Context info -->
+    <div class="mb-5 mt-1 p-3 bg-white/5 border border-white/8 rounded-xl">
+      <p class="text-xs text-slate-400">
+        {{ 'ADMIN.MASTER.CATEGORY_LBL' | translate }}: <strong class="text-white">{{ header?.dropdownName }}</strong>
+      </p>
+      <p *ngIf="getParentCategoryName()" class="text-xs text-slate-500 mt-0.5">
+        {{ 'ADMIN.MASTER.REQUIRES_PARENT' | translate }}: <strong class="text-indigo-300">{{ getParentCategoryName() }}</strong>
+      </p>
+    </div>
+
+    <div class="space-y-4">
+      <!-- Parent Selection if required -->
+      <div *ngIf="getParentCategoryName()">
+        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
+          {{ 'ADMIN.MASTER.PARENT_LBL' | translate }} {{ getParentCategoryName() | titlecase }} *
+        </label>
+        <app-select
+          [options]="parentOptions"
+          [value]="selectedParentId"
+          (valueChange)="selectedParentId = $event"
+          [placeholder]="('ADMIN.MASTER.SELECT_PARENT' | translate) + ' ' + (getParentCategoryName() | lowercase)"
+          [searchable]="true">
+        </app-select>
+      </div>
+
+      <div>
+        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">{{ 'ADMIN.MASTER.DISPLAY_NAME' | translate }} *</label>
+        <input [(ngModel)]="detailForm.displayName"
+          class="w-full px-4 py-3 bg-white/5 border border-white/10 text-white rounded-xl text-sm font-semibold focus:outline-none focus:border-indigo-500/50 focus:bg-white/8 transition-all placeholder-slate-600"
+          [placeholder]="'ADMIN.MASTER.DISPLAY_NAME_PLACEHOLDER' | translate"/>
+      </div>
+    </div>
+
+    <div class="flex gap-3 mt-6">
+      <button (click)="closeDetailForm()"
+        class="flex-1 py-3 bg-white/5 border border-white/10 text-slate-300 rounded-xl text-sm font-semibold hover:bg-white/10 hover:text-white transition-all">
+        {{ 'ADMIN.MASTER.CANCEL' | translate }}
+      </button>
+      <button (click)="saveDetail()" [disabled]="isSaving"
+        class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-500/20 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+        <span *ngIf="isSaving" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+        <svg *ngIf="!isSaving" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+        {{ isSaving ? ('ADMIN.MASTER.SAVING' | translate) : (editingDetail ? ('ADMIN.MASTER.UPDATE' | translate) : ('ADMIN.MASTER.CREATE' | translate)) }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+:host {
+    display: block;
+    min-height: 100%;
+}
+
+.facilities-container {
+    min-height: calc(100vh - 5rem);
+    background: transparent;
+}

@@ -1,0 +1,450 @@
+:host {
+    display: block;
+    background: #020617;
+    min-height: 100vh;
+    font-family: 'Outfit', sans-serif;
+}
+
+.welcome-container {
+    position: relative;
+    overflow: hidden;
+    color: #f8fafc;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Dynamic Background Elements --- */
+.bg-blob {
+    position: absolute;
+    width: 60vw;
+    height: 60vw;
+    border-radius: 50%;
+    filter: blur(120px);
+    z-index: 0;
+    opacity: 0.15;
+    animation: moveBlob 20s infinite alternate;
+}
+
+.blob-1 {
+    background: #6366f1;
+    top: -10%;
+    left: -10%;
+}
+
+.blob-2 {
+    background: #a855f7;
+    bottom: -10%;
+    right: -10%;
+    animation-delay: -5s;
+}
+
+.blob-3 {
+    background: #3b82f6;
+    top: 30%;
+    left: 40%;
+    animation-delay: -10s;
+}
+
+@keyframes moveBlob {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(10%, 15%) scale(1.1); }
+}
+
+.glass-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(2, 6, 23, 0.4) 100%);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: 1;
+}
+
+/* --- Header --- */
+.welcome-header {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 4rem;
+    background: rgba(2, 6, 23, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.brand-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.brand-name {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.02em;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.btn-glass {
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 1rem;
+    font-weight: 700;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.btn-glass:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-glow-primary {
+    position: relative;
+    padding: 0.75rem 1.5rem;
+    background: #6366f1;
+    color: white;
+    border-radius: 1rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-glow-primary.lg {
+    padding: 1.25rem 2.5rem;
+    font-size: 1.1rem;
+    border-radius: 1.5rem;
+}
+
+.btn-referral {
+    position: relative;
+    padding: 0.75rem 1.5rem;
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border-radius: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.btn-referral svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    transition: transform 0.3s;
+}
+
+.btn-referral:hover {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: rgba(16, 185, 129, 0.6);
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.25);
+    transform: translateY(-2px);
+    color: #34d399;
+}
+
+.btn-referral:hover svg {
+    transform: scale(1.1);
+}
+
+.btn-referral.lg {
+    padding: 1.25rem 2.5rem;
+    font-size: 1.05rem;
+    border-radius: 1.5rem;
+}
+
+.btn-referral.lg svg {
+    width: 22px;
+    height: 22px;
+}
+
+
+
+.btn-glow-primary::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(45deg, #6366f1, #a855f7, #3b82f6);
+    z-index: -1;
+    filter: blur(10px);
+    opacity: 0.6;
+    transition: opacity 0.4s;
+}
+
+.btn-glow-primary:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
+}
+
+.btn-glow-primary svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s;
+}
+
+.btn-glow-primary:hover svg {
+    transform: translateX(5px);
+}
+
+/* --- Main Content --- */
+.welcome-main {
+    position: relative;
+    z-index: 5;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.hero-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 5rem;
+}
+
+.floating-badge {
+    display: inline-flex;
+    padding: 0.5rem 1.25rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 9999px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.shimmer-text {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #94a3b8 0%, #ffffff 50%, #94a3b8 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 3s infinite linear;
+}
+
+@keyframes shimmer {
+    to { background-position: 200% center; }
+}
+
+.main-title {
+    font-size: 4.5rem;
+    font-weight: 950;
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+    margin-bottom: 1.5rem;
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.main-subtitle {
+    font-size: 1.25rem;
+    color: #94a3b8;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+}
+
+.cta-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+}
+
+
+/* --- Features Row --- */
+.features-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
+}
+
+.feature-card {
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 2.5rem 2rem;
+    border-radius: 1.5rem;
+    transition: all 0.4s ease;
+    cursor: default;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.feature-card:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(99, 102, 241, 0.3);
+    transform: translateY(-10px);
+}
+
+.icon-wrapper {
+    width: 60px;
+    height: 60px;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    transition: transform 0.3s;
+}
+
+.icon-wrapper svg {
+    width: 28px;
+    height: 28px;
+}
+
+.feature-card:hover .icon-wrapper {
+    transform: rotate(10deg) scale(1.1);
+}
+
+.blue { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+.purple { background: rgba(168, 85, 247, 0.1); color: #a855f7; }
+.emerald { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+
+.feature-card h3 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: #f1f5f9;
+}
+
+.feature-card p {
+    color: #64748b;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .features-row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .main-title {
+        font-size: 3.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .welcome-header {
+        padding: 1rem 1.5rem;
+    }
+    
+    .main-title {
+        font-size: 2.5rem;
+    }
+    
+    .welcome-main {
+        padding: 3rem 1.5rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .welcome-header {
+        padding: 0.75rem 1rem;
+    }
+    
+    .brand-name {
+        font-size: 1.05rem;
+    }
+    
+    .brand-logo {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .brand {
+        gap: 0.5rem;
+    }
+    
+    .header-actions {
+        gap: 0.5rem;
+    }
+    
+    .header-actions .btn-referral {
+        display: none; /* Hide By Referral button in mobile header */
+    }
+    
+    .header-actions .btn-glass,
+    .header-actions .btn-glow-primary {
+        padding: 0.5rem 0.875rem;
+        font-size: 0.8rem;
+        min-height: auto;
+        border-radius: 0.75rem;
+    }
+
+    .main-title {
+        font-size: 2.25rem;
+        line-height: 1.2;
+    }
+    
+    .main-subtitle {
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+    }
+    
+    .cta-group {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.75rem;
+    }
+    
+    .cta-group button {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .btn-glow-primary.lg,
+    .btn-referral.lg {
+        padding: 1rem 1.5rem;
+        font-size: 0.95rem;
+        border-radius: 1rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .brand-name {
+        display: none; /* Hide brand name text on ultra narrow mobile screens */
+    }
+}

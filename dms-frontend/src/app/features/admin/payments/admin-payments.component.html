@@ -1,0 +1,117 @@
+<div class="min-h-screen bg-[#060818] p-4 md:p-8 font-['Outfit']">
+  <div class="max-w-7xl mx-auto space-y-8">
+
+    <!-- ── Header ──────────────────────────────────────────── -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div class="space-y-2">
+        <h1 class="text-4xl font-black text-white tracking-tight">{{ 'ADMIN.PAYMENT_REVIEW.TITLE' | translate }}</h1>
+        <p class="text-slate-400 font-medium">{{ 'ADMIN.PAYMENT_REVIEW.SUBTITLE' | translate }}</p>
+      </div>
+
+      <!-- Stats pill -->
+      <div class="flex gap-3">
+        <div class="bg-amber-500/10 border border-amber-500/20 rounded-2xl px-6 py-4 flex items-center gap-3">
+          <span class="text-2xl font-black text-amber-400">{{ totalElements }}</span>
+          <p class="text-[10px] font-black text-amber-400 uppercase tracking-widest leading-none">
+            {{ 'ADMIN.PAYMENT_REVIEW.TOTAL_RECORDS' | translate }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Status Filter Tabs ──────────────────────────────── -->
+    <div class="flex items-center gap-3 flex-wrap">
+      <button *ngFor="let f of filters"
+        (click)="setFilter(f.value)"
+        [class]="activeFilter === f.value
+          ? f.color + ' text-white shadow-lg'
+          : 'bg-white/5 text-slate-400 hover:bg-white/10'"
+        class="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all border border-transparent">
+        {{ f.label | translate }}
+      </button>
+    </div>
+
+    <!-- Universal Data Table -->
+    <app-data-table
+      [title]="'ADMIN.PAYMENT_REVIEW.TABLE_TITLE' | translate"
+      [headers]="headers"
+      [data]="payments"
+      [searchable]="true"
+      [showActiveInactiveFilter]="false"
+      [totalElements]="totalElements"
+      [totalPages]="totalPages"
+      [currentPage]="currentPage"
+      [pageSize]="pageSize"
+      [isLast]="isLast"
+      [isLoading]="isLoading"
+      [isAdmin]="true"
+      (pageChange)="loadPayments($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+      (approve)="openReview($event, 'approve')"
+      (reject)="openReview($event, 'reject')">
+    </app-data-table>
+  </div>
+</div>
+
+<!-- ── Review Modal ──────────────────────────────────────────────────────── -->
+<div *ngIf="reviewModal.open"
+  class="fixed inset-0 z-50 flex items-center justify-center p-4"
+  (click)="closeModal()">
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+
+  <!-- Modal panel -->
+  <div class="relative w-full max-w-md bg-[#0d1117] border border-white/10 rounded-[2rem] p-8 space-y-6 shadow-2xl"
+    (click)="$event.stopPropagation()">
+
+    <div class="text-center space-y-2">
+      <div [class]="reviewModal.action === 'approve' ? 'text-5xl' : 'text-5xl'">
+        {{ reviewModal.action === 'approve' ? '✅' : '❌' }}
+      </div>
+      <h2 class="text-2xl font-black text-white">
+        {{ reviewModal.action === 'approve' ? ('ADMIN.PAYMENT_REVIEW.APPROVE_TITLE' | translate) : ('ADMIN.PAYMENT_REVIEW.REJECT_TITLE' | translate) }}
+      </h2>
+      <p class="text-slate-400 text-sm">
+        <strong class="text-white">{{ reviewModal.payment?.fullName || reviewModal.payment?.username }}</strong>
+        &nbsp;·&nbsp; ₹{{ reviewModal.payment?.amount | number:'1.2-2' }}
+        &nbsp;·&nbsp; {{ reviewModal.payment?.paymentMethod }}
+      </p>
+    </div>
+
+    <div class="space-y-2">
+      <label class="block text-sm font-semibold text-slate-300 uppercase tracking-widest">
+        {{ 'ADMIN.PAYMENT_REVIEW.ADMIN_REMARKS' | translate }} <span class="text-slate-500 normal-case font-normal">{{ 'ADMIN.PAYMENT_REVIEW.OPTIONAL' | translate }}</span>
+      </label>
+      <textarea [(ngModel)]="reviewModal.adminRemarks" rows="3"
+        [placeholder]="reviewModal.action === 'approve'
+          ? ('ADMIN.PAYMENT_REVIEW.APPROVE_HINT' | translate)
+          : ('ADMIN.PAYMENT_REVIEW.REJECT_HINT' | translate)"
+        class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-white resize-none
+               focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm">
+      </textarea>
+    </div>
+
+    <div *ngIf="reviewModal.action === 'approve'"
+      class="flex items-start gap-3 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-4 text-sm">
+      <span class="text-emerald-400 text-lg">🎉</span>
+      <p class="text-slate-300">{{ 'ADMIN.PAYMENT_REVIEW.APPROVE_DESC' | translate }}</p>
+    </div>
+
+    <div class="flex gap-3">
+      <button (click)="closeModal()"
+        class="flex-1 py-3 bg-white/5 hover:bg-white/10 text-slate-300 font-bold rounded-2xl transition-all text-sm">
+        {{ 'ADMIN.PAYMENT_REVIEW.CANCEL' | translate }}
+      </button>
+      <button (click)="confirmReview()" [disabled]="reviewModal.isProcessing"
+        [class]="reviewModal.action === 'approve'
+          ? 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-500/20'
+          : 'bg-rose-700 hover:bg-rose-600 shadow-rose-500/20'"
+        class="flex-1 py-3 text-white font-bold rounded-2xl transition-all shadow-lg text-sm
+               flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+        <span *ngIf="reviewModal.isProcessing"
+          class="animate-spin h-4 w-4 border-2 border-white/30 border-t-white rounded-full"></span>
+        {{ reviewModal.isProcessing ? ('ADMIN.PAYMENT_REVIEW.PROCESSING' | translate) : (reviewModal.action === 'approve' ? ('ADMIN.PAYMENT_REVIEW.CONFIRM_APPROVE' | translate) : ('ADMIN.PAYMENT_REVIEW.CONFIRM_REJECT' | translate)) }}
+      </button>
+    </div>
+  </div>
+</div>

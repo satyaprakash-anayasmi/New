@@ -1,0 +1,94 @@
+.tree-node {
+  position: relative;
+}
+
+.tree-connector {
+  position: absolute;
+  left: -14px;
+  top: 12px;
+  width: 12px;
+  height: 1px;
+  background: rgba(255,255,255,0.1);
+}
+
+.children-container {
+  position: relative;
+}
+
+.vertical-line {
+  position: absolute;
+  top: 0;
+  bottom: 8px;
+  width: 1px;
+  background: rgba(255,255,255,0.08);
+}
+
+/* Node Cards */
+.node-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border-width: 1px;
+  border-style: solid;
+  transition: all 0.2s ease;
+  flex: 1;
+  min-width: 0;
+  cursor: default;
+}
+
+.node-active {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.08);
+}
+.node-active:hover {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(99,102,241,0.3);
+}
+
+.node-inactive {
+  background: rgba(255,255,255,0.02);
+  border-color: rgba(255,255,255,0.04);
+  opacity: 0.65;
+}
+
+/* Avatars */
+.node-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 14px;
+  flex-shrink: 0;
+  border: 1px solid;
+}
+.avatar-active {
+  background: rgba(99,102,241,0.2);
+  border-color: rgba(99,102,241,0.3);
+  color: rgb(165,180,252);
+}
+.avatar-inactive {
+  background: rgba(100,116,139,0.15);
+  border-color: rgba(100,116,139,0.2);
+  color: rgb(148,163,184);
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 99px;
+  font-size: 10px;
+  font-weight: 700;
+  border: 1px solid;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.badge-active   { color: #34d399; background: rgba(52,211,153,0.1);  border-color: rgba(52,211,153,0.25); }
+.badge-inactive { color: #f87171; background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.25); }
+.badge-paid     { color: #60a5fa; background: rgba(96,165,250,0.1);  border-color: rgba(96,165,250,0.25); }
+.badge-unpaid   { color: #fbbf24; background: rgba(251,191,36,0.1);  border-color: rgba(251,191,36,0.25); }

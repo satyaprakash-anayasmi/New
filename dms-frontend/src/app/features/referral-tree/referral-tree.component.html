@@ -1,0 +1,152 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 p-4 md:p-8 font-['Outfit']">
+
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-black text-white tracking-tight flex items-center gap-3">
+          <svg class="w-7 h-7 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+          </svg>
+          {{ isAdmin ? 'Full Referral Network' : 'My Referral Tree' }}
+        </h1>
+        <p class="text-slate-400 text-sm mt-1">{{ isAdmin ? 'Complete hierarchical view of all user chains' : 'Your downline referral network' }}</p>
+      </div>
+      <div class="flex flex-col gap-4 items-end">
+        <div class="flex gap-2 w-full md:w-auto relative">
+          <div class="relative w-full md:w-64">
+            <input type="text" [(ngModel)]="searchTerm" (keyup.enter)="onSearch()" placeholder="Search tree..."
+              class="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-10 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 transition-colors">
+            <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <button *ngIf="searchTerm" (click)="clearSearch()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <button (click)="onSearch()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold transition-all shadow-lg flex-shrink-0">
+            Search
+          </button>
+        </div>
+        <div class="flex gap-2">
+          <button (click)="rootNode ? expandAll([rootNode]) : null"
+            class="px-4 py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300 rounded-xl text-sm font-semibold transition-all flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+            Expand All
+          </button>
+          <button (click)="collapseAll()" class="px-4 py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300 rounded-xl text-sm font-semibold transition-all flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9V4.5M9 9H4.5M9 9 3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5 5.25 5.25"/></svg>
+            Collapse All
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="flex items-center justify-center py-24">
+    <div class="flex flex-col items-center gap-4">
+      <div class="flex gap-2">
+        <div class="w-3 h-3 rounded-full bg-emerald-400 animate-bounce" style="animation-delay:0s"></div>
+        <div class="w-3 h-3 rounded-full bg-emerald-400 animate-bounce" style="animation-delay:0.15s"></div>
+        <div class="w-3 h-3 rounded-full bg-emerald-400 animate-bounce" style="animation-delay:0.3s"></div>
+      </div>
+      <p class="text-slate-500 text-sm">Loading referral network...</p>
+    </div>
+  </div>
+
+  <!-- Tree Container -->
+  <div *ngIf="!isLoading" class="rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 p-5 shadow-2xl overflow-auto">
+
+    <!-- Search Results View -->
+    <div *ngIf="searchResults.length > 0" class="mb-6 space-y-3">
+      <div class="flex items-center justify-between border-b border-white/10 pb-2">
+        <h3 class="text-white font-bold text-lg">Search Results ({{searchResults.length}})</h3>
+        <button (click)="clearSearch()" class="text-xs text-indigo-400 hover:text-indigo-300">Clear Search</button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div *ngFor="let res of searchResults" class="bg-indigo-900/20 border border-indigo-500/20 rounded-xl p-3 flex gap-3 items-center">
+          <div class="w-10 h-10 rounded-full bg-indigo-600/30 flex items-center justify-center text-indigo-300 font-bold">
+            {{ (res.fullName || res.username || '?').substring(0,1).toUpperCase() }}
+          </div>
+          <div>
+            <div class="text-sm font-bold text-white">{{ res.fullName || res.username }}</div>
+            <div class="text-xs text-slate-400">&#64;{{ res.username }} &bull; {{ res.referralCode || 'N/A' }}</div>
+            <div class="text-[10px] text-slate-500 mt-0.5">Joined: {{ res.createdAt | date }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No data -->
+    <div *ngIf="!rootNode && searchResults.length === 0" class="text-center text-slate-500 py-12">No referral data available</div>
+
+    <!-- Tree root -->
+    <ng-container *ngIf="rootNode && searchResults.length === 0">
+      <ng-container *ngTemplateOutlet="treeNode; context: { node: rootNode, depth: 0 }"></ng-container>
+    </ng-container>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- RECURSIVE TREE NODE TEMPLATE -->
+<!-- ══════════════════════════════════════════ -->
+<ng-template #treeNode let-node="node" let-depth="depth">
+  <div class="tree-node" [style.padding-left.px]="depth * 28">
+
+    <!-- Connector line (not for root) -->
+    <div *ngIf="depth > 0" class="tree-connector"></div>
+
+    <!-- Node Card -->
+    <div class="flex items-start gap-3 mb-2">
+      <!-- Toggle button (only if has children) -->
+      <button *ngIf="node.children?.length > 0" (click)="toggleNode(node.userId)"
+        class="mt-1 w-5 h-5 flex-shrink-0 flex items-center justify-center rounded-md bg-white/10 hover:bg-white/20 text-slate-400 hover:text-white transition-all text-xs font-black">
+        {{ isExpanded(node.userId) ? '−' : '+' }}
+      </button>
+      <div *ngIf="!node.children?.length" class="mt-1 w-5 h-5 flex-shrink-0 flex items-center justify-center">
+        <div class="w-1.5 h-1.5 rounded-full bg-slate-600"></div>
+      </div>
+
+      <!-- Node content -->
+      <div class="node-card" [class.node-active]="node.isActive" [class.node-inactive]="!node.isActive">
+        <!-- Avatar -->
+        <div class="node-avatar" [class.avatar-active]="node.isActive" [class.avatar-inactive]="!node.isActive">
+          {{ (node.fullName || node.username || '?').substring(0,1).toUpperCase() }}
+        </div>
+
+        <!-- Info -->
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="font-bold text-white text-sm truncate">{{ node.fullName || node.username }}</span>
+            <span *ngIf="node.isActive" class="badge badge-active">Active</span>
+            <span *ngIf="!node.isActive" class="badge badge-inactive">Inactive</span>
+            <span *ngIf="isPaid(node)" class="badge badge-paid">Paid</span>
+            <span *ngIf="!isPaid(node)" class="badge badge-unpaid">Unpaid</span>
+          </div>
+          <div class="flex items-center gap-3 mt-1.5 flex-wrap bg-black/20 p-2 rounded-lg border border-white/5 w-fit">
+            <span class="text-xs text-slate-400 font-medium">&#64;{{ node.username }}</span>
+            <div class="w-1 h-1 rounded-full bg-slate-700"></div>
+            <span class="text-xs font-semibold text-emerald-400">Code: {{ node.referralCode || 'N/A' }}</span>
+            <div class="w-1 h-1 rounded-full bg-slate-700"></div>
+            <span class="text-xs text-indigo-300 font-medium">Direct: {{ node.referralCount || node.children?.length || 0 }}</span>
+            <div class="w-1 h-1 rounded-full bg-slate-700"></div>
+            <span class="text-xs text-fuchsia-300 font-medium">Network: {{ node.totalDownlineCount || 0 }}</span>
+            <ng-container *ngIf="node.joinedDate">
+              <div class="w-1 h-1 rounded-full bg-slate-700"></div>
+              <span class="text-[10px] text-slate-500">Joined: {{ node.joinedDate | date:'mediumDate' }}</span>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Children (recursive) -->
+    <div *ngIf="node.children?.length > 0 && isExpanded(node.userId)" class="relative children-container">
+      <div class="vertical-line" [style.left.px]="14"></div>
+      <div *ngFor="let child of node.children">
+        <ng-container *ngTemplateOutlet="treeNode; context: { node: child, depth: depth + 1 }"></ng-container>
+      </div>
+    </div>
+
+  </div>
+</ng-template>

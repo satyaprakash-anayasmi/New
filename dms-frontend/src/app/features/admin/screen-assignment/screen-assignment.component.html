@@ -1,0 +1,332 @@
+<div class="sa-page">
+  <!-- ══ Page Header ══════════════════════════════════════════════════════ -->
+  <div class="sa-header">
+    <div class="sa-header-left">
+      <div class="sa-header-icon">
+        <svg class="w-6 h-6 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="sa-title">{{ 'ADMIN.SCREEN_ASSIGNMENT.TITLE' | translate }}</h1>
+        <p class="sa-subtitle">{{ 'ADMIN.SCREEN_ASSIGNMENT.SUBTITLE' | translate }}</p>
+      </div>
+    </div>
+
+    <!-- View Toggle Tabs -->
+    <div class="sa-tabs">
+      <button [class.sa-tab-active]="activeView === 'USERS'" (click)="activeView = 'USERS'" class="sa-tab">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        {{ 'ADMIN.SCREEN_ASSIGNMENT.USERS_VIEW' | translate }}
+      </button>
+      <button [class.sa-tab-active]="activeView === 'ROLES'" (click)="activeView = 'ROLES'; loadRoles()" class="sa-tab">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+        {{ 'ADMIN.SCREEN_ASSIGNMENT.ROLES_VIEW' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════ USERS VIEW ══════════════════════════════════ -->
+  <ng-container *ngIf="activeView === 'USERS'">
+
+    <!-- Search & Filters Bar -->
+    <div class="sa-filter-bar">
+      <div class="sa-search-wrap">
+        <svg class="sa-search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0" />
+        </svg>
+        <input
+          class="sa-search-input"
+          type="text"
+          [placeholder]="'ADMIN.SCREEN_ASSIGNMENT.SEARCH_USERS' | translate"
+          [(ngModel)]="searchQuery"
+          (input)="onSearch($any($event.target).value)"
+          id="sa-search"
+        />
+      </div>
+
+      <app-select
+        class="sa-filter-select-app"
+        [options]="rolesFilterOptions"
+        [value]="filterRole"
+        (valueChange)="filterRole = $event; applyFilters()"
+        [placeholder]="'ADMIN.SCREEN_ASSIGNMENT.ALL_ROLES' | translate"
+        [searchable]="true"
+      ></app-select>
+
+      <button class="sa-btn-ghost" (click)="clearFilters()" [title]="'ADMIN.SCREEN_ASSIGNMENT.CLEAR' | translate">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        {{ 'ADMIN.SCREEN_ASSIGNMENT.CLEAR' | translate }}
+      </button>
+
+      <span class="sa-count-badge">{{ totalElements }} {{ 'ADMIN.SCREEN_ASSIGNMENT.USERS_COUNT' | translate }}</span>
+    </div>
+
+    <!-- Users Table -->
+    <div class="sa-card">
+      <!-- Loading -->
+      <div *ngIf="isLoading" class="sa-loading">
+        <div class="sa-spinner"></div>
+        <span>{{ 'ADMIN.SCREEN_ASSIGNMENT.LOADING_USERS' | translate }}</span>
+      </div>
+
+      <!-- Table -->
+      <div *ngIf="!isLoading" class="sa-table-wrap">
+        <table class="sa-table">
+          <thead>
+            <tr>
+              <th class="sa-th">#</th>
+              <th class="sa-th">
+                <div class="sa-th-inner">
+                  <i class="fa-solid fa-user text-indigo-400 text-xs"></i>
+                  {{ 'ADMIN.APPROVED_USERS.COL_USER_DETAILS' | translate }}
+                </div>
+              </th>
+              <th class="sa-th">
+                <div class="sa-th-inner">
+                  <i class="fa-solid fa-user-tag text-emerald-400 text-xs"></i>
+                  {{ 'ADMIN.APPROVED_USERS.COL_ROLES' | translate }}
+                </div>
+              </th>
+              <th class="sa-th hidden lg:table-cell">
+                <div class="sa-th-inner">
+                  <i class="fa-solid fa-desktop text-violet-400 text-xs"></i>
+                  {{ 'ADMIN.SCREEN_ASSIGNMENT.TITLE' | translate }}
+                </div>
+              </th>
+              <th class="sa-th text-center">{{ 'ADMIN.SCREEN_ASSIGNMENT.TH_ACTIONS' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users" class="sa-tr">
+              <td class="sa-td sa-sno">{{ user.sno }}</td>
+              <td class="sa-td">
+                <div class="sa-user-cell">
+                  <div class="sa-avatar">{{ (user.username || '?').charAt(0).toUpperCase() }}</div>
+                  <div>
+                    <p class="sa-username">{{ user.username }}</p>
+                    <p class="sa-email">{{ user.email }}</p>
+                  </div>
+                </div>
+              </td>
+              <td class="sa-td">
+                <div class="sa-roles-cell">
+                  <span *ngFor="let r of (user._rolesRaw || [])" class="sa-role-badge">
+                    {{ getRoleDisplay(r) }}
+                  </span>
+                  <span *ngIf="!user._rolesRaw?.length" class="sa-no-data">{{ 'ADMIN.SCREEN_ASSIGNMENT.NO_ROLE' | translate }}</span>
+                </div>
+              </td>
+              <td class="sa-td hidden lg:table-cell">
+                <div class="sa-screens-cell">
+                  <ng-container *ngIf="user.screens && user.screens !== '—'; else noScreens">
+                    <span *ngFor="let s of (user.screens || '').split(', ')" class="sa-screen-chip">
+                      {{ getScreenLabel(s) | translate }}
+                    </span>
+                  </ng-container>
+                  <ng-template #noScreens>
+                    <span class="sa-no-data">{{ 'ADMIN.SCREEN_ASSIGNMENT.NO_SCREENS_ASSIGNED' | translate }}</span>
+                  </ng-template>
+                </div>
+              </td>
+              <td class="sa-td">
+                <div class="sa-action-cell">
+                  <button class="sa-action-btn sa-btn-edit" (click)="openUserModal(user)" [title]="'ADMIN.SCREEN_ASSIGNMENT.ASSIGN_ROLE' | translate">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                    {{ 'ADMIN.SCREEN_ASSIGNMENT.ASSIGN_ROLE' | translate }}
+                  </button>
+                  <button *ngIf="user._rolesRaw?.length" class="sa-action-btn sa-btn-danger" (click)="removeUserRoles(user)" [title]="'ADMIN.SCREEN_ASSIGNMENT.REMOVE_ROLES' | translate">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    {{ 'ADMIN.SCREEN_ASSIGNMENT.REMOVE' | translate }}
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="!users.length && !isLoading">
+              <td colspan="5" class="sa-empty">
+                <div class="sa-empty-inner">
+                  <svg class="w-12 h-12 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <p>{{ 'ADMIN.SCREEN_ASSIGNMENT.NO_USERS_FOUND' | translate }}</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div *ngIf="!isLoading && users.length > 0" class="px-6 py-6 md:px-10 md:py-8 bg-white/5 backdrop-blur-xl rounded-[2rem] border border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 mt-6">
+        <div class="flex items-center justify-between w-full md:w-auto gap-6 px-2 md:px-0">
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">
+            <ng-container *ngIf="totalElements > 0">
+              {{ 'ADMIN.COMMON.SHOWING' | translate }} <span class="text-white">{{ (currentPage * pageSize + 1) }}-{{ ((currentPage + 1) * pageSize > totalElements ? totalElements : (currentPage + 1) * pageSize) }}</span>
+              {{ 'ADMIN.COMMON.OF' | translate }} <span class="text-white">{{ totalElements }}</span>
+            </ng-container>
+            <ng-container *ngIf="totalElements === 0">
+              <span class="text-slate-500">{{ 'ADMIN.COMMON.NO_RECORDS_FOUND' | translate }}</span>
+            </ng-container>
+          </p>
+          <div class="flex items-center gap-2">
+            <label class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ 'ADMIN.COMMON.PER_PAGE' | translate }}</label>
+            <div class="w-24">
+              <app-select
+                [options]="[{id: 10, name: '10'}, {id: 20, name: '20'}, {id: 50, name: '50'}, {id: 100, name: '100'}]"
+                [value]="pageSize"
+                (valueChange)="onPageSizeChange($event)"
+                [searchable]="false"
+                [clearable]="false"
+                [placeholder]="'ADMIN.COMMON.SIZE' | translate"
+              ></app-select>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 w-full md:w-auto justify-center md:justify-end">
+          <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0" aria-label="Previous Page" title="Previous Page" class="p-3 rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:bg-white/10 hover:text-white active:scale-90 disabled:opacity-30 shadow-sm transition-all">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          
+          <div class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl text-[10px] font-black shadow-lg shadow-indigo-500/20">
+            {{ currentPage + 1 }}
+          </div>
+          
+          <button (click)="onPageChange(currentPage + 1)" [disabled]="isLast" aria-label="Next Page" title="Next Page" class="p-3 rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:bg-white/10 hover:text-white active:scale-90 disabled:opacity-30 shadow-sm transition-all">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+
+  <!-- ══════════════════════ ROLES VIEW ══════════════════════════════════ -->
+  <ng-container *ngIf="activeView === 'ROLES'">
+    <div *ngIf="isRolesLoading" class="sa-loading">
+      <div class="sa-spinner"></div>
+      <span>{{ 'ADMIN.SCREEN_ASSIGNMENT.LOADING_ROLES' | translate }}</span>
+    </div>
+
+    <div class="sa-roles-grid" *ngIf="!isRolesLoading">
+      <div *ngFor="let role of rolesData" class="sa-role-card">
+        <div class="sa-role-card-header">
+          <div class="sa-role-icon">
+            <svg class="w-5 h-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <div class="sa-role-info">
+            <h3 class="sa-role-name">{{ getRoleDisplay(role.roleName) }}</h3>
+            <p class="sa-role-screens-count">{{ (role.screens || []).length }} {{ 'ADMIN.SCREEN_ASSIGNMENT.SCREENS_ASSIGNED' | translate }}</p>
+          </div>
+          <button class="sa-btn-edit-role" (click)="openRoleModal(role)" [title]="'ADMIN.SCREEN_ASSIGNMENT.EDIT_SCREENS' | translate">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+            </svg>
+          </button>
+        </div>
+        <div class="sa-role-screens">
+          <span *ngFor="let s of role.screens" class="sa-screen-chip">{{ getScreenLabel(s) | translate }}</span>
+          <span *ngIf="!role.screens?.length" class="sa-no-data">{{ 'ADMIN.SCREEN_ASSIGNMENT.NO_SCREENS_ASSIGNED' | translate }}</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<!-- ══ Role Screen Edit Modal ══════════════════════════════════════════════ -->
+<div *ngIf="showRoleModal" class="sa-modal-overlay" (click)="closeRoleModal()">
+  <div class="sa-modal" (click)="$event.stopPropagation()">
+    <div class="sa-modal-header">
+      <div>
+        <h2 class="sa-modal-title">{{ 'ADMIN.SCREEN_ASSIGNMENT.EDIT_SCREEN_ACCESS' | translate }}</h2>
+        <p class="sa-modal-subtitle">{{ 'ADMIN.SCREEN_ASSIGNMENT.ROLE' | translate }}: <strong>{{ getRoleDisplay(selectedRole?.roleName || '') }}</strong></p>
+      </div>
+      <button class="sa-modal-close" (click)="closeRoleModal()">✕</button>
+    </div>
+    <div class="sa-modal-body">
+      <p class="sa-modal-hint">{{ 'ADMIN.SCREEN_ASSIGNMENT.SELECT_SCREENS_HINT' | translate }}</p>
+      <div class="sa-screen-grid">
+        <label *ngFor="let screen of SYSTEM_SCREENS" class="sa-screen-toggle"
+          [class.sa-screen-toggle-on]="isScreenSelected(screen.path)">
+          <input type="checkbox" [checked]="isScreenSelected(screen.path)"
+            (change)="toggleScreen(screen.path)" class="hidden" />
+          <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            [class.text-violet-400]="isScreenSelected(screen.path)"
+            [class.text-slate-600]="!isScreenSelected(screen.path)">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+          <span>{{ screen.label | translate }}</span>
+          <span class="sa-screen-path">{{ screen.path }}</span>
+        </label>
+      </div>
+    </div>
+    <div class="sa-modal-footer">
+      <button class="sa-btn-ghost" (click)="closeRoleModal()">{{ 'ADMIN.COMMON.CANCEL' | translate }}</button>
+      <button class="sa-btn-primary" (click)="saveRoleScreens()" [disabled]="isSavingRole">
+        <span *ngIf="!isSavingRole">{{ 'ADMIN.SCREEN_ASSIGNMENT.SAVE_PERMISSIONS' | translate }}</span>
+        <span *ngIf="isSavingRole" class="sa-btn-loading">{{ 'ADMIN.SCREEN_ASSIGNMENT.SAVING' | translate }}</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ User Role Edit Modal ═════════════════════════════════════════════════ -->
+<div *ngIf="showUserModal" class="sa-modal-overlay" (click)="closeUserModal()">
+  <div class="sa-modal" (click)="$event.stopPropagation()">
+    <div class="sa-modal-header">
+      <div>
+        <h2 class="sa-modal-title">{{ 'ADMIN.SCREEN_ASSIGNMENT.ASSIGN_ROLE_TO_USER' | translate }}</h2>
+        <p class="sa-modal-subtitle">{{ 'ADMIN.SCREEN_ASSIGNMENT.USER' | translate }}: <strong>{{ selectedUser?.username }}</strong></p>
+      </div>
+      <button class="sa-modal-close" (click)="closeUserModal()">✕</button>
+    </div>
+    <div class="sa-modal-body">
+      <p class="sa-modal-hint">{{ 'ADMIN.SCREEN_ASSIGNMENT.SELECT_ROLES_HINT' | translate }}</p>
+      <div class="sa-screen-grid">
+        <label *ngFor="let roleName of allRoleNames" class="sa-screen-toggle"
+          [class.sa-screen-toggle-on]="isRoleSelected(roleName)">
+          <input type="checkbox" [checked]="isRoleSelected(roleName)"
+            (change)="toggleRole(roleName)" class="hidden" />
+          <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            [class.text-emerald-400]="isRoleSelected(roleName)"
+            [class.text-slate-600]="!isRoleSelected(roleName)">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+          <span>{{ getRoleDisplay(roleName) }}</span>
+        </label>
+      </div>
+    </div>
+    <div class="sa-modal-footer">
+      <button class="sa-btn-ghost" (click)="closeUserModal()">{{ 'ADMIN.COMMON.CANCEL' | translate }}</button>
+      <button class="sa-btn-primary" (click)="saveUserRoles()" [disabled]="isSavingUser">
+        <span *ngIf="!isSavingUser">{{ 'ADMIN.SCREEN_ASSIGNMENT.SAVE_ROLES' | translate }}</span>
+        <span *ngIf="isSavingUser" class="sa-btn-loading">{{ 'ADMIN.SCREEN_ASSIGNMENT.SAVING' | translate }}</span>
+      </button>
+    </div>
+  </div>
+</div>

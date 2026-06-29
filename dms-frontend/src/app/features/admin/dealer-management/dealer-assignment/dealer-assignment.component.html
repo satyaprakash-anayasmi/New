@@ -1,0 +1,227 @@
+<div class="space-y-4">
+  
+  <!-- Header & Actions -->
+  <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-slate-800/50 p-4 rounded-xl border border-white/10">
+    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+      <svg class="w-5 h-5 text-indigo-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+      </svg>
+      {{ 'DEALER_ASSIGNMENT.TITLE' | translate }}
+    </h2>
+    <div class="flex w-full sm:w-auto gap-2">
+      <button (click)="toggleFilter()" class="flex-1 flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-2 p-2 sm:px-4 sm:py-2 bg-slate-700/50 hover:bg-slate-700 text-white rounded-lg text-xs sm:text-sm transition-all border border-white/5 hover:border-indigo-500/30 text-center">
+        <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+        </svg>
+        <span>{{ isFilterOpen ? ('DEALER_ASSIGNMENT.CLOSE' | translate) : ('DEALER_ASSIGNMENT.SEARCH' | translate) }}</span>
+      </button>
+      <button (click)="exportToExcel()" [disabled]="isExporting" class="flex-1 flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-2 p-2 sm:px-4 sm:py-2 bg-green-600 hover:bg-green-500 text-white rounded-lg text-xs sm:text-sm font-semibold transition-all shadow-lg shadow-green-500/20 text-center disabled:opacity-50">
+        <svg *ngIf="!isExporting" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+        <svg *ngIf="isExporting" class="w-4 h-4 shrink-0 animate-spin" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span>{{ isExporting ? ('DEALER_ASSIGNMENT.EXPORTING' | translate) : ('DEALER_ASSIGNMENT.DOWNLOAD_EXCEL' | translate) }}</span>
+      </button>
+      <button (click)="openAddModal()" class="flex-1 flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-2 p-2 sm:px-4 sm:py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs sm:text-sm font-semibold transition-all shadow-lg shadow-indigo-500/20 text-center">
+        <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        <span>{{ 'DEALER_ASSIGNMENT.ASSIGN_AREA' | translate }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Collapsible Filter Panel -->
+  <div *ngIf="isFilterOpen" class="bg-slate-800/80 p-5 rounded-xl border border-white/10 shadow-lg animate-fade-in">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-4">
+      <div>
+        <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">{{ 'DEALER_ASSIGNMENT.SEARCH_ALL' | translate }}</label>
+        <input type="text" [(ngModel)]="filters.searchTerm" [placeholder]="'DEALER_ASSIGNMENT.SEARCH' | translate" 
+               class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">{{ 'DEALER_ASSIGNMENT.DEALER_NAME' | translate }}</label>
+        <input type="text" [(ngModel)]="filters.dealerName" [placeholder]="'DEALER_ASSIGNMENT.DEALER_NAME' | translate" 
+               class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">{{ 'DEALER_ASSIGNMENT.AREA' | translate }}</label>
+        <input type="text" [(ngModel)]="filters.area" [placeholder]="'DEALER_ASSIGNMENT.AREA' | translate" 
+               class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">{{ 'DEALER_ASSIGNMENT.PRODUCT_LABEL' | translate }}</label>
+        <input type="text" [(ngModel)]="filters.productName" [placeholder]="'DEALER_ASSIGNMENT.PRODUCT_NAME' | translate" 
+               class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">{{ 'DEALER_ASSIGNMENT.STATUS' | translate }}</label>
+        <app-select 
+          [options]="statusOptions" 
+          [value]="filters.status" 
+          (valueChange)="filters.status = $event" 
+          [placeholder]="'DEALER_ASSIGNMENT.ALL_STATUSES' | translate" 
+          [searchable]="false">
+        </app-select>
+      </div>
+    </div>
+    <div class="flex items-end justify-end gap-2">
+      <button (click)="applyFilters()" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-semibold transition-colors shadow-lg shadow-indigo-500/20">
+        {{ 'DEALER_ASSIGNMENT.APPLY_FILTERS' | translate }}
+      </button>
+      <button (click)="resetFilters()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm font-semibold transition-colors">
+        {{ 'DEALER_ASSIGNMENT.RESET' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Data Table Component -->
+  <div class="bg-slate-800/30 rounded-xl border border-white/5 overflow-hidden">
+    <app-data-table
+      [title]="'Assignments'"
+      [headers]="headers"
+      [data]="assignments"
+      [totalElements]="totalItems"
+      [currentPage]="page"
+      [pageSize]="pageSize"
+      [isLoading]="isLoading"
+      [searchable]="false"
+      [backendFiltering]="true"
+      (pageChange)="onPageChange($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+      (rowClick)="onView($event)"
+      (edit)="onEdit($event)"
+      (delete)="onDelete($event)">
+    </app-data-table>
+  </div>
+
+
+
+  <!-- Add/Edit Modal -->
+  <div *ngIf="isModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="closeModal()"></div>
+    
+    <!-- Modal Content -->
+    <div class="relative bg-slate-900 border border-white/10 rounded-2xl w-full max-w-lg shadow-2xl animate-fade-in overflow-hidden">
+      
+      <!-- Header -->
+      <div class="flex items-center justify-between p-6 border-b border-white/5 bg-slate-800/50">
+        <h3 class="text-xl font-bold text-white">{{ editingAssignment ? ('DEALER_ASSIGNMENT.MODAL_TITLE_EDIT' | translate) : ('DEALER_ASSIGNMENT.MODAL_TITLE_NEW' | translate) }}</h3>
+        <button (click)="closeModal()" class="text-slate-400 hover:text-white transition-colors">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto custom-scrollbar">
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1">{{ 'ADMIN.DEALER_MGMT.COL_DEALER' | translate }}</label>
+          <app-select 
+            [options]="dealerOptions" 
+            [value]="assignmentForm.dealerId" 
+            (valueChange)="assignmentForm.dealerId = $event; onDealerSelect()" 
+            [placeholder]="('ADMIN.DEALER_MGMT.SELECT_DEALER' | translate)">
+          </app-select>
+          <div *ngIf="selectedDealer" class="mt-3 p-4 bg-slate-800 rounded-xl border border-white/10 text-sm text-slate-300 shadow-inner grid grid-cols-2 gap-y-2 gap-x-4">
+            <div class="col-span-2 flex items-center gap-2 pb-2 border-b border-white/5 mb-1">
+              <div class="w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-xs uppercase">
+                {{ selectedDealer.username | slice:0:2 }}
+              </div>
+              <div>
+                <div class="font-bold text-white leading-none">{{ selectedDealer.username }}</div>
+                <div class="text-xs text-slate-400">ID: {{ selectedDealer.id }}</div>
+              </div>
+              <div class="ml-auto">
+                <span class="px-2 py-1 rounded text-xs font-semibold" 
+                      [ngClass]="selectedDealer.verificationStatus === 'VERIFIED' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amber-500/10 text-amber-400'">
+                  {{ selectedDealer.verificationStatus || 'UNVERIFIED' }}
+                </span>
+              </div>
+            </div>
+            
+            <div><strong>{{ 'DEALER_ASSIGNMENT.EMAIL' | translate }}:</strong> <span class="text-slate-400">{{ selectedDealer.email }}</span></div>
+            <div><strong>{{ 'DEALER_ASSIGNMENT.AREA' | translate }}:</strong> <span class="text-slate-400">{{ selectedDealer.area || 'N/A' }}</span></div>
+            
+            <div *ngIf="isLoadingMetrics" class="col-span-2 text-xs text-indigo-400 animate-pulse mt-2 flex items-center gap-1">
+              <svg class="animate-spin h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+              {{ 'DEALER_ASSIGNMENT.LOADING_METRICS' | translate }}
+            </div>
+            
+            <div *ngIf="selectedDealerMetrics" class="col-span-2 mt-2 pt-2 border-t border-white/5 flex justify-between items-center bg-slate-900/50 p-2 rounded-lg">
+              <div class="text-center">
+                <div class="text-xs text-slate-400">{{ 'DEALER_ASSIGNMENT.DISTRIBUTIONS' | translate }}</div>
+                <div class="font-bold text-indigo-400">{{ selectedDealerMetrics.totalDistributions }}</div>
+              </div>
+              <div class="text-center">
+                <div class="text-xs text-slate-400">{{ 'DEALER_ASSIGNMENT.SUCCESS_RATE' | translate }}</div>
+                <div class="font-bold" [ngClass]="selectedDealerMetrics.successRate > 75 ? 'text-emerald-400' : 'text-amber-400'">
+                  {{ selectedDealerMetrics.successRate | number:'1.0-1' }}%
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1">{{ 'DEALER_ASSIGNMENT.STATE' | translate }}</label>
+            <app-select [options]="states" [value]="assignmentForm.state" (valueChange)="assignmentForm.state = $event; onStateChange()" [placeholder]="'DEALER_ASSIGNMENT.SELECT_STATE' | translate"></app-select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1">{{ 'DEALER_ASSIGNMENT.DISTRICT' | translate }}</label>
+            <app-select [options]="districts" [value]="assignmentForm.district" (valueChange)="assignmentForm.district = $event; onDistrictChange()" [disabled]="!districts.length" [placeholder]="'DEALER_ASSIGNMENT.SELECT_DISTRICT' | translate"></app-select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1">{{ 'DEALER_ASSIGNMENT.BLOCK' | translate }}</label>
+            <app-select [options]="blocks" [value]="assignmentForm.block" (valueChange)="assignmentForm.block = $event; onBlockChange()" [disabled]="!blocks.length" [placeholder]="'DEALER_ASSIGNMENT.SELECT_BLOCK' | translate"></app-select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1">{{ 'DEALER_ASSIGNMENT.PIN_CODE' | translate }}</label>
+            <app-select [options]="pinCodes" [value]="assignmentForm.pinCode" (valueChange)="assignmentForm.pinCode = $event; onPinCodeChange()" [disabled]="!pinCodes.length" [placeholder]="'DEALER_ASSIGNMENT.SELECT_PIN_CODE' | translate"></app-select>
+          </div>
+        </div>
+
+        <div *ngIf="availableUsers.length > 0" class="mt-4">
+          <label class="block text-sm font-medium text-slate-300 mb-1">{{ 'DEALER_ASSIGNMENT.SELECT_USERS' | translate }}</label>
+          <app-multi-select 
+            [options]="availableUserOptions" 
+            [value]="assignmentForm.assignedUserIds" 
+            (valueChange)="assignmentForm.assignedUserIds = $event" 
+            [placeholder]="'DEALER_ASSIGNMENT.SELECT_USERS_PLACEHOLDER' | translate">
+          </app-multi-select>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1">{{ 'ADMIN.DEALER_MGMT.COL_PRODUCT' | translate }}</label>
+          <app-multi-select 
+            [options]="productOptions" 
+            [value]="assignmentForm.productIds" 
+            (valueChange)="assignmentForm.productIds = $event" 
+            [placeholder]="('ADMIN.DEALER_MGMT.SELECT_PRODUCT' | translate)">
+          </app-multi-select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1">{{ 'DEALER_ASSIGNMENT.TARGET_QUANTITY' | translate }}</label>
+          <input type="number" [(ngModel)]="assignmentForm.targetQuantity" class="w-full bg-slate-950 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500 transition-colors" placeholder="e.g. 500">
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="flex items-center justify-end gap-3 p-6 border-t border-white/5 bg-slate-800/30">
+        <button (click)="closeModal()" class="px-4 py-2 text-slate-300 hover:text-white font-medium transition-colors">Cancel</button>
+        <button (click)="saveAssignment()" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-semibold transition-all shadow-lg shadow-indigo-500/25">
+          {{ editingAssignment ? 'Save Changes' : 'Create Assignment' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>

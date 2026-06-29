@@ -1,0 +1,91 @@
+<div class="welcome-container">
+  <!-- Dynamic Background Elements -->
+  <div class="bg-blob blob-1"></div>
+  <div class="bg-blob blob-2"></div>
+  <div class="bg-blob blob-3"></div>
+  <div class="glass-overlay"></div>
+
+  <!-- Header -->
+  <header class="welcome-header">
+    <div class="brand">
+      <img src="assets/images/logo.png" alt="Bazaar Janakalyan Logo" class="brand-logo" />
+      <span class="brand-name">{{ 'WELCOME.BRAND_NAME' | translate }}</span>
+    </div>
+    <div class="header-actions">
+      <button routerLink="/login" class="btn-glass">{{ 'WELCOME.BTN_LOGIN' | translate }}</button>
+      <button routerLink="/register" [queryParams]="{ref: '1'}" class="btn-referral">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        {{ 'WELCOME.BTN_REFERRAL' | translate }}
+      </button>
+      <button routerLink="/register" class="btn-glow-primary">
+        <span>{{ 'WELCOME.BTN_SIGN_UP' | translate }}</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="welcome-main">
+    <div class="hero-content">
+      <div class="floating-badge">
+        <span class="shimmer-text">{{ 'WELCOME.BADGE' | translate }}</span>
+      </div>
+      <h1 class="main-title">
+        {{ 'WELCOME.TITLE_PART1' | translate }} <br />
+        <span class="gradient-text">{{ 'WELCOME.TITLE_PART2' | translate }}</span>
+      </h1>
+      <p class="main-subtitle">
+        {{ 'WELCOME.SUBTITLE' | translate }}
+      </p>
+
+      <div class="cta-group">
+        <button routerLink="/register" class="btn-glow-primary lg">
+          <span>{{ 'WELCOME.BTN_GET_STARTED' | translate }}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M5 12h14m-7-7l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button routerLink="/register" [queryParams]="{ref: '1'}" class="btn-referral lg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          {{ 'WELCOME.BTN_JOIN_REFERRAL' | translate }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Features / Value Props -->
+    <div class="features-row">
+      <div class="feature-card">
+        <div class="icon-wrapper blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>{{ 'WELCOME.FEATURE1_TITLE' | translate }}</h3>
+        <p>{{ 'WELCOME.FEATURE1_DESC' | translate }}</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon-wrapper purple">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>{{ 'WELCOME.FEATURE2_TITLE' | translate }}</h3>
+        <p>{{ 'WELCOME.FEATURE2_DESC' | translate }}</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon-wrapper emerald">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>{{ 'WELCOME.FEATURE3_TITLE' | translate }}</h3>
+        <p>{{ 'WELCOME.FEATURE3_DESC' | translate }}</p>
+      </div>
+    </div>
+  </main>
+</div>

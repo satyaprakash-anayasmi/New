@@ -1,0 +1,201 @@
+<div class="min-h-screen p-4 md:p-8 space-y-8 animate-fade-in relative z-10">
+  <!-- Page Header -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+    <div class="flex items-center gap-4">
+      <div class="p-3 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-2xl border border-white/10 shadow-[0_0_30px_rgba(99,102,241,0.15)]">
+        <svg class="w-8 h-8 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-200 to-indigo-400 tracking-tight">
+          Exclusive Offer
+        </h1>
+        <p class="text-slate-400 text-sm mt-1 font-medium flex items-center gap-2">
+          Unlock the true potential of your network
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="flex items-center justify-center h-64">
+    <div class="w-10 h-10 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin"></div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8" *ngIf="!isLoading">
+    
+    <!-- Offer Card -->
+    <div class="relative group">
+      <!-- Glow effect -->
+      <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-[2.5rem] blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
+      
+      <div class="relative h-full p-8 rounded-[2rem] bg-slate-900/80 backdrop-blur-xl border border-white/10 flex flex-col items-center text-center overflow-hidden">
+        <!-- Shine overlay -->
+        <div class="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+        <div class="w-full flex justify-between items-center mb-6">
+          <span class="px-3 py-1 bg-indigo-500/20 text-indigo-300 text-[10px] font-black uppercase tracking-widest rounded-full border border-indigo-500/30">
+            {{ growthPlan?.badgeLabel || 'PREMIUM' }}
+          </span>
+          <span class="flex items-center gap-1 text-[10px] font-black text-emerald-400 uppercase tracking-widest">
+            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+            </svg>
+            Active
+          </span>
+        </div>
+
+        <h2 class="text-4xl font-black text-white mb-2">{{ growthPlan?.name || 'Growth Plan' }}</h2>
+        <p class="text-slate-400 text-sm max-w-sm mx-auto mb-8">{{ growthPlan?.description || 'Get access to Basic Level 1 and unlock unlimited earning potential.' }}</p>
+
+        <div class="flex items-start gap-2 mb-8">
+          <span class="text-2xl font-bold text-slate-400 mt-2">₹</span>
+          <span class="text-7xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-400">{{ growthPlan?.price || '2000' }}</span>
+        </div>
+
+        <div class="w-full space-y-4 mb-8 text-left">
+          <div class="flex items-center gap-3">
+            <div class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
+              <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <span class="text-slate-300 text-sm font-medium">Basic Level 1 Access</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
+              <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <span class="text-slate-300 text-sm font-medium">Dealer Network Tracking</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
+              <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <span class="text-slate-300 text-sm font-medium">Unlimited Earnings</span>
+          </div>
+        </div>
+
+        <div class="mt-auto w-full">
+          <button (click)="purchasePlan()" 
+                  [disabled]="isProcessing || paymentStatus === 'SUCCESS' || paymentStatus === 'APPROVED' || paymentStatus === 'PENDING'"
+                  class="relative w-full overflow-hidden px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-black uppercase tracking-widest transition-all shadow-[0_0_40px_rgba(79,70,229,0.4)] disabled:opacity-50 disabled:cursor-not-allowed group/btn">
+            <span class="relative z-10 flex items-center justify-center gap-2">
+              <span *ngIf="isProcessing" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+              <span *ngIf="!isProcessing && paymentStatus !== 'SUCCESS' && paymentStatus !== 'APPROVED'">Purchase Plan</span>
+              <span *ngIf="!isProcessing && (paymentStatus === 'SUCCESS' || paymentStatus === 'APPROVED')">Already Purchased</span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Purchase History & Status -->
+    <div class="flex flex-col gap-6">
+      
+      <!-- Current Status Card -->
+      <div class="p-6 rounded-[2rem] bg-slate-900/80 backdrop-blur-xl border border-white/10">
+        <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+          <svg class="w-5 h-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Current Status
+        </h3>
+        
+        <div *ngIf="!paymentStatus" class="flex items-center gap-4 p-4 rounded-xl bg-slate-800/50 border border-white/5">
+          <div class="w-12 h-12 rounded-full bg-slate-700/50 flex items-center justify-center">
+            <svg class="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 12H4" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm font-bold text-slate-300">No Active Plan</p>
+            <p class="text-xs text-slate-500">Purchase the Growth Plan to unlock features.</p>
+          </div>
+        </div>
+
+        <div *ngIf="paymentStatus === 'PENDING'" class="flex items-center gap-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+          <div class="w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center">
+            <svg class="w-6 h-6 text-amber-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm font-bold text-amber-400">Payment Pending</p>
+            <p class="text-xs text-amber-500/70">Your payment is being verified by admin.</p>
+          </div>
+        </div>
+
+        <div *ngIf="paymentStatus === 'SUCCESS' || paymentStatus === 'APPROVED'" class="flex items-center gap-4 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+          <div class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center">
+            <svg class="w-6 h-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm font-bold text-emerald-400">Basic Level 1 Active</p>
+            <p class="text-xs text-emerald-500/70">Your Growth Plan is fully active and unlocked.</p>
+          </div>
+        </div>
+        
+        <div *ngIf="paymentStatus === 'FAILED' || paymentStatus === 'REJECTED'" class="flex items-center gap-4 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20">
+          <div class="w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center">
+            <svg class="w-6 h-6 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm font-bold text-rose-400">Payment Failed</p>
+            <p class="text-xs text-rose-500/70">Your previous transaction was unsuccessful or rejected.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transaction History -->
+      <div class="p-6 rounded-[2rem] bg-slate-900/80 backdrop-blur-xl border border-white/10 flex-1">
+        <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+          <svg class="w-5 h-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+          Purchase History
+        </h3>
+
+        <div class="space-y-3">
+          <div *ngFor="let history of purchaseHistory" class="flex items-center justify-between p-4 rounded-xl bg-slate-800/50 border border-white/5">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-slate-300">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-sm font-bold text-white">{{ history.remarks || 'Growth Plan Purchase' }}</p>
+                <p class="text-xs text-slate-500 font-mono">{{ history.transactionReference }} &bull; {{ history.submittedAt | date:'medium' }}</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="text-sm font-bold text-white">₹{{ history.amount }}</p>
+              <span class="text-[10px] font-black uppercase tracking-widest"
+                [ngClass]="{
+                  'text-amber-400': history.status === 'PENDING',
+                  'text-emerald-400': history.status === 'SUCCESS' || history.status === 'APPROVED',
+                  'text-rose-400': history.status === 'FAILED' || history.status === 'REJECTED'
+                }">
+                {{ history.status }}
+              </span>
+            </div>
+          </div>
+
+          <div *ngIf="purchaseHistory.length === 0" class="text-center py-8">
+            <p class="text-sm text-slate-500">No past transactions found.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

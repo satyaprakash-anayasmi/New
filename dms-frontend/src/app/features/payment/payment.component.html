@@ -1,0 +1,320 @@
+<div class="min-h-screen bg-[#060818] px-4 py-12 font-['Outfit']">
+
+  <!-- ── Global Loading ──────────────────────────────────────────────── -->
+  <div *ngIf="isLoadingPayment || isLoadingPlans" class="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+    <div class="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+    <p class="text-slate-400 text-sm font-medium animate-pulse">Loading your plan details…</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- STEP 1 — PLAN SELECTION (Single Plan UI)                          -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <div *ngIf="!isLoadingPayment && !isLoadingPlans && step === 'plans'" class="max-w-5xl mx-auto">
+    <div class="bg-[#0b0e27] rounded-3xl overflow-hidden border border-white/5 flex flex-col md:flex-row shadow-2xl">
+      
+      <!-- Left Pane: Plan Details -->
+      <div class="w-full md:w-1/2 p-8 md:p-12 border-r border-white/5">
+        <div class="flex items-center gap-2 mb-6">
+          <span class="text-2xl">🌱</span>
+          <span class="px-3 py-1 bg-teal-500/10 text-teal-400 text-xs font-black uppercase tracking-widest rounded-lg border border-teal-500/20">
+            Rank Level 1
+          </span>
+        </div>
+
+        <h1 class="text-4xl md:text-5xl font-black text-white mb-4">Fresh Member</h1>
+        <p class="text-slate-400 text-sm leading-relaxed mb-10">
+          Become a Fresh Member instantly upon account registration and payment. Activate your direct membership to unlock the initial benefits package.
+        </p>
+
+        <div class="space-y-4 mb-10">
+          <div class="bg-white/[0.02] border border-white/5 rounded-2xl p-4 flex items-center gap-4 hover:bg-white/[0.04] transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center text-teal-400 text-lg">
+              ₹
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 uppercase tracking-widest font-semibold">Membership Cost</p>
+              <p class="text-white font-bold text-lg">₹2,000 Payment</p>
+            </div>
+          </div>
+
+          <div class="bg-white/[0.02] border border-white/5 rounded-2xl p-4 flex items-center gap-4 hover:bg-white/[0.04] transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-400 text-lg">
+              📦
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 uppercase tracking-widest font-semibold">Package Delivery</p>
+              <p class="text-white font-bold text-lg">₹100 Delivery Charges</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center text-slate-500 text-xs font-semibold">
+          <span>Page 1 of 5</span>
+          <button (click)="!isUserPaid && selectSinglePlan()" 
+                  [disabled]="isUserPaid"
+                  [ngClass]="isUserPaid ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'"
+                  class="px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl font-black uppercase tracking-widest transition-transform shadow-lg shadow-indigo-500/20">
+            {{ isUserPaid ? 'Activated' : 'Activate Plan' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Pane: Included Products -->
+      <div class="w-full md:w-1/2 p-8 md:p-12 bg-black/20">
+        <h2 class="text-xs text-slate-400 font-black uppercase tracking-widest mb-8">Included Products</h2>
+        
+        <div class="grid grid-cols-2 gap-4 h-[calc(100%-3rem)]">
+          <!-- Product 1 -->
+          <div class="bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center hover:bg-white/[0.04] transition-colors group">
+            <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 mb-4 group-hover:scale-110 transition-transform">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 2L3 7v10l9 5 9-5V7L12 2zm0 4.5l5 2.5-5 2.5-5-2.5 5-2.5z"/></svg>
+            </div>
+            <p class="text-slate-400 text-sm mb-1">Flour (Atta)</p>
+            <p class="text-white font-black text-xl">5 kg</p>
+          </div>
+
+          <!-- Product 2 -->
+          <div class="bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center hover:bg-white/[0.04] transition-colors group">
+            <div class="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center text-yellow-400 mb-4 group-hover:scale-110 transition-transform">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 2v20m-7-14a7 7 0 1014 0 7 7 0 10-14 0z"/></svg>
+            </div>
+            <p class="text-slate-400 text-sm mb-1">Cooking Oil</p>
+            <p class="text-white font-black text-xl">1 Litre</p>
+          </div>
+
+          <!-- Product 3 -->
+          <div class="bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center hover:bg-white/[0.04] transition-colors group">
+            <div class="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-400 mb-4 group-hover:scale-110 transition-transform">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z M8 10h8 M8 14h4"/></svg>
+            </div>
+            <p class="text-slate-400 text-sm mb-1">Biscuit Packet</p>
+            <p class="text-white font-black text-xl">1 Packet</p>
+          </div>
+
+          <!-- Product 4 -->
+          <div class="bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center hover:bg-white/[0.04] transition-colors group">
+            <div class="w-12 h-12 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-400 mb-4 group-hover:scale-110 transition-transform">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M5 10v10h14V10m-7-5v5"/></svg>
+            </div>
+            <p class="text-slate-400 text-sm mb-1">Soup Packet</p>
+            <p class="text-white font-black text-xl">1 Packet</p>
+          </div>
+        </div>
+
+        <div class="flex justify-end mt-4">
+          <span class="text-slate-500 text-xs font-semibold">First Level Rewards</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- STEP 2 — CHECKOUT                                                 -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <div *ngIf="!isLoadingPayment && !isLoadingPlans && step === 'checkout' && selectedPlan"
+    class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-8">
+
+    <!-- Back -->
+    <div class="md:col-span-5">
+      <button (click)="backToPlans()" class="flex items-center gap-2 text-slate-400 hover:text-white text-sm font-semibold transition-colors group">
+        <span class="text-lg group-hover:-translate-x-1 transition-transform">←</span> Back to Plans
+      </button>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="md:col-span-2 space-y-4">
+      <div class="rounded-[2rem] border p-7 space-y-5 border-indigo-500/50 bg-white/[0.03]">
+        <div>
+          <p class="text-slate-500 text-xs uppercase tracking-widest font-semibold mb-1">Selected Plan</p>
+          <h2 class="text-2xl font-black text-white">{{ selectedPlan.name || 'Fresh Member' }}</h2>
+          <p class="text-slate-400 text-sm mt-1">{{ selectedPlan.description || 'Activate your direct membership.' }}</p>
+        </div>
+
+        <div class="border-t border-white/5 pt-5 space-y-3">
+          <div class="flex justify-between text-sm">
+            <span class="text-slate-400">Plan Price</span>
+            <span class="text-white font-bold">₹{{ selectedPlan.price | number:'1.2-2' }}</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-slate-400">Duration</span>
+            <span class="text-white font-bold">{{ selectedPlan.durationMonths || 1 }} month</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-slate-400">GST (18%)</span>
+            <span class="text-white font-bold">₹{{ (selectedPlan.price * 0.18) | number:'1.2-2' }}</span>
+          </div>
+          <div class="border-t border-white/10 pt-3 flex justify-between">
+            <span class="text-white font-black">Total</span>
+            <span class="text-2xl font-black text-white">₹{{ (selectedPlan.price * 1.18) | number:'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust badges -->
+      <div class="rounded-2xl bg-white/[0.02] border border-white/5 p-4 space-y-2">
+        <p class="flex items-center gap-2 text-slate-500 text-xs"><span>🔒</span> Payment secured by Razorpay</p>
+        <p class="flex items-center gap-2 text-slate-500 text-xs"><span>🛡️</span> PCI DSS Level 1 Compliant</p>
+        <p class="flex items-center gap-2 text-slate-500 text-xs"><span>⚡</span> Account activated after admin approval</p>
+      </div>
+    </div>
+
+    <!-- Payment Form (Sandbox Card UI) -->
+    <div class="md:col-span-3">
+      <div class="rounded-[2rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl p-8 space-y-7">
+        <div>
+          <h2 class="text-2xl font-black text-white">Secure Checkout</h2>
+          <p class="text-slate-400 text-sm mt-1">Enter your card details to complete the payment.</p>
+        </div>
+
+        <!-- Card Preview -->
+        <div class="relative h-44 rounded-3xl overflow-hidden bg-gradient-to-br from-indigo-600 via-violet-700 to-purple-900 p-6 shadow-2xl shadow-indigo-500/30">
+          <div class="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
+          <div class="absolute top-5 right-6 flex gap-1">
+            <div class="w-8 h-8 rounded-full bg-red-500/80 opacity-80"></div>
+            <div class="w-8 h-8 rounded-full bg-yellow-400/80 opacity-80 -ml-3"></div>
+          </div>
+          <div class="absolute bottom-6 left-6 space-y-2">
+            <p class="text-white/60 text-xs uppercase tracking-widest font-semibold">Card Number</p>
+            <p class="text-white font-mono text-lg tracking-widest font-bold">
+              {{ sandbox.cardNumber || '•••• •••• •••• ••••' }}
+            </p>
+          </div>
+          <div class="absolute bottom-6 right-6 text-right space-y-1">
+            <p class="text-white/60 text-xs uppercase tracking-widest font-semibold">Expires</p>
+            <p class="text-white font-mono text-sm font-bold">{{ sandbox.expiry || 'MM/YY' }}</p>
+          </div>
+          <div class="absolute top-5 left-6">
+            <p class="text-white/80 text-sm font-bold">{{ sandbox.name || 'YOUR NAME' }}</p>
+          </div>
+        </div>
+
+        <!-- Input fields -->
+        <div class="space-y-4">
+          <div class="space-y-1.5">
+            <label class="block text-xs font-black text-slate-400 uppercase tracking-widest">Card Number</label>
+            <div class="relative">
+              <input type="text" [value]="sandbox.cardNumber" (input)="formatCard($event)" maxlength="19"
+                placeholder="1234 5678 9012 3456"
+                class="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-white font-mono text-lg focus:ring-2 focus:ring-indigo-500 outline-none placeholder-slate-700">
+            </div>
+          </div>
+          <div class="space-y-1.5">
+            <label class="block text-xs font-black text-slate-400 uppercase tracking-widest">Cardholder Name</label>
+            <input type="text" [(ngModel)]="sandbox.name" placeholder="John Doe"
+              class="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-white focus:ring-2 focus:ring-indigo-500 outline-none placeholder-slate-700">
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-1.5">
+              <label class="block text-xs font-black text-slate-400 uppercase tracking-widest">Expiry</label>
+              <input type="text" [value]="sandbox.expiry" (input)="formatExpiry($event)" maxlength="5"
+                placeholder="MM/YY"
+                class="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-white font-mono focus:ring-2 focus:ring-indigo-500 outline-none placeholder-slate-700">
+            </div>
+            <div class="space-y-1.5">
+              <label class="block text-xs font-black text-slate-400 uppercase tracking-widest">CVV</label>
+              <input type="password" [(ngModel)]="sandbox.cvv" placeholder="•••" maxlength="4"
+                class="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-white font-mono focus:ring-2 focus:ring-indigo-500 outline-none placeholder-slate-700">
+            </div>
+          </div>
+        </div>
+
+        <button (click)="pay()" [disabled]="isCreatingOrder || isSubmitting"
+          class="w-full py-5 rounded-2xl text-white font-black text-base uppercase tracking-wider transition-all bg-gradient-to-r from-indigo-600 to-violet-600 shadow-xl hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-3">
+          <span *ngIf="isCreatingOrder || isSubmitting" class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+          <span *ngIf="isCreatingOrder">Creating order…</span>
+          <span *ngIf="isSubmitting && !isCreatingOrder">Processing payment…</span>
+          <span *ngIf="!isCreatingOrder && !isSubmitting">
+            🔒 Pay ₹{{ (selectedPlan.price * 1.18) | number:'1.2-2' }}
+          </span>
+        </button>
+
+        <p class="text-center text-slate-600 text-xs">
+          By paying you agree to our Terms of Service. Payments are processed securely via Razorpay.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- STEP 3 — STATUS                                                   -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <div *ngIf="!isLoadingPayment && step === 'status' && existingPayment"
+    class="max-w-2xl mx-auto space-y-6">
+
+    <div class="text-center space-y-2 pb-2">
+      <h1 class="text-4xl font-black text-white tracking-tight">Payment Status</h1>
+      <p class="text-slate-400">Track your membership activation below.</p>
+    </div>
+
+    <div class="rounded-[2rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl p-8 space-y-6">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-bold text-white">
+            {{ existingPayment.planName || 'Fresh Member' }}
+          </h2>
+          <p class="text-slate-400 text-sm mt-1">Payment record received. Awaiting admin review.</p>
+        </div>
+        <span [class]="'flex-shrink-0 px-4 py-2 rounded-xl text-sm font-black border ' + getStatusClass(existingPayment.status)">
+          {{ existingPayment.status === 'APPROVED' ? '✅' : existingPayment.status === 'REJECTED' ? '❌' : '⏳' }}
+          {{ existingPayment.status }}
+        </span>
+      </div>
+
+      <!-- Details grid -->
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <div class="bg-white/5 rounded-2xl p-4">
+          <p class="text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1">Amount Paid</p>
+          <p class="text-white font-black text-lg">₹{{ existingPayment.amount | number:'1.2-2' }}</p>
+        </div>
+        <div class="bg-white/5 rounded-2xl p-4">
+          <p class="text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1">Method</p>
+          <p class="text-white font-bold">{{ existingPayment.paymentMethod }}</p>
+        </div>
+        <div class="bg-white/5 rounded-2xl p-4">
+          <p class="text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1">Submitted</p>
+          <p class="text-white font-bold text-sm">{{ existingPayment.submittedAt | date:'dd MMM y, h:mm a' }}</p>
+        </div>
+      </div>
+
+      <div *ngIf="existingPayment.status === 'PENDING'" class="flex items-center gap-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl p-5">
+        <span class="text-3xl">⏳</span>
+        <div>
+          <p class="text-amber-400 font-black">Under Admin Review</p>
+          <p class="text-slate-400 text-sm mt-0.5">Your payment is being verified. Account activation typically takes 24–48 hours.</p>
+        </div>
+      </div>
+      
+      <div *ngIf="existingPayment.status === 'APPROVED'" class="flex items-center gap-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-5">
+        <span class="text-3xl">🎉</span>
+        <div>
+          <p class="text-emerald-400 font-black">Account Activated!</p>
+          <p class="text-slate-400 text-sm mt-0.5">Your membership is now active. Welcome aboard!</p>
+        </div>
+      </div>
+
+      <div *ngIf="existingPayment.status === 'REJECTED'" class="flex items-center gap-4 bg-rose-500/10 border border-rose-500/20 rounded-2xl p-5">
+        <span class="text-3xl">❌</span>
+        <div>
+          <p class="text-rose-400 font-black">Payment Rejected</p>
+          <p class="text-slate-400 text-sm mt-0.5">Please review the admin note below and submit a new payment.</p>
+        </div>
+      </div>
+
+      <div *ngIf="existingPayment.adminRemarks" class="bg-indigo-500/10 border border-indigo-500/20 rounded-2xl p-4">
+        <p class="text-xs text-indigo-400 uppercase tracking-widest font-black mb-1">Admin Note</p>
+        <p class="text-slate-200 text-sm">{{ existingPayment.adminRemarks }}</p>
+      </div>
+
+      <div class="flex gap-3">
+        <button *ngIf="existingPayment.status === 'APPROVED'" routerLink="/dashboard"
+          class="flex-1 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 text-white font-black rounded-2xl transition-all shadow-lg">
+          Go to Dashboard →
+        </button>
+        <button *ngIf="existingPayment.status === 'REJECTED'" (click)="resubmit()"
+          class="flex-1 py-4 bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 text-white font-black rounded-2xl transition-all shadow-lg">
+          Submit New Payment
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

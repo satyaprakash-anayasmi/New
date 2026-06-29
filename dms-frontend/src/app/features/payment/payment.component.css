@@ -1,0 +1,12 @@
+/* Plan card hover glow effect */
+.plan-card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.plan-card-hover:hover {
+  transform: translateY(-4px);
+}
+
+/* Card number font smoothing */
+input[type="text"], input[type="password"] {
+  -webkit-font-smoothing: antialiased;
+}

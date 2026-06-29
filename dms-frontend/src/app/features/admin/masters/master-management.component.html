@@ -1,0 +1,282 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 p-4 md:p-6 lg:p-8 font-['Outfit']">
+
+  <!-- Page Header -->
+  <div class="mb-6 md:mb-8">
+    <nav class="flex items-center gap-2 text-xs text-slate-500 mb-3">
+      <span>{{ 'ADMIN.MASTER.BREADCRUMB_HOME' | translate }}</span>
+      <span>›</span>
+      <span class="text-white font-medium">{{ 'ADMIN.MASTER.BREADCRUMB_MASTER' | translate }}</span>
+    </nav>
+    <div class="flex items-start justify-between gap-4 flex-wrap">
+      <div>
+        <h1 class="text-xl md:text-2xl lg:text-3xl font-black text-white tracking-tight flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+          </div>
+          Master Data Management
+        </h1>
+        <p class="text-slate-400 text-xs md:text-sm mt-1 ml-12">{{ 'ADMIN.MASTER.CONFIGURE_SUBTITLE' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Two-panel layout: stacks on mobile, side-by-side on lg -->
+  <div class="flex flex-col lg:flex-row gap-4 lg:gap-6 items-start">
+
+    <!-- ─── LEFT: Category Panel ─── -->
+    <div class="w-full lg:w-72 xl:w-80 flex-shrink-0">
+      <div class="rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-xl overflow-hidden">
+
+        <!-- Panel Top Bar -->
+        <div class="p-4 border-b border-white/10">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-xs font-black text-white uppercase tracking-widest">{{ 'ADMIN.MASTER.CATEGORIES' | translate }}</h2>
+            <button *ngIf="activeTab === 'ACTIVE'" (click)="openAddHeader()"
+              class="flex items-center gap-1 px-2.5 py-1.5 bg-orange-500/15 hover:bg-orange-500/25 border border-orange-500/25 text-orange-300 rounded-lg text-[10px] font-bold transition-all">
+              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+              Add
+            </button>
+          </div>
+
+          <!-- Active / Inactive Tabs -->
+          <div class="flex p-0.5 bg-white/5 border border-white/10 rounded-xl">
+            <button (click)="onTabChange('ACTIVE')"
+              class="flex-1 py-1.5 text-[10px] font-bold rounded-lg transition-all"
+              [class.text-white]="activeTab === 'ACTIVE'"
+              [class.text-slate-500]="activeTab !== 'ACTIVE'"
+              [style.backgroundColor]="activeTab === 'ACTIVE' ? 'rgba(99,102,241,0.25)' : 'transparent'">
+              <span class="flex items-center justify-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full" [class.bg-indigo-400]="activeTab === 'ACTIVE'" [class.bg-slate-600]="activeTab !== 'ACTIVE'"></span>
+                Active
+              </span>
+            </button>
+            <button (click)="onTabChange('INACTIVE')"
+              class="flex-1 py-1.5 text-[10px] font-bold rounded-lg transition-all"
+              [class.text-white]="activeTab === 'INACTIVE'"
+              [class.text-slate-500]="activeTab !== 'INACTIVE'"
+              [style.backgroundColor]="activeTab === 'INACTIVE' ? 'rgba(255,255,255,0.08)' : 'transparent'">
+              <span class="flex items-center justify-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full" [class.bg-slate-300]="activeTab === 'INACTIVE'" [class.bg-slate-600]="activeTab !== 'INACTIVE'"></span>
+                Inactive
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Seed Geo Data Button -->
+        <div class="px-4 py-3 border-b border-white/5">
+          <button (click)="seedGeoData()" [disabled]="isLoading"
+            class="w-full flex items-center justify-center gap-2 px-3 py-2 bg-emerald-500/8 hover:bg-emerald-500/15 border border-emerald-500/20 text-emerald-300 rounded-xl text-[10px] font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+            <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            {{ isLoading ? 'Seeding…' : 'Seed Geo Data' }}
+          </button>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="isLoading" class="flex items-center justify-center py-10">
+          <div class="w-5 h-5 border-2 border-orange-400 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+
+        <!-- Category List -->
+        <div *ngIf="!isLoading" class="max-h-[40vh] lg:max-h-[65vh] overflow-y-auto divide-y divide-white/5">
+          <div *ngIf="headers.length === 0" class="py-8 text-center text-slate-500 text-xs">{{ 'ADMIN.MASTER.NO_CATEGORIES' | translate }}</div>
+
+          <div *ngFor="let h of headers" (click)="selectHeader(h)"
+            class="header-item" [class.header-item-selected]="selectedHeader?.id === h.id">
+            <!-- Status dot + Name -->
+            <div class="flex items-center gap-2.5 flex-1 min-w-0">
+              <span class="w-2 h-2 rounded-full flex-shrink-0"
+                [class.bg-emerald-400]="h.status === 'ACTIVE'"
+                [class.bg-slate-500]="h.status !== 'ACTIVE'"></span>
+              <div class="min-w-0">
+                <p class="text-sm font-semibold text-white truncate leading-tight">{{ h.dropdownName }}</p>
+                <p class="text-[10px] mt-0.5 font-medium"
+                  [class.text-emerald-400]="h.status === 'ACTIVE'"
+                  [class.text-slate-500]="h.status !== 'ACTIVE'">
+                  {{ h.status }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-1 ml-2 flex-shrink-0">
+              <ng-container *ngIf="h.status === 'ACTIVE'">
+                <button (click)="$event.stopPropagation(); openEditHeader(h)" class="icon-btn text-blue-400 hover:text-blue-300 hover:bg-blue-500/10" title="Edit">
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                </button>
+                <button (click)="$event.stopPropagation(); deleteHeader(h)" class="icon-btn text-rose-400 hover:text-rose-300 hover:bg-rose-500/10" title="Deactivate">
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                </button>
+              </ng-container>
+
+              <ng-container *ngIf="h.status === 'INACTIVE'">
+                <button (click)="$event.stopPropagation(); restoreHeader(h)" class="icon-btn text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10" title="Restore">
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                </button>
+                <button (click)="$event.stopPropagation(); permanentDeleteHeader(h)" class="icon-btn text-rose-400 hover:text-rose-300 hover:bg-rose-500/10" title="Permanent Delete">
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                </button>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── RIGHT: Detail Options Panel ─── -->
+    <div class="flex-1 min-w-0">
+      <div class="rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-xl overflow-hidden">
+
+        <!-- Panel Header -->
+        <div class="px-5 py-4 border-b border-white/10 flex items-center justify-between gap-3 flex-wrap">
+          <div class="min-w-0">
+            <h2 class="text-sm font-bold text-white uppercase tracking-widest truncate">
+              {{ selectedHeader ? selectedHeader.dropdownName + ' Options' : 'Select a Category' }}
+            </h2>
+            <p *ngIf="selectedHeader" class="text-xs text-slate-500 mt-0.5">
+              Values available in dropdown for this category
+            </p>
+            <p *ngIf="!selectedHeader" class="text-xs text-slate-600 mt-0.5">
+              Click any category on the left to view its options
+            </p>
+          </div>
+
+          <!-- Status Badge + Add Button -->
+          <div class="flex items-center gap-2.5 flex-shrink-0">
+            <span *ngIf="selectedHeader"
+              class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border"
+              [class.bg-emerald-500_10]="selectedHeader.status === 'ACTIVE'"
+              [class.text-emerald-400]="selectedHeader.status === 'ACTIVE'"
+              [class.border-emerald-500_20]="selectedHeader.status === 'ACTIVE'"
+              [class.bg-slate-500_10]="selectedHeader.status !== 'ACTIVE'"
+              [class.text-slate-400]="selectedHeader.status !== 'ACTIVE'"
+              [class.border-slate-500_20]="selectedHeader.status !== 'ACTIVE'"
+              [style.background]="selectedHeader.status === 'ACTIVE' ? 'rgba(16,185,129,0.1)' : 'rgba(100,116,139,0.1)'"
+              [style.borderColor]="selectedHeader.status === 'ACTIVE' ? 'rgba(16,185,129,0.25)' : 'rgba(100,116,139,0.2)'">
+              <span class="flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full inline-block"
+                  [class.bg-emerald-400]="selectedHeader.status === 'ACTIVE'"
+                  [class.bg-slate-500]="selectedHeader.status !== 'ACTIVE'"></span>
+                {{ selectedHeader.status }}
+              </span>
+            </span>
+
+            <button *ngIf="selectedHeader && selectedHeader.status === 'ACTIVE'" (click)="openAddDetail()"
+              class="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/25 text-indigo-300 rounded-xl text-[10px] font-bold transition-all whitespace-nowrap">
+              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+              Add Option
+            </button>
+          </div>
+        </div>
+
+        <!-- Empty state (no header selected) -->
+        <div *ngIf="!selectedHeader" class="flex flex-col items-center justify-center py-16 md:py-24 text-slate-600">
+          <div class="w-14 h-14 rounded-2xl bg-white/3 border border-white/8 flex items-center justify-center mb-4">
+            <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+          </div>
+          <p class="text-sm font-semibold text-slate-500">Select a category</p>
+          <p class="text-xs text-slate-600 mt-1">Choose from the list on the left</p>
+        </div>
+
+        <!-- Details via Common DataTable -->
+        <div *ngIf="selectedHeader" class="p-3 md:p-4">
+          <app-data-table
+            [title]="selectedHeader.dropdownName + ' Options'"
+            [tableConfig]="activeTab === 'ACTIVE' ? TABLE_CONFIG['MASTER_DETAIL'] : TABLE_CONFIG['MASTER_INACTIVE_DETAIL']"
+            [data]="details"
+            [totalElements]="details.length"
+            [totalPages]="1"
+            [currentPage]="0"
+            [isLoading]="isLoadingDetails"
+            [isLast]="true"
+            [searchable]="true"
+            (edit)="onDetailEdit($event)"
+            (delete)="onDetailDelete($event)"
+            (recover)="onDetailRestore($event)"
+            (permanentDelete)="onDetailPermanentDelete($event)"
+          ></app-data-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- HEADER FORM MODAL -->
+<!-- ══════════════════════════════════════════ -->
+<div *ngIf="showHeaderForm" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-3 sm:p-4">
+  <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" (click)="closeHeaderForm()"></div>
+  <div class="relative w-full max-w-md bg-slate-900 border border-white/10 rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl animate-modal-in">
+    <h3 class="text-base sm:text-lg font-bold text-white mb-5">{{ editingHeader ? 'Edit Category' : 'New Category' }}</h3>
+    <div class="space-y-4">
+      <div>
+        <label class="form-label">Category Name *</label>
+        <input [(ngModel)]="headerForm.dropdownName"
+          [disabled]="!!editingHeader"
+          class="form-input" placeholder="e.g. GENDER, STATE, ZONE"/>
+        <p class="text-[10px] text-slate-600 mt-1">Unique identifier used in API calls (uppercase, no spaces)</p>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button (click)="closeHeaderForm()" class="flex-1 py-2.5 px-4 bg-slate-800 border border-slate-700 text-slate-300 rounded-xl text-sm font-semibold hover:bg-slate-700 hover:text-white transition-all">
+        Cancel
+      </button>
+      <button (click)="saveHeader()" [disabled]="isSaving" class="flex-1 py-2.5 px-4 bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-400 hover:to-rose-400 text-white rounded-xl text-sm font-bold shadow-lg shadow-orange-500/20 transition-all disabled:opacity-50 disabled:grayscale flex items-center justify-center gap-2">
+        <span *ngIf="isSaving" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+        <svg *ngIf="!isSaving" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+        {{ isSaving ? 'Saving…' : 'Save Category' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- DETAIL FORM MODAL -->
+<!-- ══════════════════════════════════════════ -->
+<div *ngIf="showDetailForm" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-3 sm:p-4">
+  <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" (click)="closeDetailForm()"></div>
+  <div class="relative w-full max-w-md bg-slate-900 border border-white/10 rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl animate-modal-in">
+    <h3 class="text-base sm:text-lg font-bold text-white mb-4">{{ editingDetail ? 'Edit Option' : 'New Option' }}</h3>
+
+    <!-- Context Info -->
+    <div class="mb-4 p-3 bg-white/5 border border-white/10 rounded-xl">
+      <p class="text-xs text-slate-400">Category: <strong class="text-white">{{ selectedHeader?.dropdownName }}</strong></p>
+      <p *ngIf="getParentCategoryName()" class="text-xs text-slate-400 mt-0.5">Requires parent: <strong class="text-white">{{ getParentCategoryName() }}</strong></p>
+    </div>
+
+    <div class="space-y-4">
+      <!-- Parent Selection -->
+      <div *ngIf="getParentCategoryName()">
+        <label class="form-label">Select Parent {{ getParentCategoryName() | titlecase }} *</label>
+        <app-select
+          [options]="parentOptions"
+          [value]="selectedParentId"
+          (valueChange)="selectedParentId = $event"
+          [placeholder]="'Select ' + (getParentCategoryName() | lowercase)"
+          [searchable]="true">
+        </app-select>
+      </div>
+
+      <div>
+        <label class="form-label">Display Name *</label>
+        <input [(ngModel)]="detailForm.displayName" class="form-input" placeholder="e.g. Male, Zone A, Maharashtra"/>
+      </div>
+    </div>
+
+    <div class="flex gap-3 mt-6">
+      <button (click)="closeDetailForm()" class="flex-1 py-2.5 px-4 bg-slate-800 border border-slate-700 text-slate-300 rounded-xl text-sm font-semibold hover:bg-slate-700 hover:text-white transition-all">
+        Cancel
+      </button>
+      <button (click)="saveDetail()" [disabled]="isSaving" class="flex-1 py-2.5 px-4 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-400 hover:to-purple-400 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-500/20 transition-all disabled:opacity-50 disabled:grayscale flex items-center justify-center gap-2">
+        <span *ngIf="isSaving" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+        <svg *ngIf="!isSaving" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+        {{ isSaving ? 'Saving…' : 'Save Option' }}
+      </button>
+    </div>
+  </div>
+</div>
